@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flowtrace.dev/schemas/event-v1.json",
+  "title": "FlowTrace Checkpoint Event v1",
+  "type": "object",
+  "required": ["traceId", "node"],
+  "additionalProperties": true,
+  "properties": {
+    "v": {
+      "type": "integer",
+      "const": 1,
+      "default": 1
+    },
+    "key": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 128
+    },
+    "traceId": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+    },
+    "node": {
+      "type": "string",
+      "pattern": "^[a-z0-9-_.]{1,64}$"
+    },
+    "from": {
+      "type": "string",
+      "pattern": "^[a-z0-9-_.]{1,64}$"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["enter", "error", "end"],
+      "default": "enter"
+    },
+    "branch": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "default": "main"
+    },
+    "ts": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "label": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "attrs": {
+      "type": "object",
+      "maxProperties": 10,
+      "additionalProperties": {
+        "oneOf": [
+          { "type": "string", "maxLength": 100 },
+          { "type": "number" },
+          { "type": "boolean" }
+        ]
+      }
+    },
+    "seq": {
+      "type": "integer"
+    }
+  }
+}

@@ -1,0 +1,788 @@
+<div class="app-shell">
+  <!-- Top Navigation & Live Telemetry Bar -->
+  <header class="topbar">
+    <div class="brand-group" (click)="activeScreen.set('live')">
+      <div class="brand-logo" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <circle cx="5" cy="6" r="3" fill="#06b6d4" />
+          <circle cx="19" cy="6" r="3" fill="#14b8a6" />
+          <circle cx="12" cy="18" r="3.5" fill="#06b6d4" />
+          <path d="M5 9C5 13 12 13 12 14.5M19 9C19 13 12 13 12 14.5" stroke="#06b6d4" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="brand-title">{{ appName }}</h1>
+        <span class="brand-sub">{{ currentProject()?.name || appTagline }}</span>
+      </div>
+    </div>
+
+    <!-- Primary Screen Switcher -->
+    <nav class="screen-tabs" aria-label="Main navigation">
+      <button
+        id="nav-live-btn"
+        [class.active]="activeScreen() === 'live'"
+        (click)="activeScreen.set('live')">
+        Live Canvas
+      </button>
+      <button
+        id="nav-traces-btn"
+        [class.active]="activeScreen() === 'traces'"
+        (click)="activeScreen.set('traces'); refreshInspectorTraces()">
+        Traces &amp; Replay
+      </button>
+      <button
+        id="nav-projects-btn"
+        [class.active]="activeScreen() === 'projects'"
+        (click)="activeScreen.set('projects')">
+        Projects ({{ projects().length }})
+      </button>
+      <button
+        id="nav-settings-btn"
+        [class.active]="activeScreen() === 'settings'"
+        (click)="activeScreen.set('settings')">
+        Ingest Keys &amp; SDK
+      </button>
+    </nav>
+
+    <!-- Right Status & Controls -->
+    <div class="topbar-actions">
+      <div class="ws-status" [class.connected]="wsConnected()">
+        <span class="status-dot"></span>
+        <span>{{ wsConnected() ? 'LIVE STREAM' : 'RECONNECTING' }}</span>
+      </div>
+
+      <button
+        id="demo-toggle-btn"
+        class="demo-btn"
+        [class.running]="demoRunning()"
+        (click)="toggleDemoSimulator()">
+        {{ demoRunning() ? 'Demo Simulator: ON' : 'Demo Simulator: OFF' }}
+      </button>
+
+      <button id="theme-toggle-btn" (click)="toggleTheme()" title="Toggle Dark/Light Theme">
+        {{ theme() === 'dark' ? 'Light' : 'Dark' }}
+      </button>
+
+      <button id="login-screen-btn" class="user-pill" (click)="activeScreen.set('login')">
+        {{ loginEmail() }}
+      </button>
+    </div>
+  </header>
+
+  @if (copiedHint()) {
+    <div class="toast-banner" role="status">{{ copiedHint() }}</div>
+  }
+
+  <!-- SCREEN 1: LIVE CANVAS + EDITOR -->
+  @if (activeScreen() === 'live') {
+    <div class="workspace-grid">
+      <!-- Floating Canvas Toolbar -->
+      <div class="canvas-toolbar" role="toolbar" aria-label="Canvas controls">
+        <button id="pause-resume-btn" (click)="togglePause()">
+          {{ livePaused() ? 'Resume' : 'Pause' }}
+        </button>
+
+        <div class="speed-group" aria-label="Animation speed">
+          @for (spd of [0.5, 1, 2, 4]; track spd) {
+            <button
+              [class.active]="speedMultiplier() === spd"
+              (click)="setSpeed(spd)">
+              {{ spd }}×
+            </button>
+          }
+        </div>
+
+        <button id="schedule-mode-btn" (click)="toggleScheduleMode()" title="Catch-up mode">
+          Mode: {{ scheduleMode() === 'realtime' ? 'Realtime' : 'Smooth' }}
+        </button>
+
+        <button (click)="showLabels.set(!showLabels())" [class.active]="showLabels()">
+          Labels
+        </button>
+
+        <button (click)="showCounters.set(!showCounters())" [class.active]="showCounters()">
+          Counters
+        </button>
+
+        <button id="fit-view-btn" (click)="fitToScreen()">Fit View</button>
+
+        <div class="toolbar-divider"></div>
+
+        <button
+          id="editor-toggle-btn"
+          [class.btn-primary]="editorMode()"
+          (click)="toggleEditorMode()">
+          {{ editorMode() ? 'Exit Editor' : 'Edit Diagram' }}
+        </button>
+
+        @if (editorMode()) {
+          <button id="auto-layout-btn" (click)="autoLayoutDiagram()">Auto-Layout</button>
+          <button id="undo-btn" [disabled]="!canUndo()" (click)="undo()">Undo</button>
+          <button id="redo-btn" [disabled]="!canRedo()" (click)="redo()">Redo</button>
+          <button id="export-json-btn" (click)="exportDiagramJson()">Export JSON</button>
+          <span class="save-badge" [attr.data-save-state]="saveStatus()">
+            v{{ diagramVersion() }} · {{ saveStatus() }}
+          </span>
+        }
+
+        <input
+          id="trace-filter-input"
+          type="search"
+          class="trace-search-input mono"
+          placeholder="Filter traceId prefix..."
+          [ngModel]="traceSearchFilter()"
+          (ngModelChange)="traceSearchFilter.set($event)" />
+      </div>
+
+      <!-- Sampling / Replay / Auto-Discovery Banners -->
+      @if (samplingActive()) {
+        <div class="canvas-chip warn-chip">
+          Sampling active (>300 concurrent tokens)
+        </div>
+      }
+      @if (replayActive()) {
+        <div class="canvas-chip replay-chip">
+          <span>Replaying Trace ({{ replayProgress() }}%)</span>
+          <button (click)="stopReplay()">Stop</button>
+        </div>
+      }
+
+      <!-- Editor Left Palette (when in Editor Mode) -->
+      @if (editorMode()) {
+        <aside class="editor-palette" aria-label="Node palette">
+          <h3>Add Node Block</h3>
+          <p class="palette-hint">Click to drop onto canvas, or drag output port (bottom dot) to input port (top dot).</p>
+          <div class="palette-list">
+            @for (item of paletteTypes; track item.type) {
+              <button
+                class="palette-item"
+                [attr.data-palette-type]="item.type"
+                (click)="addNodeFromPalette(item.type, item.label, item.icon)">
+                <span class="node-type-dot" [attr.data-type]="item.type"></span>
+                <span>{{ item.label }}</span>
+              </button>
+            }
+          </div>
+
+          @if (discoveredEdges().length > 0) {
+            <div class="discovered-box">
+              <h4>Auto-Discovered Edges ({{ discoveredEdges().length }})</h4>
+              @for (de of discoveredEdges(); track de.id) {
+                <div class="discovered-row">
+                  <span class="mono">{{ de.from }} → {{ de.to }}</span>
+                  <div class="discovered-actions">
+                    <button class="btn-primary" (click)="acceptDiscoveredEdge(de.id)">Accept</button>
+                    <button class="btn-danger" (click)="rejectDiscoveredEdge(de.id)">Reject</button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </aside>
+      }
+
+      <!-- Interactive Full-Screen SVG Canvas -->
+      <svg
+        id="flowtrace-canvas"
+        class="flow-canvas"
+        (wheel)="onCanvasWheel($event)"
+        (mousedown)="onCanvasMouseDown($event)"
+        (mousemove)="onCanvasMouseMove($event)"
+        (mouseup)="onCanvasMouseUp()">
+        <defs>
+          <!-- Subtle dotted canvas background -->
+          <pattern id="dot-grid-pattern" width="24" height="24" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1" fill="var(--dot-grid)" />
+          </pattern>
+
+          <!-- Token Cyan->Teal Radial Glow -->
+          <radialGradient id="token-ok-grad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#67e8f9" />
+            <stop offset="65%" stop-color="#06b6d4" />
+            <stop offset="100%" stop-color="#0d9488" />
+          </radialGradient>
+
+          <radialGradient id="token-error-grad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fca5a5" />
+            <stop offset="70%" stop-color="#ef4444" />
+            <stop offset="100%" stop-color="#b91c1c" />
+          </radialGradient>
+
+          <radialGradient id="token-warn-grad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fde68a" />
+            <stop offset="70%" stop-color="#f59e0b" />
+            <stop offset="100%" stop-color="#b45309" />
+          </radialGradient>
+
+          <filter id="token-glow" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="3.5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+
+          <!-- Arrowheads -->
+          <marker id="arrow-idle" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 8 5 L 0 9 z" fill="var(--edge-idle)" />
+          </marker>
+          <marker id="arrow-hot" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 8 5 L 0 9 z" fill="#06b6d4" />
+          </marker>
+          <marker id="arrow-discovered" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 8 5 L 0 9 z" fill="#f59e0b" />
+          </marker>
+        </defs>
+
+        <!-- Dotted Background -->
+        <rect width="100%" height="100%" fill="url(#dot-grid-pattern)" />
+
+        <!-- Pan/Zoom Viewport Matrix -->
+        <g [attr.transform]="'translate(' + panX() + ',' + panY() + ') scale(' + zoom() + ')'">
+
+          <!-- 1. Edges Layer -->
+          @for (edge of graph().edges; track edge.id) {
+            <g
+              class="edge-group"
+              [attr.data-edge-id]="edge.id"
+              (click)="onSelectEdge($event, edge)">
+              <!-- Invisible wider hit path for clicking -->
+              <path
+                [attr.d]="edgePath(edge)"
+                fill="none"
+                stroke="transparent"
+                stroke-width="14" />
+
+              <!-- Visible Bezier Edge -->
+              <path
+                class="edge-path"
+                [class.edge-hot]="isEdgeHot(edge)"
+                [class.edge-discovered]="edge.discovered"
+                [class.edge-selected]="selectedEdgeId() === edge.id"
+                [attr.d]="edgePath(edge)"
+                [attr.stroke-width]="edgeStrokeWidth(edge)"
+                [attr.marker-end]="edge.discovered ? 'url(#arrow-discovered)' : isEdgeHot(edge) ? 'url(#arrow-hot)' : 'url(#arrow-idle)'"
+                fill="none" />
+
+              @if (showLabels() && edge.label) {
+                <g [attr.transform]="'translate(' + edgeMidpoint(edge).x + ',' + edgeMidpoint(edge).y + ')'">
+                  <rect x="-32" y="-11" width="64" height="22" rx="6" class="edge-label-chip" />
+                  <text text-anchor="middle" dy="4" class="edge-label-text mono">{{ edge.label }}</text>
+                </g>
+              }
+            </g>
+          }
+
+          <!-- 2. Unmapped Ghost Edges Layer -->
+          @for (ghost of ghostEdges(); track ghost.id) {
+            <line
+              class="ghost-edge"
+              [attr.x1]="ghost.x1"
+              [attr.y1]="ghost.y1"
+              [attr.x2]="ghost.x2"
+              [attr.y2]="ghost.y2" />
+          }
+
+          <!-- Interactive Edge Connection Preview Line in Editor -->
+          @if (connectingFromNode()) {
+            <line
+              class="connecting-preview-line"
+              [attr.x1]="engine.getNodeOutputPort(connectingFromNode()!).x"
+              [attr.y1]="engine.getNodeOutputPort(connectingFromNode()!).y"
+              [attr.x2]="pointerCanvasPos().x"
+              [attr.y2]="pointerCanvasPos().y" />
+          }
+
+          <!-- 3. Nodes Layer -->
+          @for (node of graph().nodes; track node.key) {
+            <g
+              class="node-group"
+              tabindex="0"
+              role="button"
+              [attr.aria-label]="node.label + ' (' + node.key + ')'"
+              [attr.data-node-key]="node.key"
+              [attr.transform]="nodeTransform(node)"
+              (mousedown)="onNodeMouseDown($event, node)">
+
+              <!-- Card Base -->
+              <rect
+                class="node-card"
+                [class.node-selected]="selectedNodeKey() === node.key"
+                [class.node-highlighted]="highlightedTraceNodes().has(node.key)"
+                [class.node-error-flash]="getNodeEffect(node.key)?.errorFlash"
+                [class.node-discovered]="node.discovered"
+                [attr.width]="nodeWidth"
+                [attr.height]="nodeHeight"
+                rx="14"
+                ry="14" />
+
+              <!-- Left Type Accent Indicator -->
+              <rect
+                class="node-type-bar"
+                [attr.data-type]="node.type"
+                x="10"
+                y="14"
+                width="4"
+                height="36"
+                rx="2" />
+
+              <!-- Node Label & Key -->
+              <text x="24" y="29" class="node-title">{{ node.label }}</text>
+              <text x="24" y="47" class="node-key-sub mono">{{ node.key }}</text>
+
+              <!-- Live Counter Badge -->
+              @if (showCounters()) {
+                <g [attr.transform]="'translate(' + (nodeWidth - 44) + ', 12)'">
+                  <rect width="34" height="20" rx="6" class="node-counter-pill" />
+                  <text x="17" y="14" text-anchor="middle" class="node-counter-text mono">
+                    {{ nodeTotals()[node.key] || 0 }}
+                  </text>
+                </g>
+              }
+
+              <!-- Editor Input & Output Ports -->
+              @if (editorMode()) {
+                <!-- Input port (top center) -->
+                <circle
+                  class="node-port port-in"
+                  [attr.cx]="nodeWidth / 2"
+                  cy="0"
+                  r="6"
+                  (mouseup)="onCompleteConnectPort($event, node.key)">
+                  <title>Drop connection here</title>
+                </circle>
+
+                <!-- Output port (bottom center) -->
+                <circle
+                  class="node-port port-out"
+                  [attr.cx]="nodeWidth / 2"
+                  [attr.cy]="nodeHeight"
+                  r="6"
+                  (mousedown)="onStartConnectPort($event, node.key)">
+                  <title>Drag to connect to another node</title>
+                </circle>
+              }
+            </g>
+          }
+
+          <!-- 4. Animated Tokens & Fading Trails Layer -->
+          @for (token of filteredTokens(); track token.id) {
+            <g
+              class="token-group"
+              [attr.data-token-id]="token.id"
+              [attr.data-trace-id]="token.traceId"
+              [attr.data-edge-id]="token.edgeId || ''"
+              [style.opacity]="token.opacity"
+              (click)="onSelectToken($event, token)">
+
+              <!-- Fading Comet Trail -->
+              @for (pt of token.trail; track $index) {
+                <circle
+                  [attr.cx]="pt.x"
+                  [attr.cy]="pt.y"
+                  [attr.r]="Math.max(1.5, 5.5 - $index * 0.8)"
+                  [attr.fill]="token.status === 'error' ? '#ef4444' : token.status === 'warn' ? '#f59e0b' : '#06b6d4'"
+                  [attr.opacity]="Math.max(0.08, 0.55 - $index * 0.08)" />
+              }
+
+              <!-- Main Glowing Token Dot -->
+              <circle
+                class="token-dot"
+                [attr.cx]="token.x"
+                [attr.cy]="token.y"
+                [attr.r]="6.5 * token.scale"
+                [attr.fill]="token.status === 'error' ? 'url(#token-error-grad)' : token.status === 'warn' ? 'url(#token-warn-grad)' : 'url(#token-ok-grad)'"
+                filter="url(#token-glow)">
+                <title>Trace {{ token.traceId }} ({{ token.label || token.toNode }})</title>
+              </circle>
+            </g>
+          }
+        </g>
+      </svg>
+
+      <!-- Right Inspector Drawer -->
+      <aside class="inspector-drawer" aria-label="Inspector">
+        @if (selectedNode(); as node) {
+          <div class="drawer-section">
+            <div class="drawer-header">
+              <h3>Node Inspector</h3>
+              @if (editorMode()) {
+                <button class="btn-danger" (click)="deleteSelectedElement()">Delete</button>
+              }
+            </div>
+
+            <div class="field-group">
+              <label>Checkpoint Node Key (used in code)</label>
+              <div class="copy-row">
+                <input
+                  type="text"
+                  class="mono"
+                  [readonly]="!editorMode()"
+                  [ngModel]="node.key"
+                  (change)="updateSelectedNodeKey($any($event.target).value)" />
+                <button (click)="copyText(node.key, 'node key')">Copy</button>
+              </div>
+              @if (editorMode()) {
+                <small class="field-warning">Changing a node key breaks existing code checkpoints targeting the old key.</small>
+              }
+            </div>
+
+            <div class="field-group">
+              <label>Display Label</label>
+              <input
+                type="text"
+                [readonly]="!editorMode()"
+                [ngModel]="node.label"
+                (ngModelChange)="updateSelectedNodeLabel($event)" />
+            </div>
+
+            <div class="metric-cards">
+              <div class="metric-card">
+                <span class="metric-label">Total Events</span>
+                <strong class="metric-value mono">{{ nodeTotals()[node.key] || 0 }}</strong>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">Rate (1s)</span>
+                <strong class="metric-value mono">{{ nodeRates()[node.key] || 0 }} /s</strong>
+              </div>
+            </div>
+          </div>
+        } @else if (selectedEdge(); as edge) {
+          <div class="drawer-section">
+            <div class="drawer-header">
+              <h3>Edge Inspector</h3>
+              @if (editorMode()) {
+                <button class="btn-danger" (click)="deleteSelectedElement()">Delete Edge</button>
+              }
+            </div>
+            <p class="mono">{{ edge.from }} → {{ edge.to }}</p>
+            <div class="metric-cards">
+              <div class="metric-card">
+                <span class="metric-label">Hop Rate (1s)</span>
+                <strong class="metric-value mono">{{ edgeHeat()[edge.id] || 0 }} /s</strong>
+              </div>
+            </div>
+            @if (edge.discovered) {
+              <div class="discovered-actions">
+                <button class="btn-primary" (click)="acceptDiscoveredEdge(edge.id)">Accept Edge</button>
+                <button class="btn-danger" (click)="rejectDiscoveredEdge(edge.id)">Reject</button>
+              </div>
+            }
+          </div>
+        }
+
+        @if (selectedTraceDetail(); as detail) {
+          <div class="drawer-section trace-detail-panel">
+            <div class="drawer-header">
+              <h3>Trace Timeline</h3>
+              <button class="btn-primary" (click)="replayTraceOnCanvas(detail)">
+                Replay on Canvas
+              </button>
+            </div>
+            <div class="trace-id-banner mono">{{ detail.summary.id }}</div>
+            <div class="timeline-list">
+              @for (ev of detail.events; track ev.id) {
+                <div class="timeline-item" [class.timeline-error]="ev.type === 'error'">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-body">
+                    <div class="timeline-hop mono">
+                      @if (ev.fromNode) {
+                        <span>{{ ev.fromNode }} → </span>
+                      }
+                      <strong>{{ ev.node }}</strong>
+                      <span class="timeline-badge">{{ ev.type }}</span>
+                    </div>
+                    @if (ev.label) {
+                      <div class="timeline-label">{{ ev.label }}</div>
+                    }
+                    <div class="timeline-meta mono">{{ ev.serverTs | date:'HH:mm:ss.SSS' }}</div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Live Recent Traces Feed -->
+        <div class="drawer-section">
+          <div class="drawer-header">
+            <h3>Recent Traces</h3>
+            <button (click)="refreshInspectorTraces(selectedNodeKey() || undefined)">Refresh</button>
+          </div>
+          <div class="trace-feed">
+            @for (tr of recentTraces(); track tr.id) {
+              <div
+                class="trace-row"
+                [class.trace-row-error]="tr.status === 'error'"
+                (click)="openTraceDetail(tr.id)">
+                <div>
+                  <div class="mono trace-short-id">{{ tr.id.slice(0, 18) }}…</div>
+                  <div class="trace-sub">Last node: <span class="mono">{{ tr.lastNode || '—' }}</span> · {{ tr.eventCount }} hops</div>
+                </div>
+                <span class="status-pill" [attr.data-status]="tr.status">{{ tr.status }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </aside>
+    </div>
+  }
+
+  <!-- SCREEN 2: TRACES & REPLAY -->
+  @if (activeScreen() === 'traces') {
+    <main class="page-container">
+      <div class="page-header">
+        <div>
+          <h2>Stored Traces &amp; Timeline Replay</h2>
+          <p>Inspect historical request journeys and replay them with exact relative timing on the canvas.</p>
+        </div>
+        <div class="filter-bar">
+          <input
+            type="search"
+            class="mono"
+            placeholder="Search by traceId prefix..."
+            [ngModel]="traceSearchFilter()"
+            (ngModelChange)="traceSearchFilter.set($event); refreshInspectorTraces()" />
+          <button class="btn-primary" (click)="refreshInspectorTraces()">Search</button>
+        </div>
+      </div>
+
+      <div class="traces-split">
+        <div class="traces-table-card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Trace UUID</th>
+                <th>Status</th>
+                <th>Hops</th>
+                <th>Last Node</th>
+                <th>Last Event</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (tr of recentTraces(); track tr.id) {
+                <tr (click)="openTraceDetail(tr.id)">
+                  <td class="mono">{{ tr.id }}</td>
+                  <td><span class="status-pill" [attr.data-status]="tr.status">{{ tr.status }}</span></td>
+                  <td class="mono">{{ tr.eventCount }}</td>
+                  <td class="mono">{{ tr.lastNode }}</td>
+                  <td class="mono">{{ tr.lastEventAt | date:'HH:mm:ss' }}</td>
+                  <td>
+                    <button class="btn-primary" (click)="openTraceDetail(tr.id); $event.stopPropagation()">
+                      Inspect / Replay
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        @if (selectedTraceDetail(); as detail) {
+          <div class="trace-inspector-card">
+            <div class="drawer-header">
+              <h3>Trace {{ detail.summary.id.slice(0, 13) }}…</h3>
+              <button class="btn-primary" (click)="replayTraceOnCanvas(detail)">
+                Replay on Live Canvas
+              </button>
+            </div>
+            <div class="timeline-list">
+              @for (ev of detail.events; track ev.id) {
+                <div class="timeline-item" [class.timeline-error]="ev.type === 'error'">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-body">
+                    <div class="timeline-hop mono">
+                      @if (ev.fromNode) {
+                        <span>{{ ev.fromNode }} → </span>
+                      }
+                      <strong>{{ ev.node }}</strong>
+                      <span class="timeline-badge">{{ ev.type }}</span>
+                    </div>
+                    <div class="timeline-meta mono">{{ ev.serverTs | date:'HH:mm:ss.SSS' }} · seq={{ ev.seq ?? '—' }}</div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </main>
+  }
+
+  <!-- SCREEN 3: PROJECTS LIST -->
+  @if (activeScreen() === 'projects') {
+    <main class="page-container">
+      <div class="page-header">
+        <div>
+          <h2>Projects Workspace</h2>
+          <p>Each project holds a versioned architecture diagram, write-only ingest API keys, and isolated traces.</p>
+        </div>
+        <div class="filter-bar">
+          <input
+            type="text"
+            placeholder="New project name..."
+            [ngModel]="newProjectName()"
+            (ngModelChange)="newProjectName.set($event)" />
+          <button id="create-project-btn" class="btn-primary" (click)="createNewProject()">
+            + New Project
+          </button>
+        </div>
+      </div>
+
+      <div class="projects-grid">
+        @for (proj of projects(); track proj.id) {
+          <div
+            class="project-card"
+            [class.active-project]="currentProject()?.id === proj.id"
+            (click)="selectProject(proj); activeScreen.set('live')">
+            <div class="project-card-top">
+              <h3>{{ proj.name }}</h3>
+              <span class="status-pill" data-status="ok">
+                {{ proj.autoDiscover ? 'Auto-Discover ON' : 'Strict Schema' }}
+              </span>
+            </div>
+            <p class="mono project-id">{{ proj.id }}</p>
+            <div class="project-meta">
+              <span>Retention: {{ proj.retentionDays }} days</span>
+              <span>Created {{ proj.createdAt | date:'mediumDate' }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </main>
+  }
+
+  <!-- SCREEN 4: PROJECT SETTINGS, API KEYS & INTEGRATION SNIPPETS -->
+  @if (activeScreen() === 'settings') {
+    <main class="page-container">
+      <div class="page-header">
+        <div>
+          <h2>Project Settings &amp; Ingest Integration</h2>
+          <p>Manage write-only ingest keys and copy pre-filled HTTP, UDP, TCP, and Java SDK snippets.</p>
+        </div>
+        @if (currentProject(); as proj) {
+          <button (click)="toggleProjectAutoDiscover()">
+            Auto-Discovery: {{ proj.autoDiscover ? 'Enabled' : 'Disabled' }}
+          </button>
+        }
+      </div>
+
+      <div class="settings-grid">
+        <section class="settings-card">
+          <h3>Ingest API Keys</h3>
+          <p class="security-note">
+            Do not include PII or secrets inside checkpoint <code>attrs</code>. Ingest keys are write-only.
+          </p>
+
+          <div class="create-key-row">
+            <input
+              type="text"
+              placeholder="Key description..."
+              [ngModel]="newKeyName()"
+              (ngModelChange)="newKeyName.set($event)" />
+            <button id="create-key-btn" class="btn-primary" (click)="generateApiKey()">
+              Generate Key
+            </button>
+          </div>
+
+          @if (newlyCreatedKey()) {
+            <div class="active-key-banner">
+              <div>
+                <small>Active Ingest Key (shown in snippets below):</small>
+                <div class="mono">{{ newlyCreatedKey() }}</div>
+              </div>
+              <button (click)="copyText(newlyCreatedKey(), 'API key')">Copy Key</button>
+            </div>
+          }
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Prefix</th>
+                <th>Rate Limit</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (k of apiKeys(); track k.id) {
+                <tr>
+                  <td>{{ k.name }}</td>
+                  <td class="mono">{{ k.keyPrefix }}…</td>
+                  <td class="mono">{{ k.rateLimitPerS }}/s</td>
+                  <td>{{ k.revokedAt ? 'Revoked' : 'Active' }}</td>
+                  <td>
+                    @if (!k.revokedAt) {
+                      <button class="btn-danger" (click)="revokeKey(k.id)">Revoke</button>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </section>
+
+        <section class="settings-card">
+          <h3>Quick-Start Integration Snippets</h3>
+
+          <div class="snippet-block">
+            <div class="snippet-header">
+              <strong>1. HTTP Ingest (curl)</strong>
+              <button (click)="copyText('curl -X POST http://localhost:8080/api/v1/events -H &quot;X-API-Key: ' + newlyCreatedKey() + '&quot; -H &quot;Content-Type: application/json&quot; -d \'[{&quot;traceId&quot;:&quot;0194f1c0-7b52-7c1e-9a3e-5f0d2b6c8a11&quot;,&quot;node&quot;:&quot;website&quot;},{&quot;traceId&quot;:&quot;0194f1c0-7b52-7c1e-9a3e-5f0d2b6c8a11&quot;,&quot;node&quot;:&quot;lb&quot;}]\'', 'curl snippet')">Copy</button>
+            </div>
+            <pre class="mono">curl -X POST http://localhost:8080/api/v1/events \
+  -H "X-API-Key: {{ newlyCreatedKey() }}" \
+  -H "Content-Type: application/json" \
+  -d '[{{"{"}}"traceId":"0194f1c0-7b52-7c1e-9a3e-5f0d2b6c8a11","node":"website"{{"}"}},{{"{"}}"traceId":"0194f1c0-7b52-7c1e-9a3e-5f0d2b6c8a11","node":"lb"{{"}"}}]'</pre>
+          </div>
+
+          <div class="snippet-block">
+            <div class="snippet-header">
+              <strong>2. Java SDK (`client-java`)</strong>
+            </div>
+            <pre class="mono">FlowTrace ft = FlowTrace.builder()
+    .endpoint("udp://localhost:9001") // or tcp://localhost:9000, http://localhost:8080/api/v1
+    .apiKey("{{ newlyCreatedKey() }}")
+    .build();
+
+String traceId = ft.newTrace(); // UUIDv7, zero network latency
+ft.checkpoint(traceId, "website");
+ft.checkpoint(traceId, "lb");
+ft.checkpoint(traceId, "if-premium", Map.of("tier", "pro"));
+ft.checkpoint(traceId, "service-a");
+ft.end(traceId, "db");</pre>
+          </div>
+
+          <div class="snippet-block">
+            <div class="snippet-header">
+              <strong>3. Fire-and-Forget UDP (`netcat`)</strong>
+            </div>
+            <pre class="mono">echo '{{"{"}}"key":"{{ newlyCreatedKey() }}","traceId":"0194f1c0-7b52-7c1e-9a3e-5f0d2b6c8a11","node":"service-a","from":"if-premium"{{"}"}}' | nc -u -w0 localhost 9001</pre>
+          </div>
+        </section>
+      </div>
+    </main>
+  }
+
+  <!-- SCREEN 5: LOGIN / COGNITO OIDC PROFILE -->
+  @if (activeScreen() === 'login') {
+    <main class="login-container">
+      <div class="login-card">
+        <h2>Sign in to {{ appName }}</h2>
+        <p>Amazon Cognito OIDC (Authorization Code + PKCE) · Local Dev Profile Active</p>
+        <div class="field-group">
+          <label>Developer Email / Identity</label>
+          <input
+            type="email"
+            [ngModel]="loginEmail()"
+            (ngModelChange)="loginEmail.set($event)" />
+        </div>
+        <button class="btn-primary login-submit" (click)="signInWithMockCognito()">
+          Continue with OIDC Session
+        </button>
+      </div>
+    </main>
+  }
+</div>
