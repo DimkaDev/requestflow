@@ -27,3 +27,8 @@
    - Keep commits small and conventional (`feat:`, `fix:`, `chore:`, `docs:`, `test:`).
 8. **Scope discipline:**
    - Do not add features listed under "Out of scope / later" (section 21).
+9. **Cloud ↔ Local Agent Handoff & Traceability (`docs/WORKLOG.md`):**
+   - This repository is worked on by both **Cloud agents** (remote VM) and **Local agents** (developer's machine).
+   - **Before starting any task:** run `git status` / `git pull --rebase` and read `docs/WORKLOG.md` and `docs/PROGRESS.md` to understand the latest session context, recent changes, and next steps.
+   - **After completing any task or session:** prepend a new structured entry under `## История сессий (Trace Log)` in `docs/WORKLOG.md` (recording date, environment `cloud-vm` or `local`, goal, exact files changed, tests run, and next steps), update `docs/PROGRESS.md` if milestone items changed, commit, and `git push`.
+
