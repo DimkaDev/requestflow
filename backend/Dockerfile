@@ -19,4 +19,4 @@ COPY --from=build /workspace/backend/target/quarkus-app/app/ /work/app/
 COPY --from=build /workspace/backend/target/quarkus-app/quarkus/ /work/quarkus/
 EXPOSE 8080 9000 9001/udp
 ENV JAVA_OPTS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
-ENTRYPOINT ["java", "-jar", "/work/quarkus-run.jar"]
+ENTRYPOINT ["sh", "-c", "exec java ${JAVA_OPTS} -jar /work/quarkus-run.jar"]

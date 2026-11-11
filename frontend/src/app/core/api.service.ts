@@ -1,12 +1,26 @@
 import { Injectable, signal } from '@angular/core';
 import {
   ApiKey,
+  AuditLogEntry,
+  ConnectorConfig,
+  ConnectorType,
   CreatedApiKeyResult,
+  CreatedConnectorResponse,
   DiagramGraph,
   DiagramVersion,
+  Invitation,
+  OrgRole,
+  OrganizationMember,
+  OrganizationUsage,
+  OrganizationView,
+  PlanTier,
   Project,
+  RotatedApiKeyResult,
+  TemplateDefinition,
   TraceDetail,
   TraceSummary,
+  WebhookMapping,
+  Workspace,
 } from './models';
 
 @Injectable({ providedIn: 'root' })
@@ -44,8 +58,206 @@ export class FlowTraceApiService {
     };
   }
 
-  public async listProjects(): Promise<Project[]> {
-    const res = await fetch(`${this.apiBaseUrl}/projects`, { headers: this.headers() });
+  public async listOrganizations(): Promise<OrganizationView[]> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations`, { headers: this.headers() });
+    if (!res.ok) throw new Error(`Failed to list organizations: ${res.status}`);
+    return res.json();
+  }
+
+  public async createOrganization(
+    name: string,
+    slug?: string,
+    billingEmail?: string
+  ): Promise<OrganizationView> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify({ name, slug, billingEmail }),
+    });
+    if (!res.ok) throw new Error(`Failed to create organization: ${res.status}`);
+    return res.json();
+  }
+
+  public async updateOrganization(
+    orgId: string,
+    patch: { name?: string; slug?: string; billingEmail?: string; planTier?: PlanTier }
+  ): Promise<OrganizationView> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}`, {
+      method: 'PATCH',
+      headers: this.headers(),
+      body: JSON.stringify(patch),
+    });
+    if (!res.ok) throw new Error(`Failed to update organization: ${res.status}`);
+    return res.json();
+  }
+
+  public async transferOwnership(orgId: string, newOwnerUserId: string): Promise<OrganizationView> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}/transfer-ownership`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify({ newOwnerUserId }),
+    });
+    if (!res.ok) throw new Error(`Failed to transfer ownership: ${res.status}`);
+    return res.json();
+  }
+
+  public async deleteOrganization(orgId: string): Promise<void> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}`, {
+      method: 'DELETE',
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to soft-delete organization: ${res.status}`);
+  }
+
+  public async restoreOrganization(orgId: string): Promise<OrganizationView> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}/restore`, {
+      method: 'POST',
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to restore organization: ${res.status}`);
+    return res.json();
+  }
+
+  public async createWorkspace(orgId: string, name: string, slug?: string): Promise<Workspace> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}/workspaces`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify({ name, slug }),
+    });
+    if (!res.ok) throw new Error(`Failed to create workspace: ${res.status}`);
+    return res.json();
+  }
+
+  public async updateWorkspace(
+    orgId: string,
+    workspaceId: string,
+    name: string,
+    slug?: string
+  ): Promise<Workspace> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}/workspaces/${workspaceId}`, {
+      method: 'PATCH',
+      headers: this.headers(),
+      body: JSON.stringify({ name, slug }),
+    });
+    if (!res.ok) throw new Error(`Failed to update workspace: ${res.status}`);
+    return res.json();
+  }
+
+  public async deleteWorkspace(orgId: string, workspaceId: string): Promise<void> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}/workspaces/${workspaceId}`, {
+      method: 'DELETE',
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to delete workspace: ${res.status}`);
+  }
+
+  public async listOrgMembers(orgId: string): Promise<OrganizationMember[]> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}/members`, {
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to list members: ${res.status}`);
+    return res.json();
+  }
+
+  public async updateMemberRole(
+    orgId: string,
+    memberUserId: string,
+    role: OrgRole
+  ): Promise<OrganizationMember[]> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}/members/${memberUserId}`, {
+      method: 'PATCH',
+      headers: this.headers(),
+      body: JSON.stringify({ role }),
+    });
+    if (!res.ok) throw new Error(`Failed to update member role: ${res.status}`);
+    return res.json();
+  }
+
+  public async removeMember(orgId: string, memberUserId: string): Promise<void> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}/members/${memberUserId}`, {
+      method: 'DELETE',
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to remove member: ${res.status}`);
+  }
+
+  public async listInvitations(orgId: string): Promise<Invitation[]> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}/invitations`, {
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to list invitations: ${res.status}`);
+    return res.json();
+  }
+
+  public async createInvitation(
+    orgId: string,
+    email: string,
+    role: OrgRole
+  ): Promise<Invitation> {
+    const baseAppUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:8080';
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}/invitations`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify({ email, role, baseAppUrl }),
+    });
+    if (!res.ok) throw new Error(`Failed to create invitation: ${res.status}`);
+    return res.json();
+  }
+
+  public async resendInvitation(orgId: string, invitationId: string): Promise<Invitation> {
+    const baseAppUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:8080';
+    const res = await fetch(
+      `${this.apiBaseUrl}/organizations/${orgId}/invitations/${invitationId}/resend`,
+      {
+        method: 'POST',
+        headers: this.headers(),
+        body: JSON.stringify({ baseAppUrl }),
+      }
+    );
+    if (!res.ok) throw new Error(`Failed to resend invitation: ${res.status}`);
+    return res.json();
+  }
+
+  public async revokeInvitation(orgId: string, invitationId: string): Promise<void> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}/invitations/${invitationId}`, {
+      method: 'DELETE',
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to revoke invitation: ${res.status}`);
+  }
+
+  public async acceptInvitation(token: string): Promise<OrganizationView> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations/invitations/accept`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify({ token }),
+    });
+    if (!res.ok) throw new Error(`Failed to accept invitation: ${res.status}`);
+    return res.json();
+  }
+
+  public async listAuditLogs(
+    orgId: string,
+    action?: string,
+    limit = 60
+  ): Promise<AuditLogEntry[]> {
+    const q = new URLSearchParams();
+    if (action) q.set('action', action);
+    if (limit) q.set('limit', String(limit));
+    const qs = q.toString() ? `?${q.toString()}` : '';
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}/audit-logs${qs}`, {
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to list audit logs: ${res.status}`);
+    return res.json();
+  }
+
+  public async listProjects(organizationId?: string, workspaceId?: string): Promise<Project[]> {
+    const q = new URLSearchParams();
+    if (organizationId) q.set('organizationId', organizationId);
+    if (workspaceId) q.set('workspaceId', workspaceId);
+    const qs = q.toString() ? `?${q.toString()}` : '';
+    const res = await fetch(`${this.apiBaseUrl}/projects${qs}`, { headers: this.headers() });
     if (!res.ok) throw new Error(`Failed to list projects: ${res.status}`);
     return res.json();
   }
@@ -53,12 +265,14 @@ export class FlowTraceApiService {
   public async createProject(
     name: string,
     autoDiscover = true,
-    retentionDays = 7
+    retentionDays = 7,
+    organizationId?: string,
+    workspaceId?: string
   ): Promise<Project> {
     const res = await fetch(`${this.apiBaseUrl}/projects`, {
       method: 'POST',
       headers: this.headers(),
-      body: JSON.stringify({ name, autoDiscover, retentionDays }),
+      body: JSON.stringify({ name, autoDiscover, retentionDays, organizationId, workspaceId }),
     });
     if (!res.ok) throw new Error(`Failed to create project: ${res.status}`);
     return res.json();
@@ -121,14 +335,29 @@ export class FlowTraceApiService {
   public async createKey(
     projectId: string,
     name: string,
-    rateLimitPerS = 1000
+    rateLimitPerS = 1000,
+    scopes = 'ingest'
   ): Promise<CreatedApiKeyResult> {
     const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/keys`, {
       method: 'POST',
       headers: this.headers(),
-      body: JSON.stringify({ name, rateLimitPerS }),
+      body: JSON.stringify({ name, rateLimitPerS, scopes }),
     });
     if (!res.ok) throw new Error(`Failed to create key: ${res.status}`);
+    return res.json();
+  }
+
+  public async rotateKey(
+    projectId: string,
+    keyId: string,
+    gracePeriodHours = 24
+  ): Promise<RotatedApiKeyResult> {
+    const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/keys/${keyId}/rotate`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify({ gracePeriodHours }),
+    });
+    if (!res.ok) throw new Error(`Failed to rotate key: ${res.status}`);
     return res.json();
   }
 
@@ -137,6 +366,15 @@ export class FlowTraceApiService {
       method: 'DELETE',
       headers: this.headers(),
     });
+  }
+
+  public async getOrganizationUsage(orgId: string, month?: string): Promise<OrganizationUsage> {
+    const query = month ? `?month=${encodeURIComponent(month)}` : '';
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}/usage${query}`, {
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to load organization usage: ${res.status}`);
+    return res.json();
   }
 
   public async searchTraces(
@@ -206,5 +444,63 @@ export class FlowTraceApiService {
       method: 'DELETE',
       headers: this.headers(),
     });
+  }
+
+  public async listTemplates(): Promise<TemplateDefinition[]> {
+    const res = await fetch(`${this.apiBaseUrl}/templates`, { headers: this.headers() });
+    if (!res.ok) throw new Error(`Failed to list templates: ${res.status}`);
+    return res.json();
+  }
+
+  public async applyTemplate(projectId: string, templateId: string): Promise<void> {
+    const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/template/${templateId}`, {
+      method: 'POST',
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to apply template: ${res.status}`);
+  }
+
+  // Connectors & E-Commerce Webhooks (Gate G1-E / E20)
+  public async listConnectors(projectId: string): Promise<ConnectorConfig[]> {
+    const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/connectors`, {
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to list connectors: ${res.status}`);
+    return res.json();
+  }
+
+  public async createConnector(
+    projectId: string,
+    req: { name: string; type: ConnectorType; mapping?: WebhookMapping }
+  ): Promise<CreatedConnectorResponse> {
+    const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/connectors`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify(req),
+    });
+    if (!res.ok) throw new Error(`Failed to create connector: ${res.status}`);
+    return res.json();
+  }
+
+  public async deleteConnector(projectId: string, connectorId: string): Promise<void> {
+    const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/connectors/${connectorId}`, {
+      method: 'DELETE',
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to delete connector: ${res.status}`);
+  }
+
+  public async testConnectorMapping(
+    projectId: string,
+    connectorId: string,
+    sampleJson: Record<string, unknown>
+  ): Promise<any> {
+    const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/connectors/${connectorId}/test`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify(sampleJson),
+    });
+    if (!res.ok) throw new Error(`Failed to test connector: ${res.status}`);
+    return res.json();
   }
 }

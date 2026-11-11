@@ -1,9 +1,13 @@
 package dev.flowtrace.application;
 
 import dev.flowtrace.application.port.out.ProjectRepository;
+import dev.flowtrace.domain.CarryItem;
+import dev.flowtrace.domain.CarryOp;
+import dev.flowtrace.domain.CarryPayload;
 import dev.flowtrace.domain.CheckpointEvent;
 import dev.flowtrace.domain.DiagramGraph;
 import dev.flowtrace.domain.DiagramVersion;
+import dev.flowtrace.domain.EntityInfo;
 import dev.flowtrace.domain.EventType;
 import dev.flowtrace.domain.NodeType;
 import dev.flowtrace.domain.UuidV7;
@@ -11,6 +15,7 @@ import io.quarkus.scheduler.Scheduled;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -22,15 +27,26 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Built-in DemoSimulator (spec section 13).
+ * Built-in DemoSimulator (spec section 13 & v1.1 Live Shop).
  * Injects synthetic traces through the real IngestEventUseCase pipeline for a project's current diagram.
- * Walks the graph from source nodes, picks outgoing edges at decision nodes, applies random per-hop delay 80-600ms,
- * and auto-stops after 15 minutes.
+ * Supports both technical graphs and business shopping personas (buyer, abandoner, browser, hesitant)
+ * with customer avatars, carried items with prices, and terminal business events.
  */
 @ApplicationScoped
 public class DemoSimulator {
 
     public static final long AUTO_STOP_DURATION_MS = 15 * 60 * 1000L;
+
+    public static final List<CarryItem> DEMO_CATALOG = List.of(
+            new CarryItem("candle-lavender", "Lavender Candle", "emoji:🕯️", null, 1, 14.50, "EUR"),
+            new CarryItem("coffee-beans", "Artisan Coffee Beans", "emoji:☕", null, 1, 18.00, "EUR"),
+            new CarryItem("organic-tee", "Cotton T-Shirt", "emoji:👕", null, 1, 29.00, "EUR"),
+            new CarryItem("wireless-headphones", "Nordic Headphones", "emoji:🎧", null, 1, 89.00, "EUR"),
+            new CarryItem("crafted-journal", "Crafted Journal", "emoji:📚", null, 1, 22.00, "EUR")
+    );
+
+    public static final List<String> DEMO_AVATARS = List.of("cat", "fox", "bear", "dog", "rabbit");
+    public static final List<String> DEMO_NAMES = List.of("Alice", "Marc", "Elena", "Lucas", "Sofia", "Julian", "Clara");
 
     public record DemoConfig(
             UUID projectId,
@@ -39,6 +55,19 @@ public class DemoSimulator {
             long startedAtMs,
             long expiresAtMs
     ) {
+    }
+
+    public record PlannedHop(
+            String fromKey,
+            String nodeKey,
+            String label,
+            EventType eventType,
+            EntityInfo entity,
+            CarryPayload carry
+    ) {
+        public PlannedHop(String fromKey, String nodeKey, String label, EventType eventType) {
+            this(fromKey, nodeKey, label, eventType, null, null);
+        }
     }
 
     private final IngestEventUseCase ingestEventUseCase;
@@ -112,27 +141,34 @@ public class DemoSimulator {
             return;
         }
 
-        // Find source nodes (or nodes with no incoming edges, or first node)
-        List<DiagramGraph.DiagramNode> sources = graph.nodes().stream()
-                .filter(n -> n.type() == NodeType.source)
-                .toList();
-        if (sources.isEmpty()) {
-            sources = List.of(graph.nodes().getFirst());
-        }
-
         ThreadLocalRandom rng = ThreadLocalRandom.current();
-        DiagramGraph.DiagramNode startNode = sources.get(rng.nextInt(sources.size()));
         String traceId = UuidV7.generateString();
         String tier = rng.nextBoolean() ? "pro" : "free";
         String region = rng.nextBoolean() ? "eu-west-1" : "us-east-1";
 
-        List<PlannedHop> steps = planWalk(graph, startNode, tier, cfg.errorRate(), rng);
+        List<PlannedHop> steps;
+        boolean isCommerce = isCommerceGraph(graph);
+
+        if (isCommerce) {
+            steps = planCommerceScenario(graph, rng, cfg.errorRate());
+        } else {
+            List<DiagramGraph.DiagramNode> sources = graph.nodes().stream()
+                    .filter(n -> n.type() == NodeType.source)
+                    .toList();
+            if (sources.isEmpty()) {
+                sources = List.of(graph.nodes().getFirst());
+            }
+            DiagramGraph.DiagramNode startNode = sources.get(rng.nextInt(sources.size()));
+            steps = planWalk(graph, startNode, tier, cfg.errorRate(), rng);
+        }
+
         long cumulativeDelayMs = 0L;
 
         for (int i = 0; i < steps.size(); i++) {
             PlannedHop step = steps.get(i);
             boolean isLast = (i == steps.size() - 1);
             long scheduledDelay = cumulativeDelayMs;
+
             hopScheduler.schedule(() -> {
                 if (!activeConfigs.containsKey(projectId)) {
                     return;
@@ -149,12 +185,14 @@ public class DemoSimulator {
                         ts,
                         ts,
                         step.label(),
-                        Map.of("tier", tier, "region", region, "synthetic", true),
-                        seqGenerator.getAndIncrement()
+                        Map.of("tier", tier, "region", region, "synthetic", true, "demo", true),
+                        seqGenerator.getAndIncrement(),
+                        step.entity(),
+                        step.carry()
                 );
                 ingestEventUseCase.ingestForProject("demo", projectId, event);
 
-                if (isLast && step.eventType() != EventType.end) {
+                if (isLast && !step.eventType().isTerminal()) {
                     hopScheduler.schedule(() -> {
                         long endTs = System.currentTimeMillis();
                         CheckpointEvent endEvent = CheckpointEvent.validateAndCreate(
@@ -168,7 +206,7 @@ public class DemoSimulator {
                                 endTs,
                                 endTs,
                                 null,
-                                Map.of("tier", tier, "region", region),
+                                Map.of("tier", tier, "region", region, "synthetic", true),
                                 seqGenerator.getAndIncrement()
                         );
                         ingestEventUseCase.ingestForProject("demo", projectId, endEvent);
@@ -176,11 +214,78 @@ public class DemoSimulator {
                 }
             }, scheduledDelay, TimeUnit.MILLISECONDS);
 
-            cumulativeDelayMs += rng.nextLong(140L, 460L);
+            cumulativeDelayMs += rng.nextLong(180L, 480L);
         }
     }
 
-    private record PlannedHop(String fromKey, String nodeKey, String label, EventType eventType) {
+    public boolean isCommerceGraph(DiagramGraph graph) {
+        if (graph == null || graph.nodes() == null) return false;
+        return graph.nodes().stream().anyMatch(n ->
+                n.key().equals("cart") || n.key().equals("paid") || n.key().equals("visit")
+        );
+    }
+
+    public List<PlannedHop> planCommerceScenario(DiagramGraph graph, ThreadLocalRandom rng, double errorRate) {
+        List<PlannedHop> steps = new ArrayList<>();
+        String avatar = DEMO_AVATARS.get(rng.nextInt(DEMO_AVATARS.size()));
+        String name = DEMO_NAMES.get(rng.nextInt(DEMO_NAMES.size()));
+        String ref = "c-" + rng.nextInt(100, 999);
+        EntityInfo customer = new EntityInfo("customer", ref, name, avatar);
+
+        CarryItem item1 = DEMO_CATALOG.get(rng.nextInt(DEMO_CATALOG.size()));
+        CarryItem item2 = DEMO_CATALOG.get(rng.nextInt(DEMO_CATALOG.size()));
+
+        double roll = rng.nextDouble();
+
+        if (roll < 0.50) {
+            // Buyer (50%): visit -> browse -> product -> cart -> checkout -> payment -> paid (complete)
+            steps.add(new PlannedHop(null, "visit", "enter storefront", EventType.enter, customer, null));
+            steps.add(new PlannedHop("visit", "browse", "browse catalog", EventType.enter));
+            steps.add(new PlannedHop("browse", "product", "view product", EventType.enter));
+            steps.add(new PlannedHop("product", "cart", "add to cart", EventType.enter, null, new CarryPayload(CarryOp.add, List.of(item1, item2))));
+            steps.add(new PlannedHop("cart", "checkout", "proceed to checkout", EventType.enter));
+            steps.add(new PlannedHop("checkout", "payment", "card payment", EventType.enter));
+            steps.add(new PlannedHop("payment", "paid", "payment authorized", EventType.complete));
+        } else if (roll < 0.75) {
+            // Abandoner (25%): visit -> browse -> product -> cart -> abandoned
+            steps.add(new PlannedHop(null, "visit", "enter storefront", EventType.enter, customer, null));
+            steps.add(new PlannedHop("visit", "browse", "browse catalog", EventType.enter));
+            steps.add(new PlannedHop("browse", "product", "view product", EventType.enter));
+            steps.add(new PlannedHop("product", "cart", "add to cart", EventType.enter, null, new CarryPayload(CarryOp.add, List.of(item1))));
+            steps.add(new PlannedHop("cart", "abandoned", "cart abandoned", EventType.abandon));
+        } else if (roll < 0.88) {
+            // Browser (13%): visit -> browse -> product -> browse -> abandoned
+            steps.add(new PlannedHop(null, "visit", "enter storefront", EventType.enter, customer, null));
+            steps.add(new PlannedHop("visit", "browse", "browse catalog", EventType.enter));
+            steps.add(new PlannedHop("browse", "product", "view product", EventType.enter));
+            steps.add(new PlannedHop("product", "browse", "view more", EventType.enter));
+            steps.add(new PlannedHop("browse", "abandoned", "bounce", EventType.abandon));
+        } else {
+            // Hesitant / Payment Fail (12%): visit -> product -> cart -> checkout (removes 1) -> payment -> payment-failed
+            steps.add(new PlannedHop(null, "visit", "enter storefront", EventType.enter, customer, null));
+            steps.add(new PlannedHop("visit", "browse", "browse catalog", EventType.enter));
+            steps.add(new PlannedHop("browse", "product", "view product", EventType.enter));
+            steps.add(new PlannedHop("product", "cart", "add 2 items", EventType.enter, null, new CarryPayload(CarryOp.add, List.of(item1, item2))));
+            steps.add(new PlannedHop("cart", "checkout", "remove 1 item", EventType.enter, null, new CarryPayload(CarryOp.remove, List.of(item2))));
+            steps.add(new PlannedHop("checkout", "payment", "card payment", EventType.enter));
+            boolean cardDeclined = rng.nextDouble() < Math.max(errorRate, 0.50);
+            if (cardDeclined) {
+                steps.add(new PlannedHop("payment", "payment-failed", "insufficient funds", EventType.fail));
+            } else {
+                steps.add(new PlannedHop("payment", "paid", "authorized", EventType.complete));
+            }
+        }
+
+        // Filter steps to nodes that actually exist in the current graph
+        List<PlannedHop> validSteps = new ArrayList<>();
+        String lastValidKey = null;
+        for (PlannedHop step : steps) {
+            if (graph.findNode(step.nodeKey()).isPresent()) {
+                validSteps.add(new PlannedHop(lastValidKey, step.nodeKey(), step.label(), step.eventType(), step.entity(), step.carry()));
+                lastValidKey = step.nodeKey();
+            }
+        }
+        return validSteps.isEmpty() ? steps : validSteps;
     }
 
     private List<PlannedHop> planWalk(
@@ -211,7 +316,6 @@ public class DemoSimulator {
 
             DiagramGraph.DiagramEdge chosenEdge;
             if (current.type() == NodeType.decision && outgoing.size() > 1) {
-                // Pick edge matching tier or random
                 chosenEdge = outgoing.get(rng.nextInt(outgoing.size()));
             } else {
                 chosenEdge = outgoing.get(rng.nextInt(outgoing.size()));

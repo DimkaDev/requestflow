@@ -1,8 +1,15 @@
 import type {
+  AbandonEvent,
+  CarryEvent,
+  CarrySummary,
+  CompleteEvent,
+  CrowdEvent,
   DiagramEdge,
   DiagramGraph,
   DiagramNode,
   EndEvent,
+  EntityInfo,
+  FailEvent,
   HopEvent,
   SpawnEvent,
 } from './models';
@@ -23,16 +30,25 @@ export interface ActiveToken {
   unmapped: boolean;
   status: 'ok' | 'error' | 'warn';
   label?: string | null;
+  shortTag: string;
   attrs?: Record<string, unknown>;
   x: number;
   y: number;
+  angleDeg: number;
+  sourcePoint: Point2D;
+  targetPoint: Point2D;
   trail: Point2D[];
   progress: number;
+  easedProgress: number;
   scale: number;
   opacity: number;
   startedAtMs: number;
   durationMs: number;
   staggerOffsetPx: number;
+  entity?: EntityInfo | null;
+  carry?: CarrySummary | null;
+  avatarIcon?: string | null;
+  carriedIcons?: string[];
 }
 
 export interface NodeVisualEffect {
@@ -56,26 +72,31 @@ export interface GhostEdge {
 }
 
 interface QueuedCommand {
-  kind: 'spawn' | 'hop' | 'end';
+  kind: 'spawn' | 'hop' | 'end' | 'carry' | 'complete' | 'fail' | 'abandon';
   receivedAtMs: number;
   spawn?: SpawnEvent;
   hop?: HopEvent;
   end?: EndEvent;
+  carry?: CarryEvent;
+  complete?: CompleteEvent;
+  fail?: FailEvent;
+  abandon?: AbandonEvent;
 }
 
 export const NODE_CARD_WIDTH = 176;
 export const NODE_CARD_HEIGHT = 64;
+export const BLUEPRINT_CARD_WIDTH = 204;
+export const BLUEPRINT_CARD_HEIGHT = 86;
 
-/**
- * Pure TypeScript Animation & Catch-Up Scheduler (spec section 10.2 & 10.3).
- * Framework-light so it can be unit-tested deterministically and driven by a single requestAnimationFrame loop.
- */
+// Pure TypeScript scheduler so unit tests run without a DOM or browser timer.
 export class AnimationEngine {
   public maxConcurrentTokens = 300;
   public speedMultiplier = 1.0;
   public mode: 'realtime' | 'smooth' = 'realtime';
   public prefersReducedMotion = false;
   public paused = false;
+  public cardWidth = NODE_CARD_WIDTH;
+  public cardHeight = NODE_CARD_HEIGHT;
 
   private graph: DiagramGraph = { schema: 1, direction: 'TB', nodes: [], edges: [] };
   private readonly queues = new Map<string, QueuedCommand[]>();
@@ -105,9 +126,7 @@ export class AnimationEngine {
     this.samplingActive = false;
   }
 
-  /**
-   * Called when tab returns from hidden state: drops queued hops older than 5s (spec section 10.3).
-   */
+  // Drops queued hops older than 5s when the tab returns from background.
   public dropStaleQueuedEvents(nowMs: number, maxAgeMs = 5000): void {
     for (const [key, q] of this.queues.entries()) {
       const filtered = q.filter((item) => nowMs - item.receivedAtMs <= maxAgeMs);
@@ -143,12 +162,103 @@ export class AnimationEngine {
     this.tryAdvanceTrace(key, nowMs);
   }
 
-  /**
-   * Computes the base and catch-up adjusted hop duration per spec section 10.3:
-   * Base duration = clamp(600ms / speed, 250ms, 1500ms).
-   * In `realtime` mode, if queued events accumulate, duration scales down toward 150ms
-   * so a token never lags real time by more than ~2s.
-   */
+  public enqueueCarry(ev: CarryEvent, nowMs: number): void {
+    const key = `${ev.traceId}:${ev.branch || 'main'}`;
+    const active = this.activeTokens.get(key);
+    if (active) {
+      active.carry = ev.carry;
+      active.carriedIcons = this.extractCarriedIcons(ev.carry?.topIcons);
+    } else {
+      const q = this.queues.get(key) ?? [];
+      q.push({ kind: 'carry', receivedAtMs: nowMs, carry: ev });
+      this.queues.set(key, q);
+      this.tryAdvanceTrace(key, nowMs);
+    }
+  }
+
+  public enqueueComplete(ev: CompleteEvent, nowMs: number): void {
+    const key = `${ev.traceId}:${ev.branch || 'main'}`;
+    const q = this.queues.get(key) ?? [];
+    q.push({ kind: 'complete', receivedAtMs: nowMs, complete: ev });
+    this.queues.set(key, q);
+    this.tryAdvanceTrace(key, nowMs);
+  }
+
+  public enqueueFail(ev: FailEvent, nowMs: number): void {
+    const key = `${ev.traceId}:${ev.branch || 'main'}`;
+    const q = this.queues.get(key) ?? [];
+    q.push({ kind: 'fail', receivedAtMs: nowMs, fail: ev });
+    this.queues.set(key, q);
+    this.tryAdvanceTrace(key, nowMs);
+  }
+
+  public enqueueAbandon(ev: AbandonEvent, nowMs: number): void {
+    const key = `${ev.traceId}:${ev.branch || 'main'}`;
+    const q = this.queues.get(key) ?? [];
+    q.push({ kind: 'abandon', receivedAtMs: nowMs, abandon: ev });
+    this.queues.set(key, q);
+    this.tryAdvanceTrace(key, nowMs);
+  }
+
+  public onCrowd(ev: CrowdEvent): void {
+    this.triggerNodeArrivalEffect(ev.node, false, false, Date.now());
+  }
+
+  public resolveAvatarIcon(avatar?: string | null): string {
+    if (!avatar) return '👤';
+    if (/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/u.test(avatar)) {
+      return avatar;
+    }
+    const clean = avatar.toLowerCase().replace(/[-_]/g, '');
+    switch (clean) {
+      case 'cat':
+        return '🐱';
+      case 'fox':
+        return '🦊';
+      case 'bear':
+        return '🐻';
+      case 'dog':
+        return '🐶';
+      case 'rabbit':
+        return '🐰';
+      case 'shopper':
+      case 'customer':
+      case 'buyer':
+        return '🛍️';
+      case 'womantechnologist':
+      case 'woman':
+      case 'developer':
+        return '👩‍💻';
+      case 'manartist':
+      case 'artist':
+      case 'man':
+        return '👨‍🎨';
+      case 'shoppingcart':
+      case 'cart':
+        return '🛒';
+      default:
+        return '👤';
+    }
+  }
+
+  public extractCarriedIcons(topIcons?: string[]): string[] {
+    if (!topIcons || topIcons.length === 0) return [];
+    const iconSlugMap: Record<string, string> = {
+      candle: '🕯️',
+      coffee: '☕',
+      shirt: '👕',
+      tee: '👕',
+      headphones: '🎧',
+      journal: '📚',
+      book: '📚',
+    };
+    return topIcons.map((ic) => {
+      const stripped = ic.replace(/^emoji:/, '').replace(/^lib:/, '').trim();
+      return iconSlugMap[stripped.toLowerCase()] || stripped;
+    });
+  }
+
+  // Scales hop duration down to 150ms under queue backlog so tokens never lag real time by >2s.
   public computeHopDurationMs(queueDepth: number): number {
     const speed = Math.max(0.25, Math.min(4.0, this.speedMultiplier));
     const base = Math.max(250, Math.min(1500, Math.round(600 / speed)));
@@ -167,13 +277,13 @@ export class AnimationEngine {
       return;
     }
 
-    // Update active tokens
     for (const [key, token] of this.activeTokens.entries()) {
       const elapsed = Math.max(0, nowMs - token.startedAtMs);
       const rawProgress = token.durationMs > 0 ? Math.min(1, elapsed / token.durationMs) : 1;
       token.progress = rawProgress;
 
       if (token.phase === 'spawning') {
+        token.easedProgress = rawProgress;
         token.scale = 0.4 + 0.6 * this.easeOutBack(rawProgress);
         token.opacity = rawProgress;
         if (rawProgress >= 1) {
@@ -182,6 +292,7 @@ export class AnimationEngine {
         }
       } else if (token.phase === 'traveling') {
         const eased = this.prefersReducedMotion ? 1 : this.easeInOutCubic(rawProgress);
+        token.easedProgress = eased;
         const pos = this.interpolateEdgePosition(
           token.fromNode!,
           token.toNode,
@@ -190,8 +301,10 @@ export class AnimationEngine {
         );
         token.x = pos.x;
         token.y = pos.y;
+        token.angleDeg = this.interpolateEdgeTangentAngle(token.fromNode!, token.toNode, eased);
+        token.sourcePoint = this.getNodeOutputPort(token.fromNode!);
+        token.targetPoint = this.getNodeInputPort(token.toNode);
 
-        // Build fading trail points along the recently traversed segment
         if (!this.prefersReducedMotion) {
           const trailPoints: Point2D[] = [];
           const steps = 6;
@@ -212,12 +325,12 @@ export class AnimationEngine {
         }
 
         if (rawProgress >= 1) {
-          // Arrival at target node: trigger pulse or error flash/shake
           this.triggerNodeArrivalEffect(token.toNode, token.status === 'error', false, nowMs);
           this.activeTokens.delete(key);
           this.tryAdvanceTrace(key, nowMs);
         }
       } else if (token.phase === 'fading') {
+        token.easedProgress = rawProgress;
         token.scale = Math.max(0.1, 1 - rawProgress * 0.8);
         token.opacity = Math.max(0, 1 - rawProgress);
         if (rawProgress >= 1) {
@@ -227,14 +340,12 @@ export class AnimationEngine {
       }
     }
 
-    // Advance any idle queues
     for (const key of Array.from(this.queues.keys())) {
       if (!this.activeTokens.has(key)) {
         this.tryAdvanceTrace(key, nowMs);
       }
     }
 
-    // Update node effects
     for (const [nodeKey, eff] of this.nodeEffects.entries()) {
       if (nowMs >= eff.expiresAtMs) {
         this.nodeEffects.delete(nodeKey);
@@ -250,7 +361,6 @@ export class AnimationEngine {
       }
     }
 
-    // Expire ghost edges
     for (const [id, ghost] of this.ghostEdges.entries()) {
       if (nowMs >= ghost.expiresAtMs) {
         this.ghostEdges.delete(id);
@@ -296,6 +406,7 @@ export class AnimationEngine {
       const ev = next.spawn;
       const center = this.getNodeCenter(ev.node);
       const duration = this.prefersReducedMotion ? 80 : 200;
+      const status = ev.status === 'error' ? 'error' : 'ok';
       this.activeTokens.set(key, {
         id: `tok_${ev.traceId}_${ev.branch}`,
         traceId: ev.traceId,
@@ -303,24 +414,34 @@ export class AnimationEngine {
         phase: 'spawning',
         toNode: ev.node,
         unmapped: false,
-        status: ev.status === 'error' ? 'error' : 'ok',
+        status,
         label: ev.label,
+        shortTag: this.computeShortTag(ev.traceId, ev.label, status),
         attrs: ev.attrs,
         x: center.x,
         y: center.y,
+        angleDeg: 90,
+        sourcePoint: center,
+        targetPoint: center,
         trail: [],
         progress: 0,
+        easedProgress: 0,
         scale: 0.4,
         opacity: 0,
         startedAtMs: nowMs,
         durationMs: duration,
         staggerOffsetPx: 0,
+        entity: ev.entity ?? null,
+        carry: ev.carry ?? null,
+        avatarIcon: this.resolveAvatarIcon(ev.entity?.avatar),
+        carriedIcons: this.extractCarriedIcons(ev.carry?.topIcons),
       });
       this.triggerNodeArrivalEffect(ev.node, ev.status === 'error', false, nowMs);
     } else if (next.kind === 'hop' && next.hop) {
       const ev = next.hop;
       const duration = this.computeHopDurationMs(q.length);
       const startPos = this.getNodeOutputPort(ev.from);
+      const endPos = this.getNodeInputPort(ev.to);
       const stagger = ((this.edgeOccupancyCounter++ % 5) - 2) * 3.5;
 
       const edgeObj = this.findEdge(ev.from, ev.to);
@@ -335,7 +456,6 @@ export class AnimationEngine {
       }
 
       if (isUnmapped) {
-        const endPos = this.getNodeInputPort(ev.to);
         const ghostId = `ghost_${ev.from}_${ev.to}`;
         this.ghostEdges.set(ghostId, {
           id: ghostId,
@@ -349,6 +469,7 @@ export class AnimationEngine {
         });
       }
 
+      const effectiveLabel = ev.label ?? edgeObj?.label ?? null;
       this.activeTokens.set(key, {
         id: `tok_${ev.traceId}_${ev.branch}`,
         traceId: ev.traceId,
@@ -359,17 +480,26 @@ export class AnimationEngine {
         edgeId: ev.edgeId ?? edgeObj?.id ?? null,
         unmapped: isUnmapped,
         status: tokenStatus,
-        label: ev.label,
+        label: effectiveLabel,
+        shortTag: this.computeShortTag(ev.traceId, effectiveLabel, tokenStatus),
         attrs: ev.attrs,
         x: startPos.x,
         y: startPos.y,
+        angleDeg: this.interpolateEdgeTangentAngle(ev.from, ev.to, 0),
+        sourcePoint: startPos,
+        targetPoint: endPos,
         trail: [],
         progress: 0,
+        easedProgress: 0,
         scale: 1,
         opacity: 1,
         startedAtMs: nowMs,
         durationMs: duration,
         staggerOffsetPx: stagger,
+        entity: ev.entity ?? null,
+        carry: ev.carry ?? null,
+        avatarIcon: this.resolveAvatarIcon(ev.entity?.avatar),
+        carriedIcons: this.extractCarriedIcons(ev.carry?.topIcons),
       });
     } else if (next.kind === 'end' && next.end) {
       const ev = next.end;
@@ -383,10 +513,15 @@ export class AnimationEngine {
         toNode: ev.node,
         unmapped: false,
         status: 'ok',
+        shortTag: 'DONE',
         x: center.x,
         y: center.y,
+        angleDeg: 90,
+        sourcePoint: center,
+        targetPoint: center,
         trail: [],
         progress: 0,
+        easedProgress: 0,
         scale: 1,
         opacity: 1,
         startedAtMs: nowMs,
@@ -394,7 +529,114 @@ export class AnimationEngine {
         staggerOffsetPx: 0,
       });
       this.triggerNodeArrivalEffect(ev.node, false, true, nowMs);
+    } else if (next.kind === 'complete' && next.complete) {
+      const ev = next.complete;
+      const center = this.getNodeCenter(ev.node);
+      const duration = this.prefersReducedMotion ? 80 : 350;
+      this.triggerNodeArrivalEffect(ev.node, false, true, nowMs);
+      this.activeTokens.set(key, {
+        id: `tok_${ev.traceId}_${ev.branch}`,
+        traceId: ev.traceId,
+        branch: ev.branch || 'main',
+        phase: 'fading',
+        toNode: ev.node,
+        unmapped: false,
+        status: 'ok',
+        shortTag: 'PAID',
+        x: center.x,
+        y: center.y,
+        angleDeg: 90,
+        sourcePoint: center,
+        targetPoint: center,
+        trail: [],
+        progress: 0,
+        easedProgress: 0,
+        scale: 1.25,
+        opacity: 1,
+        startedAtMs: nowMs,
+        durationMs: duration,
+        staggerOffsetPx: 0,
+        entity: ev.entity ?? null,
+        carry: ev.carry ?? null,
+        avatarIcon: this.resolveAvatarIcon(ev.entity?.avatar),
+        carriedIcons: this.extractCarriedIcons(ev.carry?.topIcons),
+      });
+    } else if (next.kind === 'fail' && next.fail) {
+      const ev = next.fail;
+      const center = this.getNodeCenter(ev.node);
+      const duration = this.prefersReducedMotion ? 80 : 300;
+      this.triggerNodeArrivalEffect(ev.node, true, false, nowMs);
+      this.activeTokens.set(key, {
+        id: `tok_${ev.traceId}_${ev.branch}`,
+        traceId: ev.traceId,
+        branch: ev.branch || 'main',
+        phase: 'fading',
+        toNode: ev.node,
+        unmapped: false,
+        status: 'error',
+        shortTag: 'FAIL',
+        x: center.x,
+        y: center.y,
+        angleDeg: 90,
+        sourcePoint: center,
+        targetPoint: center,
+        trail: [],
+        progress: 0,
+        easedProgress: 0,
+        scale: 1,
+        opacity: 1,
+        startedAtMs: nowMs,
+        durationMs: duration,
+        staggerOffsetPx: 0,
+        entity: ev.entity ?? null,
+        avatarIcon: this.resolveAvatarIcon(ev.entity?.avatar),
+      });
+    } else if (next.kind === 'abandon' && next.abandon) {
+      const ev = next.abandon;
+      const center = this.getNodeCenter(ev.node);
+      const duration = this.prefersReducedMotion ? 80 : 300;
+      this.activeTokens.set(key, {
+        id: `tok_${ev.traceId}_${ev.branch}`,
+        traceId: ev.traceId,
+        branch: ev.branch || 'main',
+        phase: 'fading',
+        toNode: ev.node,
+        unmapped: false,
+        status: 'warn',
+        shortTag: 'LEFT',
+        x: center.x,
+        y: center.y,
+        angleDeg: 90,
+        sourcePoint: center,
+        targetPoint: center,
+        trail: [],
+        progress: 0,
+        easedProgress: 0,
+        scale: 0.8,
+        opacity: 0.7,
+        startedAtMs: nowMs,
+        durationMs: duration,
+        staggerOffsetPx: 0,
+        entity: ev.entity ?? null,
+        carry: ev.carry ?? null,
+        avatarIcon: this.resolveAvatarIcon(ev.entity?.avatar),
+      });
     }
+  }
+
+  private computeShortTag(
+    traceId: string,
+    label?: string | null,
+    status?: 'ok' | 'error' | 'warn'
+  ): string {
+    if (status === 'error') {
+      return label ? label.slice(0, 7).toUpperCase() : 'ERR 500';
+    }
+    if (label && label.trim().length > 0) {
+      return label.trim().slice(0, 8);
+    }
+    const clean = traceId.replace(/[^a-zA-Z0-9]/g, '');
+    return `#${clean.slice(-4).toUpperCase() || 'REQ'}`;
   }
 
   private triggerNodeArrivalEffect(
@@ -419,8 +661,8 @@ export class AnimationEngine {
       return { x: 0, y: 0 };
     }
     return {
-      x: node.x + NODE_CARD_WIDTH / 2,
-      y: node.y + NODE_CARD_HEIGHT / 2,
+      x: node.x + this.cardWidth / 2,
+      y: node.y + this.cardHeight / 2,
     };
   }
 
@@ -430,8 +672,8 @@ export class AnimationEngine {
       return { x: 0, y: 0 };
     }
     return {
-      x: node.x + NODE_CARD_WIDTH / 2,
-      y: node.y + NODE_CARD_HEIGHT,
+      x: node.x + this.cardWidth / 2,
+      y: node.y + this.cardHeight,
     };
   }
 
@@ -441,23 +683,22 @@ export class AnimationEngine {
       return { x: 0, y: 0 };
     }
     return {
-      x: node.x + NODE_CARD_WIDTH / 2,
+      x: node.x + this.cardWidth / 2,
       y: node.y,
     };
   }
 
-  /**
-   * Builds a smooth cubic Bezier SVG path string between two nodes.
-   */
-  public buildEdgeSvgPath(fromKey: string, toKey: string): string {
+  public buildEdgeSvgPath(fromKey: string, toKey: string, staggerOffsetPx = 0): string {
     const p0 = this.getNodeOutputPort(fromKey);
     const p3 = this.getNodeInputPort(toKey);
     const dy = Math.max(48, Math.abs(p3.y - p0.y) * 0.5);
-    const c1x = p0.x;
+    const sx = p0.x + staggerOffsetPx;
+    const ex = p3.x + staggerOffsetPx;
+    const c1x = sx;
     const c1y = p0.y + dy;
-    const c2x = p3.x;
+    const c2x = ex;
     const c2y = p3.y - dy;
-    return `M ${p0.x} ${p0.y} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p3.x} ${p3.y}`;
+    return `M ${sx} ${p0.y} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${ex} ${p3.y}`;
   }
 
   public interpolateEdgePosition(
@@ -488,6 +729,30 @@ export class AnimationEngine {
       uuu * p0.y + 3 * uu * t * p1.y + 3 * u * tt * p2.y + ttt * p3.y;
 
     return { x, y };
+  }
+
+  // First derivative of cubic Bezier B'(t) so packet capsules and chevrons align with the curve.
+  public interpolateEdgeTangentAngle(fromKey: string, toKey: string, t: number): number {
+    const p0 = this.getNodeOutputPort(fromKey);
+    const p3 = this.getNodeInputPort(toKey);
+    const dy = Math.max(48, Math.abs(p3.y - p0.y) * 0.5);
+    const p1 = { x: p0.x, y: p0.y + dy };
+    const p2 = { x: p3.x, y: p3.y - dy };
+
+    const u = 1 - t;
+    const dx =
+      3 * u * u * (p1.x - p0.x) +
+      6 * u * t * (p2.x - p1.x) +
+      3 * t * t * (p3.x - p2.x);
+    const dY =
+      3 * u * u * (p1.y - p0.y) +
+      6 * u * t * (p2.y - p1.y) +
+      3 * t * t * (p3.y - p2.y);
+
+    if (dx === 0 && dY === 0) {
+      return 90;
+    }
+    return (Math.atan2(dY, dx) * 180) / Math.PI;
   }
 
   private findEdge(from: string, to: string): DiagramEdge | undefined {

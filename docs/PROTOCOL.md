@@ -1,8 +1,8 @@
-# FlowTrace Ingestion & Streaming Protocol Specification (v1)
+# FlowTrace Ingestion & Streaming Protocol Specification (v1.1)
 
-This document is the normative protocol specification for FlowTrace (mirroring sections 5, 6, and 7 of `spec.md`).
+This document is the normative protocol specification for FlowTrace (mirroring sections 5, 6, and 7 of `spec.md` and `docs/TASKS_v2.md`).
 
-## 1. Event Schema (v1)
+## 1. Event Schema (v1.1)
 
 JSON schema file: [`docs/event.schema.json`](./event.schema.json)
 
@@ -11,14 +11,33 @@ JSON schema file: [`docs/event.schema.json`](./event.schema.json)
   "v": 1,
   "key": "ft_live_xxx",
   "traceId": "0194f1c0-7b52-7c1e-9a3e-5f0d2b6c8a11",
-  "node": "service-a",
-  "from": "load-balancer",
+  "node": "cart",
+  "from": "product-page",
   "type": "enter",
   "branch": "main",
   "ts": 1760000000000,
   "label": "route=A",
   "attrs": { "tier": "pro", "region": "eu" },
-  "seq": 42
+  "seq": 42,
+  "entity": {
+    "kind": "customer",
+    "ref": "c-1042",
+    "label": "Visitor",
+    "avatar": "fox"
+  },
+  "carry": {
+    "op": "add",
+    "items": [
+      {
+        "sku": "candle-lavender",
+        "label": "Lavender candle",
+        "icon": "emoji:🕯️",
+        "qty": 1,
+        "price": 12.50,
+        "currency": "EUR"
+      }
+    ]
+  }
 }
 ```
 
@@ -28,12 +47,22 @@ JSON schema file: [`docs/event.schema.json`](./event.schema.json)
 - `traceId`: **required** valid UUID string.
 - `node`: **required** node key matching `^[a-z0-9-_.]{1,64}$`.
 - `from`: optional source node key matching `^[a-z0-9-_.]{1,64}$`.
-- `type`: optional enum `enter` (default) | `error` | `end`.
+- `type`: optional enum:
+  - Technical: `enter` (default) | `error` | `end`.
+  - Business terminal (v1.1): `complete` (order placed/paid) | `fail` (failed transaction) | `abandon` (cart/funnel abandoned).
 - `branch`: optional string (1..64 chars), default `main`.
 - `ts`: optional client epoch milliseconds (number). Server receive timestamp is authoritative for ordering.
 - `label`: optional string, max 40 chars.
 - `attrs`: optional flat map of `≤ 10` keys; values must be string (`≤ 100` chars), number, or boolean.
 - `seq`: optional integer sequence number (used for idempotency within 10s and TCP ACK/NACK).
+- `entity`: optional object representing an identifiable persona (e.g. shopper/visitor). If omitted, the UI renders the classic anonymous dot.
+  - `kind`: string (1..32 chars), e.g. `"customer"`, `"agent"`, `"guest"`.
+  - `ref`: optional client identifier (stored hashed with project salt).
+  - `label`: optional display label (≤ 40 chars).
+  - `avatar`: optional avatar key (e.g. `"fox"`, `"cat"`, `"bear"`, `"dog"`, `"rabbit"`, `"shopper"`).
+- `carry`: optional payload representing items carried by the entity through business nodes.
+  - `op`: required enum `set` | `add` | `remove` | `clear`.
+  - `items`: array of 1..20 items (`label` ≤ 60 chars, `icon` ≤ 200 chars). Server limits total active carried items per trace to 50. Total sum and quantity are maintained server-side.
 
 ## 2. Ingestion Transports
 

@@ -118,6 +118,12 @@ public class IngestHttpResource {
                     .build();
         }
 
+        if (result.accepted() == 0 && !finalRejected.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(Map.of("accepted", 0, "rejected", finalRejected))
+                    .build();
+        }
+
         return Response.status(Response.Status.ACCEPTED)
                 .entity(Map.of("accepted", result.accepted(), "rejected", finalRejected))
                 .build();
@@ -153,7 +159,40 @@ public class IngestHttpResource {
                 attrs = objectMapper.convertValue(node.get("attrs"), new TypeReference<>() {
                 });
             }
-            return new IngestEventUseCase.RawEventInput(v, key, traceId, targetNode, from, type, branch, ts, label, attrs, seq);
+
+            dev.flowtrace.domain.EntityInfo entity = null;
+            if (node.hasNonNull("entity") && node.get("entity").isObject()) {
+                JsonNode en = node.get("entity");
+                String kind = en.hasNonNull("kind") ? en.get("kind").asText() : null;
+                String ref = en.hasNonNull("ref") ? en.get("ref").asText() : null;
+                String elabel = en.hasNonNull("label") ? en.get("label").asText() : null;
+                String avatar = en.hasNonNull("avatar") ? en.get("avatar").asText() : null;
+                entity = new dev.flowtrace.domain.EntityInfo(kind, ref, elabel, avatar);
+            }
+
+            dev.flowtrace.domain.CarryPayload carry = null;
+            if (node.hasNonNull("carry") && node.get("carry").isObject()) {
+                JsonNode cn = node.get("carry");
+                dev.flowtrace.domain.CarryOp op = cn.hasNonNull("op")
+                        ? dev.flowtrace.domain.CarryOp.fromString(cn.get("op").asText())
+                        : null;
+                List<dev.flowtrace.domain.CarryItem> items = new ArrayList<>();
+                if (cn.hasNonNull("items") && cn.get("items").isArray()) {
+                    for (JsonNode in : cn.get("items")) {
+                        String sku = in.hasNonNull("sku") ? in.get("sku").asText() : null;
+                        String ilabel = in.hasNonNull("label") ? in.get("label").asText() : null;
+                        String icon = in.hasNonNull("icon") ? in.get("icon").asText() : null;
+                        String image = in.hasNonNull("image") ? in.get("image").asText() : null;
+                        int qty = in.hasNonNull("qty") && in.get("qty").isNumber() ? in.get("qty").asInt() : 1;
+                        double price = in.hasNonNull("price") && in.get("price").isNumber() ? in.get("price").asDouble() : 0.0;
+                        String currency = in.hasNonNull("currency") ? in.get("currency").asText() : "EUR";
+                        items.add(new dev.flowtrace.domain.CarryItem(sku, ilabel, icon, image, qty, price, currency));
+                    }
+                }
+                carry = new dev.flowtrace.domain.CarryPayload(op, items);
+            }
+
+            return new IngestEventUseCase.RawEventInput(v, key, traceId, targetNode, from, type, branch, ts, label, attrs, seq, entity, carry);
         } catch (Exception e) {
             return null;
         }

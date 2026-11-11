@@ -30,7 +30,7 @@
     },
     "type": {
       "type": "string",
-      "enum": ["enter", "error", "end"],
+      "enum": ["enter", "error", "end", "complete", "fail", "abandon"],
       "default": "enter"
     },
     "branch": {
@@ -60,6 +60,45 @@
     },
     "seq": {
       "type": "integer"
+    },
+    "entity": {
+      "type": "object",
+      "properties": {
+        "kind": { "type": "string", "maxLength": 32 },
+        "ref": { "type": "string", "maxLength": 128 },
+        "label": { "type": "string", "maxLength": 40 },
+        "avatar": { "type": "string", "maxLength": 32 }
+      },
+      "additionalProperties": false
+    },
+    "carry": {
+      "type": "object",
+      "required": ["op"],
+      "properties": {
+        "op": {
+          "type": "string",
+          "enum": ["set", "add", "remove", "clear"]
+        },
+        "items": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "object",
+            "required": ["sku"],
+            "properties": {
+              "sku": { "type": "string", "maxLength": 64 },
+              "label": { "type": "string", "maxLength": 60 },
+              "icon": { "type": "string", "maxLength": 200 },
+              "image": { "type": "string", "maxLength": 512 },
+              "qty": { "type": "integer", "minimum": 1, "default": 1 },
+              "price": { "type": "number", "minimum": 0 },
+              "currency": { "type": "string", "maxLength": 8 }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
     }
   }
 }

@@ -1,6 +1,8 @@
 package dev.flowtrace.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -9,13 +11,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Pure domain logic for Hop Resolution (spec section 6.1).
- * Maintains bounded in-memory TraceState (30s idle expiry) and idempotency cache (10s TTL).
+ * Pure domain logic for Hop Resolution (spec section 6.1 & v1.1).
+ * Maintains bounded in-memory TraceState (30s idle expiry), idempotency cache (10s TTL),
+ * and carried items state (ops set/add/remove/clear, limits, totals).
  */
 public class HopResolver {
 
     public static final long DEFAULT_IDLE_TIMEOUT_MS = 30_000L;
     public static final long IDEMPOTENCY_WINDOW_MS = 10_000L;
+    public static final int MAX_CARRIED_ITEMS_PER_TRACE = 50;
 
     public record TraceBranchKey(UUID projectId, String traceId, String branch) {
     }
@@ -23,7 +27,15 @@ public class HopResolver {
     public record IdempotencyKey(UUID projectId, String traceId, String branch, long seq) {
     }
 
-    public record TraceStateEntry(String lastNode, long updatedAtMs) {
+    public record TraceStateEntry(
+            String lastNode,
+            long updatedAtMs,
+            EntityInfo entity,
+            Map<String, CarryItem> carriedItems
+    ) {
+        public TraceStateEntry(String lastNode, long updatedAtMs) {
+            this(lastNode, updatedAtMs, null, Collections.emptyMap());
+        }
     }
 
     public record ResolutionResult(
@@ -48,8 +60,8 @@ public class HopResolver {
     }
 
     /**
-     * Resolves an incoming CheckpointEvent into UI events (spawn, hop, end, diagram_patch)
-     * according to spec section 6.1.
+     * Resolves an incoming CheckpointEvent into UI events (spawn, hop, end, complete, fail, abandon, carry, diagram_patch)
+     * according to spec section 6.1 & v1.1.
      */
     public synchronized ResolutionResult resolve(
             UUID projectId,
@@ -77,14 +89,28 @@ public class HopResolver {
             existingState = null;
         }
 
+        // Entity & Carry state resolution
+        EntityInfo currentEntity = event.entity() != null
+                ? event.entity()
+                : (existingState != null ? existingState.entity() : null);
+
+        Map<String, CarryItem> baseItems = (existingState != null && existingState.carriedItems() != null)
+                ? existingState.carriedItems()
+                : Collections.emptyMap();
+        Map<String, CarryItem> updatedItems = event.carry() != null
+                ? applyCarry(baseItems, event.carry())
+                : baseItems;
+        CarrySummary carrySummary = computeSummary(updatedItems);
+
         String fromNode = null;
         // Rule 1: If `from` is present -> hop `from -> node`
         if (event.from() != null && !event.from().isBlank()) {
             fromNode = event.from();
         } else if (existingState != null && existingState.lastNode() != null) {
             // Rule 2: Else if TraceState has a last node -> hop `last -> node`
-            // Avoid self-loop if end event is sent right after entering the same node without explicit `from`
-            if (!(event.type() == EventType.end && existingState.lastNode().equals(event.node()))) {
+            // Avoid self-loop if terminal event or in-place carry update is sent right after entering
+            boolean isTerminal = event.type().isTerminal();
+            if (!(isTerminal && existingState.lastNode().equals(event.node()))) {
                 fromNode = existingState.lastNode();
             }
         }
@@ -93,6 +119,20 @@ public class HopResolver {
         boolean diagramModified = false;
         List<UiEvent.PatchOp> patchOps = new ArrayList<>();
         List<UiEvent> emitted = new ArrayList<>();
+
+        // In-place carry update at existing node without movement
+        if (fromNode != null && fromNode.equals(event.node()) && event.type() == EventType.enter && event.carry() != null) {
+            emitted.add(new UiEvent.CarryEvent(
+                    event.traceId(),
+                    event.branch(),
+                    event.node(),
+                    event.carry().op(),
+                    carrySummary,
+                    now
+            ));
+            traceStates.put(stateKey, new TraceStateEntry(event.node(), now, currentEntity, updatedItems));
+            return new ResolutionResult(false, fromNode, List.copyOf(emitted), null);
+        }
 
         // Rule 6: Check if `from` (when present) and `node` exist in diagram
         if (fromNode != null && workingDiagram.findNode(fromNode).isEmpty() && autoDiscover) {
@@ -120,7 +160,9 @@ public class HopResolver {
                     status,
                     event.label(),
                     event.attrs(),
-                    now
+                    now,
+                    currentEntity,
+                    carrySummary
             ));
         } else {
             // Rule 5: Check if edge `from -> node` exists
@@ -162,7 +204,9 @@ public class HopResolver {
                     event.label(),
                     event.attrs(),
                     now,
-                    event.seq()
+                    event.seq(),
+                    currentEntity,
+                    carrySummary
             ));
         }
 
@@ -170,17 +214,21 @@ public class HopResolver {
             emitted.add(0, new UiEvent.DiagramPatchEvent(List.copyOf(patchOps)));
         }
 
-        // Rule 4 & 8: Update TraceState or emit end
+        // Rule 4, 8 & v1.1 Terminal events: Update TraceState or emit terminal outcome
         if (event.type() == EventType.end) {
             traceStates.remove(stateKey);
-            emitted.add(new UiEvent.EndEvent(
-                    event.traceId(),
-                    event.branch(),
-                    event.node(),
-                    now
-            ));
+            emitted.add(new UiEvent.EndEvent(event.traceId(), event.branch(), event.node(), now, "end"));
+        } else if (event.type() == EventType.complete) {
+            traceStates.remove(stateKey);
+            emitted.add(new UiEvent.CompleteEvent(event.traceId(), event.branch(), event.node(), currentEntity, carrySummary, now));
+        } else if (event.type() == EventType.fail) {
+            traceStates.remove(stateKey);
+            emitted.add(new UiEvent.FailEvent(event.traceId(), event.branch(), event.node(), currentEntity, event.label() != null ? event.label() : "error", now));
+        } else if (event.type() == EventType.abandon) {
+            traceStates.remove(stateKey);
+            emitted.add(new UiEvent.AbandonEvent(event.traceId(), event.branch(), event.node(), currentEntity, carrySummary, now));
         } else {
-            traceStates.put(stateKey, new TraceStateEntry(event.node(), now));
+            traceStates.put(stateKey, new TraceStateEntry(event.node(), now, currentEntity, updatedItems));
         }
 
         return new ResolutionResult(
@@ -204,7 +252,7 @@ public class HopResolver {
                 TraceBranchKey key = entry.getKey();
                 expiredEvents.add(Map.entry(
                         key.projectId(),
-                        new UiEvent.EndEvent(key.traceId(), key.branch(), entry.getValue().lastNode(), nowMs)
+                        new UiEvent.EndEvent(key.traceId(), key.branch(), entry.getValue().lastNode(), nowMs, "idle_timeout")
                 ));
             }
         }
@@ -220,11 +268,81 @@ public class HopResolver {
                 list.add(new UiEvent.ActiveTracePosition(
                         entry.getKey().traceId(),
                         entry.getKey().branch(),
-                        entry.getValue().lastNode()
+                        entry.getValue().lastNode(),
+                        entry.getValue().entity(),
+                        computeSummary(entry.getValue().carriedItems())
                 ));
             }
         }
         return list;
+    }
+
+    private Map<String, CarryItem> applyCarry(Map<String, CarryItem> current, CarryPayload payload) {
+        Map<String, CarryItem> updated = new LinkedHashMap<>(current);
+        if (payload == null || payload.op() == null) {
+            return Collections.unmodifiableMap(updated);
+        }
+        switch (payload.op()) {
+            case clear -> updated.clear();
+            case set -> {
+                updated.clear();
+                if (payload.items() != null) {
+                    for (CarryItem item : payload.items()) {
+                        if (updated.size() >= MAX_CARRIED_ITEMS_PER_TRACE) break;
+                        updated.put(item.sku(), item);
+                    }
+                }
+            }
+            case add -> {
+                if (payload.items() != null) {
+                    for (CarryItem item : payload.items()) {
+                        CarryItem existing = updated.get(item.sku());
+                        if (existing != null) {
+                            updated.put(item.sku(), existing.withQty(existing.qty() + item.qty()));
+                        } else if (updated.size() < MAX_CARRIED_ITEMS_PER_TRACE) {
+                            updated.put(item.sku(), item);
+                        }
+                    }
+                }
+            }
+            case remove -> {
+                if (payload.items() != null) {
+                    for (CarryItem item : payload.items()) {
+                        CarryItem existing = updated.get(item.sku());
+                        if (existing != null) {
+                            int remaining = existing.qty() - item.qty();
+                            if (remaining > 0) {
+                                updated.put(item.sku(), existing.withQty(remaining));
+                            } else {
+                                updated.remove(item.sku());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return Collections.unmodifiableMap(updated);
+    }
+
+    public CarrySummary computeSummary(Map<String, CarryItem> items) {
+        if (items == null || items.isEmpty()) {
+            return CarrySummary.empty();
+        }
+        int totalQty = 0;
+        double totalPrice = 0.0;
+        String currency = "EUR";
+        List<String> icons = new ArrayList<>();
+        for (CarryItem item : items.values()) {
+            totalQty += item.qty();
+            totalPrice += (item.qty() * item.price());
+            if (item.currency() != null && !item.currency().isBlank()) {
+                currency = item.currency();
+            }
+            if (item.icon() != null && !item.icon().isBlank() && icons.size() < 3 && !icons.contains(item.icon())) {
+                icons.add(item.icon());
+            }
+        }
+        return new CarrySummary(totalQty, Math.round(totalPrice * 100.0) / 100.0, currency, List.copyOf(icons));
     }
 
     private void evictExpired(long nowMs) {

@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.flowtrace.adapter.in.tcp.TcpIngestServer;
 import dev.flowtrace.adapter.in.udp.UdpIngestServer;
+import dev.flowtrace.application.OrganizationService;
 import dev.flowtrace.application.ProjectService;
+import dev.flowtrace.domain.ApiKeyCrypto;
+import dev.flowtrace.domain.DiagramGraph;
 import dev.flowtrace.domain.UuidV7;
 import io.quarkus.test.common.http.TestHTTPResource;
 import io.quarkus.test.junit.QuarkusTest;
@@ -23,7 +26,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
+import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -35,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Integration tests covering HTTP, UDP, TCP ingest, WebSocket live streaming,
- * trace persistence, and multi-tenant isolation (spec section 16).
+ * trace persistence, multi-tenant isolation, and Epic 1 Organizations/Workspaces/RBAC.
  */
 @QuarkusTest
 class FlowTraceIntegrationTest {
@@ -52,6 +55,12 @@ class FlowTraceIntegrationTest {
     @Inject
     ObjectMapper objectMapper;
 
+    @Inject
+    OrganizationService organizationService;
+
+    @Inject
+    dev.flowtrace.application.port.out.ProjectRepository projectRepository;
+
     @TestHTTPResource("/")
     URI baseUri;
 
@@ -66,6 +75,7 @@ class FlowTraceIntegrationTest {
 
     @Test
     void httpUdpAndTcpIngestDeliverHopsOverWebSocketAndPersistTraces() throws Exception {
+        projectRepository.saveDiagramVersion(ProjectService.SEED_PROJECT_ID, DiagramGraph.defaultSampleDiagram());
         String projectId = ProjectService.SEED_PROJECT_ID.toString();
         String apiKey = ProjectService.SEED_API_KEY;
         String traceId = UuidV7.generateString();
@@ -185,6 +195,283 @@ class FlowTraceIntegrationTest {
                 .when().get("/api/v1/projects/" + projectId + "/keys")
                 .then()
                 .statusCode(403);
+    }
+
+    @Test
+    void epic1OrganizationsWorkspacesInvitationsAndRbacMatrixWorkEndToEnd() {
+        // 1. Owner creates an organization
+        String orgId = RestAssured.given()
+                .header("X-Debug-User-Id", "org-owner")
+                .contentType(ContentType.JSON)
+                .body(Map.of("name", "Acme Fintech", "slug", "acme-fintech", "billingEmail", "finance@acme.io"))
+                .when().post("/api/v1/organizations")
+                .then()
+                .statusCode(201)
+                .body("organization.name", equalTo("Acme Fintech"))
+                .body("myRole", equalTo("OWNER"))
+                .extract().path("organization.id");
+
+        // 2. Owner creates a secondary Staging workspace
+        String stagingWsId = RestAssured.given()
+                .header("X-Debug-User-Id", "org-owner")
+                .contentType(ContentType.JSON)
+                .body(Map.of("name", "Staging", "slug", "staging"))
+                .when().post("/api/v1/organizations/" + orgId + "/workspaces")
+                .then()
+                .statusCode(201)
+                .body("slug", equalTo("staging"))
+                .extract().path("id");
+
+        // 3. Owner creates a project inside Acme Fintech (Staging workspace)
+        String projectId = RestAssured.given()
+                .header("X-Debug-User-Id", "org-owner")
+                .contentType(ContentType.JSON)
+                .body(Map.of("name", "Payment Gateway", "organizationId", orgId, "workspaceId", stagingWsId))
+                .when().post("/api/v1/projects")
+                .then()
+                .statusCode(201)
+                .body("organizationId", equalTo(orgId))
+                .body("workspaceId", equalTo(stagingWsId))
+                .extract().path("id");
+
+        // 4. Owner invites a VIEWER and a BILLING_ADMIN (E1-Step-5: token_hash stored, plaintext returned once)
+        io.restassured.response.Response viewerInviteRes = RestAssured.given()
+                .header("X-Debug-User-Id", "org-owner")
+                .contentType(ContentType.JSON)
+                .body(Map.of("email", "viewer@acme.io", "role", "VIEWER"))
+                .when().post("/api/v1/organizations/" + orgId + "/invitations")
+                .then()
+                .statusCode(201)
+                .body("role", equalTo("VIEWER"))
+                .body("token", startsWith("ft_inv_"))
+                .body("tokenPrefix", startsWith("ft_inv_"))
+                .extract().response();
+
+        String viewerInviteId = viewerInviteRes.path("id");
+        String initialViewerToken = viewerInviteRes.path("token");
+        String initialViewerHash = viewerInviteRes.path("tokenHash");
+        assertEquals(ApiKeyCrypto.sha256Hex(initialViewerToken), initialViewerHash);
+
+        // Listing invitations must NOT expose the plaintext token from DB
+        RestAssured.given()
+                .header("X-Debug-User-Id", "org-owner")
+                .when().get("/api/v1/organizations/" + orgId + "/invitations")
+                .then()
+                .statusCode(200)
+                .body("[0].token", nullValue())
+                .body("[0].tokenPrefix", notNullValue())
+                .body("[0].tokenHash", equalTo(initialViewerHash));
+
+        // E1-Step-5: Resend invitation rotates token_hash and invalidates previous token
+        String viewerToken = RestAssured.given()
+                .header("X-Debug-User-Id", "org-owner")
+                .contentType(ContentType.JSON)
+                .body(Map.of("baseAppUrl", "http://localhost:4200"))
+                .when().post("/api/v1/organizations/" + orgId + "/invitations/" + viewerInviteId + "/resend")
+                .then()
+                .statusCode(200)
+                .body("token", startsWith("ft_inv_"))
+                .extract().path("token");
+
+        assertNotEquals(initialViewerToken, viewerToken);
+
+        // Old token must now be rejected (404)
+        RestAssured.given()
+                .header("X-Debug-User-Id", "viewer@acme.io")
+                .contentType(ContentType.JSON)
+                .body(Map.of("token", initialViewerToken))
+                .when().post("/api/v1/organizations/invitations/accept")
+                .then()
+                .statusCode(404);
+
+        String billingToken = RestAssured.given()
+                .header("X-Debug-User-Id", "org-owner")
+                .contentType(ContentType.JSON)
+                .body(Map.of("email", "billing@acme.io", "role", "BILLING_ADMIN"))
+                .when().post("/api/v1/organizations/" + orgId + "/invitations")
+                .then()
+                .statusCode(201)
+                .body("role", equalTo("BILLING_ADMIN"))
+                .extract().path("token");
+
+        // 5. Viewer and Billing Admin accept their invitations
+        RestAssured.given()
+                .header("X-Debug-User-Id", "viewer@acme.io")
+                .contentType(ContentType.JSON)
+                .body(Map.of("token", viewerToken))
+                .when().post("/api/v1/organizations/invitations/accept")
+                .then()
+                .statusCode(200)
+                .body("myRole", equalTo("VIEWER"));
+
+        RestAssured.given()
+                .header("X-Debug-User-Id", "billing@acme.io")
+                .contentType(ContentType.JSON)
+                .body(Map.of("token", billingToken))
+                .when().post("/api/v1/organizations/invitations/accept")
+                .then()
+                .statusCode(200)
+                .body("myRole", equalTo("BILLING_ADMIN"));
+
+        // 6. VIEWER can read project & diagram (200), but CANNOT edit diagram or create API keys (403)
+        RestAssured.given()
+                .header("X-Debug-User-Id", "viewer@acme.io")
+                .when().get("/api/v1/projects/" + projectId + "/diagram")
+                .then()
+                .statusCode(200);
+
+        RestAssured.given()
+                .header("X-Debug-User-Id", "viewer@acme.io")
+                .contentType(ContentType.JSON)
+                .body(DiagramGraph.defaultSampleDiagram())
+                .when().put("/api/v1/projects/" + projectId + "/diagram")
+                .then()
+                .statusCode(403);
+
+        RestAssured.given()
+                .header("X-Debug-User-Id", "viewer@acme.io")
+                .contentType(ContentType.JSON)
+                .body(Map.of("name", "Unauthorized Key"))
+                .when().post("/api/v1/projects/" + projectId + "/keys")
+                .then()
+                .statusCode(403);
+
+        // 7. BILLING_ADMIN can update plan/billing email (200), but CANNOT view project traces or diagram (403)
+        RestAssured.given()
+                .header("X-Debug-User-Id", "billing@acme.io")
+                .contentType(ContentType.JSON)
+                .body(Map.of("billingEmail", "ap@acme.io", "planTier", "BUSINESS"))
+                .when().patch("/api/v1/organizations/" + orgId)
+                .then()
+                .statusCode(200)
+                .body("organization.planTier", equalTo("BUSINESS"));
+
+        RestAssured.given()
+                .header("X-Debug-User-Id", "billing@acme.io")
+                .when().get("/api/v1/projects/" + projectId + "/traces")
+                .then()
+                .statusCode(403);
+
+        // 8. E1-Step-8: Audit log records organization, workspace, project, key, and invitation events
+        RestAssured.given()
+                .header("X-Debug-User-Id", "org-owner")
+                .when().get("/api/v1/organizations/" + orgId + "/audit-logs")
+                .then()
+                .statusCode(200)
+                .body("size()", greaterThanOrEqualTo(6))
+                .body("action", hasItems(
+                        "org.created",
+                        "workspace.created",
+                        "project.created",
+                        "member.invited",
+                        "member.invitation_resent",
+                        "member.invitation_accepted",
+                        "org.updated"
+                ));
+
+        // Filtered audit log query (?action=member.)
+        RestAssured.given()
+                .header("X-Debug-User-Id", "org-owner")
+                .queryParam("action", "member.")
+                .when().get("/api/v1/organizations/" + orgId + "/audit-logs")
+                .then()
+                .statusCode(200)
+                .body("action", everyItem(startsWith("member.")));
+
+        // 9. E1-Step-7: Cross-tenant outsider cannot read audit logs, workspaces, members, or invitations (403)
+        RestAssured.given()
+                .header("X-Debug-User-Id", "outsider-tenant")
+                .when().get("/api/v1/organizations/" + orgId + "/audit-logs")
+                .then()
+                .statusCode(403);
+
+        RestAssured.given()
+                .header("X-Debug-User-Id", "outsider-tenant")
+                .when().get("/api/v1/organizations/" + orgId + "/members")
+                .then()
+                .statusCode(403);
+
+        RestAssured.given()
+                .header("X-Debug-User-Id", "outsider-tenant")
+                .when().get("/api/v1/organizations/" + orgId + "/workspaces")
+                .then()
+                .statusCode(403);
+
+        // 10. E1-Step-6: Soft-delete organization blocks UI access and live ingestion, restore re-enables, purge removes after 30d
+        String ingestKey = RestAssured.given()
+                .header("X-Debug-User-Id", "org-owner")
+                .contentType(ContentType.JSON)
+                .body(Map.of("name", "Acme Live Key", "rateLimitPerS", 500))
+                .when().post("/api/v1/projects/" + projectId + "/keys")
+                .then()
+                .statusCode(201)
+                .extract().path("fullKey");
+
+        RestAssured.given()
+                .header("X-Debug-User-Id", "org-owner")
+                .when().delete("/api/v1/organizations/" + orgId)
+                .then()
+                .statusCode(204);
+
+        // Access to soft-deleted org and its projects is immediately blocked (403)
+        RestAssured.given()
+                .header("X-Debug-User-Id", "org-owner")
+                .when().get("/api/v1/organizations/" + orgId)
+                .then()
+                .statusCode(403);
+
+        RestAssured.given()
+                .header("X-Debug-User-Id", "org-owner")
+                .when().get("/api/v1/projects/" + projectId)
+                .then()
+                .statusCode(403);
+
+        // Ingest using key of soft-deleted organization is rejected
+        RestAssured.given()
+                .header("X-API-Key", ingestKey)
+                .contentType(ContentType.JSON)
+                .body(Map.of("traceId", UuidV7.generateString(), "node", "website"))
+                .when().post("/api/v1/events")
+                .then()
+                .statusCode(400)
+                .body("accepted", equalTo(0))
+                .body("rejected[0].reason", containsString("deletion"));
+
+        // Owner can restore within the 30-day window
+        RestAssured.given()
+                .header("X-Debug-User-Id", "org-owner")
+                .contentType(ContentType.JSON)
+                .when().post("/api/v1/organizations/" + orgId + "/restore")
+                .then()
+                .statusCode(200)
+                .body("organization.id", equalTo(orgId))
+                .body("organization.deletedAt", nullValue());
+
+        // Ingest works again after restore
+        RestAssured.given()
+                .header("X-API-Key", ingestKey)
+                .contentType(ContentType.JSON)
+                .body(Map.of("traceId", UuidV7.generateString(), "node", "website"))
+                .when().post("/api/v1/events")
+                .then()
+                .statusCode(202)
+                .body("accepted", equalTo(1));
+
+        // Soft-delete again and run the 30-day expiration purge
+        RestAssured.given()
+                .header("X-Debug-User-Id", "org-owner")
+                .when().delete("/api/v1/organizations/" + orgId)
+                .then()
+                .statusCode(204);
+
+        int purgedCount = organizationService.purgeExpiredSoftDeletedOrganizations(Instant.now().plusSeconds(60));
+        assertTrue(purgedCount >= 1);
+
+        RestAssured.given()
+                .header("X-Debug-User-Id", "org-owner")
+                .when().get("/api/v1/organizations/" + orgId)
+                .then()
+                .statusCode(404);
     }
 
     private JsonNode pollType(BlockingQueue<JsonNode> queue, String expectedType, int timeoutSeconds) throws InterruptedException {

@@ -8,6 +8,7 @@ import dev.flowtrace.application.port.out.TraceRepository;
 import dev.flowtrace.domain.ApiKey;
 import dev.flowtrace.domain.DiagramGraph;
 import dev.flowtrace.domain.DiagramVersion;
+import dev.flowtrace.domain.OrgPermission;
 import dev.flowtrace.domain.Project;
 import dev.flowtrace.domain.TraceSummary;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -36,7 +37,7 @@ import java.util.UUID;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /**
- * UI & Management REST API under `/api/v1/projects` (spec section 9).
+ * UI & Management REST API under `/api/v1/projects` (spec section 9 + Epic 1 RBAC).
  */
 @Path("/api/v1/projects")
 @ApplicationScoped
@@ -65,13 +66,25 @@ public class ProjectManagementResource {
         this.mockAuthEnabled = mockAuthEnabled;
     }
 
-    public record CreateProjectRequest(String name, Boolean autoDiscover, Integer retentionDays) {
+    public record CreateProjectRequest(
+            String name,
+            UUID organizationId,
+            UUID workspaceId,
+            Boolean autoDiscover,
+            Integer retentionDays
+    ) {
     }
 
     public record UpdateProjectRequest(String name, Boolean autoDiscover, Integer retentionDays) {
     }
 
-    public record CreateKeyRequest(String name, Integer rateLimitPerS) {
+    public record CreateKeyRequest(String name, Integer rateLimitPerS, String scopes) {
+        public CreateKeyRequest(String name, Integer rateLimitPerS) {
+            this(name, rateLimitPerS, "ingest");
+        }
+    }
+
+    public record RotateKeyRequest(Integer gracePeriodHours) {
     }
 
     public record DemoRequest(Double rate, Double errorRate) {
@@ -80,10 +93,12 @@ public class ProjectManagementResource {
     @GET
     public List<Project> listProjects(
             @HeaderParam("Authorization") String authHeader,
-            @HeaderParam("X-Debug-User-Id") String debugUserId
+            @HeaderParam("X-Debug-User-Id") String debugUserId,
+            @QueryParam("organizationId") UUID organizationId,
+            @QueryParam("workspaceId") UUID workspaceId
     ) {
         UUID userId = resolveAuthenticatedUser(authHeader, debugUserId);
-        return projectService.listProjectsForUser(userId);
+        return projectService.listProjectsForUser(userId, organizationId, workspaceId);
     }
 
     @POST
@@ -95,6 +110,8 @@ public class ProjectManagementResource {
         UUID userId = resolveAuthenticatedUser(authHeader, debugUserId);
         Project created = projectService.createProject(
                 userId,
+                req != null ? req.organizationId() : null,
+                req != null ? req.workspaceId() : null,
                 req != null ? req.name() : null,
                 req != null ? req.autoDiscover() : null,
                 req != null ? req.retentionDays() : null
@@ -202,9 +219,29 @@ public class ProjectManagementResource {
                 userId,
                 projectId,
                 req != null ? req.name() : null,
-                req != null ? req.rateLimitPerS() : null
+                req != null ? req.rateLimitPerS() : null,
+                req != null ? req.scopes() : "ingest"
         );
         return Response.status(Response.Status.CREATED).entity(result).build();
+    }
+
+    @POST
+    @Path("/{id}/keys/{keyId}/rotate")
+    public Response rotateKey(
+            @HeaderParam("Authorization") String authHeader,
+            @HeaderParam("X-Debug-User-Id") String debugUserId,
+            @PathParam("id") UUID projectId,
+            @PathParam("keyId") UUID keyId,
+            RotateKeyRequest req
+    ) {
+        UUID userId = resolveAuthenticatedUser(authHeader, debugUserId);
+        ProjectService.RotatedApiKeyResult result = projectService.rotateApiKey(
+                userId,
+                projectId,
+                keyId,
+                req != null ? req.gracePeriodHours() : 24
+        );
+        return Response.ok(result).build();
     }
 
     @DELETE
@@ -234,7 +271,7 @@ public class ProjectManagementResource {
             @QueryParam("cursor") String cursor
     ) {
         UUID userId = resolveAuthenticatedUser(authHeader, debugUserId);
-        projectService.getOwnedProject(userId, projectId);
+        projectService.requireProjectPermission(userId, projectId, OrgPermission.TRACE_VIEW);
         Instant from = fromMs != null ? Instant.ofEpochMilli(fromMs) : null;
         Instant to = toMs != null ? Instant.ofEpochMilli(toMs) : null;
         return traceRepository.searchTraces(projectId, from, to, status, node, limit != null ? limit : 50, cursor);
@@ -249,7 +286,7 @@ public class ProjectManagementResource {
             @PathParam("traceId") String traceId
     ) {
         UUID userId = resolveAuthenticatedUser(authHeader, debugUserId);
-        projectService.getOwnedProject(userId, projectId);
+        projectService.requireProjectPermission(userId, projectId, OrgPermission.TRACE_VIEW);
         return traceRepository.findTraceDetail(projectId, traceId)
                 .orElseThrow(() -> new NotFoundException("Trace not found: " + traceId));
     }
@@ -273,7 +310,7 @@ public class ProjectManagementResource {
             @PathParam("id") UUID projectId
     ) {
         UUID userId = resolveAuthenticatedUser(authHeader, debugUserId);
-        projectService.getOwnedProject(userId, projectId);
+        projectService.requireProjectPermission(userId, projectId, OrgPermission.PROJECT_VIEW);
         DemoSimulator.DemoConfig cfg = demoSimulator.getStatus(projectId);
         if (cfg == null) {
             return Response.ok(Map.of("running", false)).build();
@@ -296,7 +333,7 @@ public class ProjectManagementResource {
             DemoRequest req
     ) {
         UUID userId = resolveAuthenticatedUser(authHeader, debugUserId);
-        projectService.getOwnedProject(userId, projectId);
+        projectService.requireProjectPermission(userId, projectId, OrgPermission.DIAGRAM_EDIT);
         DemoSimulator.DemoConfig cfg = demoSimulator.startDemo(
                 projectId,
                 req != null ? req.rate() : null,
@@ -319,13 +356,12 @@ public class ProjectManagementResource {
             @PathParam("id") UUID projectId
     ) {
         UUID userId = resolveAuthenticatedUser(authHeader, debugUserId);
-        projectService.getOwnedProject(userId, projectId);
+        projectService.requireProjectPermission(userId, projectId, OrgPermission.DIAGRAM_EDIT);
         demoSimulator.stopDemo(projectId);
         return Response.ok(Map.of("running", false)).build();
     }
 
     private UUID resolveAuthenticatedUser(String authHeader, String debugUserId) {
-        // 1. Check Bearer JWT if provided (extract sub/email)
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7).trim();
             String[] parts = token.split("\\.");
@@ -345,10 +381,11 @@ public class ProjectManagementResource {
             }
         }
 
-        // 2. If mockAuthEnabled (local dev / tests), allow X-Debug-User-Id or default seeded user
         if (mockAuthEnabled) {
             if (debugUserId != null && !debugUserId.isBlank()) {
-                return projectService.ensureUser(debugUserId.trim(), debugUserId.trim() + "@flowtrace.local");
+                String clean = debugUserId.trim();
+                String email = clean.contains("@") ? clean : (clean + "@flowtrace.local");
+                return projectService.ensureUser(clean, email);
             }
             return projectService.ensureUser("local-dev-user", "dev@flowtrace.local");
         }

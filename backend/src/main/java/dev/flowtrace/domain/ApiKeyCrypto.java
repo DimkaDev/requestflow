@@ -12,6 +12,7 @@ import java.util.HexFormat;
 public final class ApiKeyCrypto {
 
     private static final String PREFIX = "ft_live_";
+    private static final String INVITE_PREFIX = "ft_inv_";
     private static final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     private static final SecureRandom RANDOM = new SecureRandom();
 
@@ -22,8 +23,16 @@ public final class ApiKeyCrypto {
     }
 
     public static GeneratedKey generateNewKey() {
-        StringBuilder sb = new StringBuilder(PREFIX.length() + 32);
-        sb.append(PREFIX);
+        return generateWithPrefix(PREFIX);
+    }
+
+    public static GeneratedKey generateInvitationToken() {
+        return generateWithPrefix(INVITE_PREFIX);
+    }
+
+    private static GeneratedKey generateWithPrefix(String prefix) {
+        StringBuilder sb = new StringBuilder(prefix.length() + 32);
+        sb.append(prefix);
         for (int i = 0; i < 32; i++) {
             sb.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
         }

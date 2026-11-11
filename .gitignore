@@ -18,3 +18,4 @@ cdk.out/
 coverage/
 test-results/
 playwright-report/
+graphify-out/

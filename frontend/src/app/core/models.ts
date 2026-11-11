@@ -7,6 +7,79 @@ export type NodeType =
   | 'external'
   | 'end';
 
+export type HopVisualStyle =
+  | 'comet'
+  | 'laser-conduit'
+  | 'packet-capsule'
+  | 'sonar-wave'
+  | 'circuit-frame';
+
+export type NodeVisualStyle = 'classic' | 'blueprint';
+
+export type OrgRole = 'OWNER' | 'ADMIN' | 'MEMBER' | 'VIEWER' | 'BILLING_ADMIN';
+
+export type PlanTier = 'FREE' | 'PRO' | 'BUSINESS' | 'ENTERPRISE';
+
+export interface Organization {
+  id: string;
+  name: string;
+  slug: string;
+  billingEmail: string;
+  planTier: PlanTier;
+  createdAt: string;
+  deletedAt?: string | null;
+}
+
+export interface Workspace {
+  id: string;
+  organizationId: string;
+  name: string;
+  slug: string;
+  createdAt: string;
+}
+
+export interface OrganizationView {
+  organization: Organization;
+  myRole: OrgRole;
+  permissions: string[];
+  workspaces: Workspace[];
+}
+
+export interface OrganizationMember {
+  organizationId: string;
+  userId: string;
+  email: string;
+  externalId: string;
+  role: OrgRole;
+  createdAt: string;
+}
+
+export interface Invitation {
+  id: string;
+  organizationId: string;
+  email: string;
+  role: OrgRole;
+  token?: string | null;
+  tokenPrefix?: string | null;
+  tokenHash?: string | null;
+  status: 'PENDING' | 'ACCEPTED' | string;
+  invitedBy?: string | null;
+  expiresAt: string;
+  createdAt: string;
+}
+
+export interface AuditLogEntry {
+  id: string;
+  organizationId: string;
+  actorUserId?: string | null;
+  actorEmail: string;
+  action: string;
+  targetType: string;
+  targetId: string;
+  meta: Record<string, unknown>;
+  createdAt: string;
+}
+
 export interface DiagramNode {
   key: string;
   label: string;
@@ -32,9 +105,22 @@ export interface DiagramGraph {
   edges: DiagramEdge[];
 }
 
+export interface TemplateDefinition {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  theme: string;
+  diagram: DiagramGraph;
+  defaultPersonas: string[];
+  terminalNodes: string[];
+}
+
 export interface Project {
   id: string;
   ownerId: string;
+  organizationId?: string | null;
+  workspaceId?: string | null;
   name: string;
   autoDiscover: boolean;
   retentionDays: number;
@@ -56,14 +142,48 @@ export interface ApiKey {
   keyPrefix: string;
   keyHash: string;
   rateLimitPerS: number;
+  scopes?: string;
+  lastIpHash?: string | null;
   createdAt: string;
   lastUsedAt?: string | null;
   revokedAt?: string | null;
+  expiresAt?: string | null;
 }
 
 export interface CreatedApiKeyResult {
   apiKey: ApiKey;
   fullKey: string;
+}
+
+export interface RotatedApiKeyResult {
+  newKey: ApiKey;
+  fullKey: string;
+  oldKeyExpiresAt: string;
+}
+
+export interface UsageBucket {
+  date: string;
+  eventsCount: number;
+  bytesCount: number;
+}
+
+export interface ProjectUsage {
+  projectId: string;
+  projectName: string;
+  eventsThisMonth: number;
+  bytesThisMonth: number;
+  dailyHistory: UsageBucket[];
+}
+
+export interface OrganizationUsage {
+  organizationId: string;
+  planTier: PlanTier;
+  monthlyQuota: number;
+  totalEventsThisMonth: number;
+  totalBytesThisMonth: number;
+  percentUsed: number;
+  isQuotaExceeded: boolean;
+  projectBreakdown: ProjectUsage[];
 }
 
 export interface TraceSummary {
@@ -114,10 +234,42 @@ export interface StatsEvent {
   edges: Record<string, EdgeMetric>;
 }
 
+export interface EntityInfo {
+  kind?: string;
+  ref?: string;
+  label?: string;
+  avatar?: string;
+}
+
+export interface CarryItem {
+  sku: string;
+  label?: string;
+  icon?: string;
+  image?: string;
+  qty: number;
+  price: number;
+  currency?: string;
+}
+
+export type CarryOp = 'set' | 'add' | 'remove' | 'clear';
+
+export interface CarrySummary {
+  count: number;
+  total: number;
+  currency: string;
+  topIcons: string[];
+}
+
 export interface SnapshotEvent {
   t: 'snapshot';
   diagram: DiagramGraph;
-  active: Array<{ traceId: string; branch: string; node: string }>;
+  active: Array<{
+    traceId: string;
+    branch: string;
+    node: string;
+    entity?: EntityInfo | null;
+    carry?: CarrySummary | null;
+  }>;
   stats: StatsEvent;
   serverTime: number;
 }
@@ -131,6 +283,8 @@ export interface SpawnEvent {
   label?: string | null;
   attrs?: Record<string, unknown>;
   ts: number;
+  entity?: EntityInfo | null;
+  carry?: CarrySummary | null;
 }
 
 export interface HopEvent {
@@ -146,6 +300,8 @@ export interface HopEvent {
   attrs?: Record<string, unknown>;
   ts: number;
   seq?: number | null;
+  entity?: EntityInfo | null;
+  carry?: CarrySummary | null;
 }
 
 export interface EndEvent {
@@ -153,6 +309,54 @@ export interface EndEvent {
   traceId: string;
   branch: string;
   node: string;
+  ts: number;
+  outcome?: string;
+}
+
+export interface CarryEvent {
+  t: 'carry';
+  traceId: string;
+  branch: string;
+  node: string;
+  op: CarryOp;
+  carry: CarrySummary;
+  ts: number;
+}
+
+export interface CompleteEvent {
+  t: 'complete';
+  traceId: string;
+  branch: string;
+  node: string;
+  entity?: EntityInfo | null;
+  carry: CarrySummary;
+  ts: number;
+}
+
+export interface FailEvent {
+  t: 'fail';
+  traceId: string;
+  branch: string;
+  node: string;
+  entity?: EntityInfo | null;
+  reason?: string;
+  ts: number;
+}
+
+export interface AbandonEvent {
+  t: 'abandon';
+  traceId: string;
+  branch: string;
+  node: string;
+  entity?: EntityInfo | null;
+  carry: CarrySummary;
+  ts: number;
+}
+
+export interface CrowdEvent {
+  t: 'crowd';
+  node: string;
+  count: number;
   ts: number;
 }
 
@@ -177,4 +381,57 @@ export type UiStreamEvent =
   | EndEvent
   | DiagramPatchEvent
   | StatsEvent
-  | DroppedEvent;
+  | DroppedEvent
+  | CarryEvent
+  | CompleteEvent
+  | FailEvent
+  | AbandonEvent
+  | CrowdEvent;
+
+// E-Commerce Connectors (Gate G1-E / E20)
+export type ConnectorType =
+  | 'STOREFRONT_JS'
+  | 'GENERIC_WEBHOOK'
+  | 'SHOPIFY_WEBHOOK'
+  | 'WOOCOMMERCE_WEBHOOK'
+  | 'STRIPE_WEBHOOK';
+
+export type ConnectorStatus = 'WAITING' | 'CONNECTED' | 'ERROR';
+
+export interface WebhookMapping {
+  traceIdPath?: string | null;
+  nodePath?: string | null;
+  defaultNode?: string | null;
+  entityRefPath?: string | null;
+  entityNamePath?: string | null;
+  avatarPath?: string | null;
+  itemsPath?: string | null;
+  amountPath?: string | null;
+  currencyPath?: string | null;
+}
+
+export interface ConnectorConfig {
+  id: string;
+  projectId: string;
+  name: string;
+  type: ConnectorType;
+  tokenPrefix: string;
+  mapping: WebhookMapping;
+  status: ConnectorStatus;
+  lastEventAt?: string | null;
+  totalEvents: number;
+  lastError?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreatedConnectorResponse {
+  id: string;
+  projectId: string;
+  name: string;
+  type: ConnectorType;
+  tokenPrefix: string;
+  secretToken: string;
+  mapping: WebhookMapping;
+  status: ConnectorStatus;
+}

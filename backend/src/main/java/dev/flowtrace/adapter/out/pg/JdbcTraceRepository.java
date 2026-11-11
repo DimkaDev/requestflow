@@ -166,8 +166,8 @@ public class JdbcTraceRepository implements TraceRepository {
                     last_node = ?
                 WHERE project_id = ? AND id = ?
                 """;
-        boolean isEnd = (ev.type() == EventType.end);
-        String newStatus = (ev.type() == EventType.error) ? "error" : "ok";
+        boolean isEnd = ev.type().isTerminal();
+        String newStatus = (ev.type() == EventType.error || ev.type() == EventType.fail) ? "error" : "ok";
 
         try (PreparedStatement upd = conn.prepareStatement(updateSql)) {
             upd.setTimestamp(1, Timestamp.from(serverInstant));

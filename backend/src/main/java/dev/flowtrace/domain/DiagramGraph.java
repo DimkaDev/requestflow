@@ -82,4 +82,71 @@ public record DiagramGraph(
         );
         return new DiagramGraph(1, "TB", nodes, edges);
     }
+
+    public static DiagramGraph onlineShopDiagram() {
+        List<DiagramNode> nodes = List.of(
+                new DiagramNode("visit", "Storefront", NodeType.source, -340, 0, "store", false),
+                new DiagramNode("browse", "Browse Catalog", NodeType.service, -120, 0, "compass", false),
+                new DiagramNode("product", "Product Detail", NodeType.service, 120, 0, "tag", false),
+                new DiagramNode("cart", "Cart & Bag", NodeType.service, 340, 0, "shopping-cart", false),
+                new DiagramNode("checkout", "Checkout", NodeType.service, 340, 180, "user-check", false),
+                new DiagramNode("payment", "Payment Gateway", NodeType.decision, 120, 180, "credit-card", false),
+                new DiagramNode("paid", "Order Paid", NodeType.end, -120, 180, "check-circle", false),
+                new DiagramNode("payment-failed", "Payment Failed", NodeType.end, 120, 320, "alert-circle", false),
+                new DiagramNode("abandoned", "Abandoned", NodeType.end, -120, -140, "x-circle", false)
+        );
+        List<DiagramEdge> edges = List.of(
+                new DiagramEdge("e_shop_1", "visit", "browse", "visit", false),
+                new DiagramEdge("e_shop_2", "browse", "product", "view", false),
+                new DiagramEdge("e_shop_3", "browse", "abandoned", "bounce", false),
+                new DiagramEdge("e_shop_4", "product", "cart", "add to cart", false),
+                new DiagramEdge("e_shop_5", "product", "browse", "more", false),
+                new DiagramEdge("e_shop_6", "cart", "checkout", "proceed", false),
+                new DiagramEdge("e_shop_7", "cart", "abandoned", "abandon", false),
+                new DiagramEdge("e_shop_8", "checkout", "payment", "pay", false),
+                new DiagramEdge("e_shop_9", "checkout", "abandoned", "abandon", false),
+                new DiagramEdge("e_shop_10", "payment", "paid", "success", false),
+                new DiagramEdge("e_shop_11", "payment", "payment-failed", "declined", false)
+        );
+        return new DiagramGraph(1, "LR", nodes, edges);
+    }
+
+    public static DiagramGraph queueWorkerDiagram() {
+        List<DiagramNode> nodes = List.of(
+                new DiagramNode("client", "Webhooks / Clients", NodeType.source, -320, 0, "globe", false),
+                new DiagramNode("ingest-api", "Ingest API", NodeType.service, -100, 0, "server", false),
+                new DiagramNode("queue", "Kafka / SQS Buffer", NodeType.queue, 120, 0, "layers", false),
+                new DiagramNode("worker", "Worker Pool", NodeType.service, 340, 0, "cpu", false),
+                new DiagramNode("db", "Postgres Primary", NodeType.datastore, 340, 180, "database", false),
+                new DiagramNode("dlq", "Dead Letter Queue", NodeType.end, 120, 180, "alert-triangle", false)
+        );
+        List<DiagramEdge> edges = List.of(
+                new DiagramEdge("e_qw_1", "client", "ingest-api", "submit", false),
+                new DiagramEdge("e_qw_2", "ingest-api", "queue", "publish", false),
+                new DiagramEdge("e_qw_3", "queue", "worker", "poll", false),
+                new DiagramEdge("e_qw_4", "worker", "db", "commit", false),
+                new DiagramEdge("e_qw_5", "worker", "dlq", "exhausted", false)
+        );
+        return new DiagramGraph(1, "LR", nodes, edges);
+    }
+
+    public static DiagramGraph aiRagDiagram() {
+        List<DiagramNode> nodes = List.of(
+                new DiagramNode("user-prompt", "User Prompt", NodeType.source, -340, 0, "terminal", false),
+                new DiagramNode("embedding", "Embedding Gen", NodeType.service, -120, 0, "sparkles", false),
+                new DiagramNode("vector-db", "Vector Database", NodeType.datastore, -120, 180, "database", false),
+                new DiagramNode("llm-agent", "LLM Orchestrator", NodeType.service, 120, 0, "cpu", false),
+                new DiagramNode("tool-exec", "Tool Execution", NodeType.service, 120, 180, "tool", false),
+                new DiagramNode("response", "Final Response", NodeType.end, 340, 0, "check-circle", false)
+        );
+        List<DiagramEdge> edges = List.of(
+                new DiagramEdge("e_ai_1", "user-prompt", "embedding", "query", false),
+                new DiagramEdge("e_ai_2", "embedding", "vector-db", "similarity", false),
+                new DiagramEdge("e_ai_3", "vector-db", "llm-agent", "context", false),
+                new DiagramEdge("e_ai_4", "llm-agent", "tool-exec", "tool_call", false),
+                new DiagramEdge("e_ai_5", "tool-exec", "llm-agent", "tool_result", false),
+                new DiagramEdge("e_ai_6", "llm-agent", "response", "stream", false)
+        );
+        return new DiagramGraph(1, "LR", nodes, edges);
+    }
 }

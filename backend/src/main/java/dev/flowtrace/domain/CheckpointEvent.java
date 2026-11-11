@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * Validated Checkpoint / Event domain model (spec section 6).
+ * Validated Checkpoint / Event domain model (spec section 6 & v1.1).
  */
 public record CheckpointEvent(
         int v,
@@ -20,13 +20,32 @@ public record CheckpointEvent(
         long serverTs,
         String label,
         Map<String, Object> attrs,
-        Long seq
+        Long seq,
+        EntityInfo entity,
+        CarryPayload carry
 ) {
     public static final Pattern NODE_KEY_PATTERN = Pattern.compile("^[a-z0-9-_.]{1,64}$");
     public static final int MAX_LABEL_LENGTH = 40;
     public static final int MAX_ATTR_KEYS = 10;
     public static final int MAX_ATTR_VALUE_LENGTH = 100;
     public static final int MAX_BRANCH_LENGTH = 64;
+
+    public CheckpointEvent(
+            int v,
+            String key,
+            String traceId,
+            String node,
+            String from,
+            EventType type,
+            String branch,
+            Long clientTs,
+            long serverTs,
+            String label,
+            Map<String, Object> attrs,
+            Long seq
+    ) {
+        this(v, key, traceId, node, from, type, branch, clientTs, serverTs, label, attrs, seq, null, null);
+    }
 
     public static CheckpointEvent validateAndCreate(
             Integer v,
@@ -41,6 +60,25 @@ public record CheckpointEvent(
             String label,
             Map<String, Object> rawAttrs,
             Long seq
+    ) {
+        return validateAndCreate(v, key, traceId, node, from, typeStr, branch, clientTs, serverTs, label, rawAttrs, seq, null, null);
+    }
+
+    public static CheckpointEvent validateAndCreate(
+            Integer v,
+            String key,
+            String traceId,
+            String node,
+            String from,
+            String typeStr,
+            String branch,
+            Long clientTs,
+            long serverTs,
+            String label,
+            Map<String, Object> rawAttrs,
+            Long seq,
+            EntityInfo entity,
+            CarryPayload carry
     ) {
         int version = (v == null) ? 1 : v;
         if (version != 1) {
@@ -117,7 +155,9 @@ public record CheckpointEvent(
                 serverTs,
                 label,
                 cleanAttrs,
-                seq
+                seq,
+                entity,
+                carry
         );
     }
 }

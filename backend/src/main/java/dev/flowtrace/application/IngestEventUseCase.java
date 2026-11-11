@@ -1,14 +1,19 @@
 package dev.flowtrace.application;
 
 import dev.flowtrace.application.port.out.EventFanout;
+import dev.flowtrace.application.port.out.OrganizationRepository;
 import dev.flowtrace.application.port.out.ProjectRepository;
 import dev.flowtrace.application.port.out.TraceRepository;
 import dev.flowtrace.domain.ApiKey;
 import dev.flowtrace.domain.ApiKeyCrypto;
+import dev.flowtrace.domain.CarryPayload;
 import dev.flowtrace.domain.CheckpointEvent;
 import dev.flowtrace.domain.DiagramGraph;
 import dev.flowtrace.domain.DiagramVersion;
+import dev.flowtrace.domain.EntityInfo;
 import dev.flowtrace.domain.HopResolver;
+import dev.flowtrace.domain.Organization;
+import dev.flowtrace.domain.PlanTier;
 import dev.flowtrace.domain.Project;
 import dev.flowtrace.domain.TokenBucketRateLimiter;
 import dev.flowtrace.domain.UiEvent;
@@ -41,8 +46,25 @@ public class IngestEventUseCase {
             Long ts,
             String label,
             Map<String, Object> attrs,
-            Long seq
+            Long seq,
+            EntityInfo entity,
+            CarryPayload carry
     ) {
+        public RawEventInput(
+                Integer v,
+                String key,
+                String traceId,
+                String node,
+                String from,
+                String type,
+                String branch,
+                Long ts,
+                String label,
+                Map<String, Object> attrs,
+                Long seq
+        ) {
+            this(v, key, traceId, node, from, type, branch, ts, label, attrs, seq, null, null);
+        }
     }
 
     public record RejectedItem(int index, String reason) {
@@ -61,6 +83,8 @@ public class IngestEventUseCase {
     private static final long KEY_CACHE_TTL_MS = 60_000L;
 
     private final ProjectRepository projectRepository;
+    private final OrganizationRepository organizationRepository;
+    private final UsageMeterService usageMeterService;
     private final TraceRepository traceRepository;
     private final EventFanout eventFanout;
     private final MeterRegistry meterRegistry;
@@ -70,18 +94,34 @@ public class IngestEventUseCase {
     private final Map<String, CachedKeyEntry> keyCache = new ConcurrentHashMap<>();
     private final Map<UUID, DiagramGraph> diagramCache = new ConcurrentHashMap<>();
     private final Map<UUID, Project> projectCache = new ConcurrentHashMap<>();
+    private final Map<UUID, Boolean> orgDeletedCache = new ConcurrentHashMap<>();
+    private final Map<UUID, PlanTier> orgPlanTierCache = new ConcurrentHashMap<>();
 
     @Inject
     public IngestEventUseCase(
             ProjectRepository projectRepository,
+            OrganizationRepository organizationRepository,
+            UsageMeterService usageMeterService,
             TraceRepository traceRepository,
             EventFanout eventFanout,
             MeterRegistry meterRegistry
     ) {
         this.projectRepository = projectRepository;
+        this.organizationRepository = organizationRepository;
+        this.usageMeterService = usageMeterService;
         this.traceRepository = traceRepository;
         this.eventFanout = eventFanout;
         this.meterRegistry = meterRegistry;
+    }
+
+    public IngestEventUseCase(
+            ProjectRepository projectRepository,
+            OrganizationRepository organizationRepository,
+            TraceRepository traceRepository,
+            EventFanout eventFanout,
+            MeterRegistry meterRegistry
+    ) {
+        this(projectRepository, organizationRepository, null, traceRepository, eventFanout, meterRegistry);
     }
 
     public Optional<ApiKey> authenticateKey(String rawKey) {
@@ -101,6 +141,35 @@ public class IngestEventUseCase {
 
     public void evictKeyCache() {
         keyCache.clear();
+        projectCache.clear();
+        orgDeletedCache.clear();
+        orgPlanTierCache.clear();
+    }
+
+    private UUID getProjectOrganizationId(UUID projectId) {
+        Project project = projectCache.computeIfAbsent(projectId, id ->
+                projectRepository.findById(id).orElse(new Project(id, id, "Default", true, 7, Instant.now()))
+        );
+        return project.organizationId();
+    }
+
+    private PlanTier getProjectPlanTier(UUID orgId) {
+        if (orgId == null || organizationRepository == null) {
+            return PlanTier.FREE;
+        }
+        return orgPlanTierCache.computeIfAbsent(orgId, id ->
+                organizationRepository.findById(id).map(Organization::planTier).orElse(PlanTier.FREE)
+        );
+    }
+
+    private boolean isProjectOrganizationDeleted(UUID projectId) {
+        UUID orgId = getProjectOrganizationId(projectId);
+        if (orgId == null || organizationRepository == null) {
+            return false;
+        }
+        return orgDeletedCache.computeIfAbsent(orgId, id ->
+                organizationRepository.findById(id).map(Organization::isDeleted).orElse(false)
+        );
     }
 
     public void invalidateDiagramCache(UUID projectId, DiagramGraph newGraph) {
@@ -144,6 +213,24 @@ public class IngestEventUseCase {
                 continue;
             }
             ApiKey apiKey = apiKeyOpt.get();
+            if (!apiKey.hasScope("ingest")) {
+                rejected.add(new RejectedItem(i, "API key lacks 'ingest' scope"));
+                recordDrop(protocol, "insufficient_scope");
+                continue;
+            }
+            if (isProjectOrganizationDeleted(apiKey.projectId())) {
+                rejected.add(new RejectedItem(i, "organization is scheduled for deletion"));
+                recordDrop(protocol, "org_deleted");
+                continue;
+            }
+
+            UUID orgId = getProjectOrganizationId(apiKey.projectId());
+            PlanTier planTier = getProjectPlanTier(orgId);
+            if (usageMeterService != null && !usageMeterService.isIngestAllowed(orgId, planTier)) {
+                rejected.add(new RejectedItem(i, "monthly event quota exceeded (" + planTier.monthlyEventQuota() + " events)"));
+                recordDrop(protocol, "quota_exceeded");
+                continue;
+            }
 
             if (!rateLimiter.tryAcquire(apiKey.id().toString(), apiKey.rateLimitPerS())) {
                 rejected.add(new RejectedItem(i, "rate limit exceeded"));
@@ -167,7 +254,9 @@ public class IngestEventUseCase {
                         serverTs,
                         raw.label(),
                         raw.attrs(),
-                        raw.seq()
+                        raw.seq(),
+                        raw.entity(),
+                        raw.carry()
                 );
             } catch (ValidationException ve) {
                 rejected.add(new RejectedItem(i, ve.getMessage()));
@@ -225,6 +314,10 @@ public class IngestEventUseCase {
         }
 
         traceRepository.enqueueAsync(projectId, resolution.resolvedFromNode(), validated);
+
+        if (usageMeterService != null && project.organizationId() != null) {
+            usageMeterService.recordEvent(project.organizationId(), projectId, 1, 128L);
+        }
 
         Timer.builder("hop_latency_seconds")
                 .register(meterRegistry)

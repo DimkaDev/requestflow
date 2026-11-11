@@ -42,3 +42,81 @@
 - [x] **M8 — Polish & hardening**
   - [x] Clean `EventFanout` interface & slow-client protection
   - [x] Load/perf benchmark report in `docs/PERF.md` + full unit & integration test suite
+
+---
+
+## Next Phase: Commercial SaaS (S1 — S3)
+
+> Detailed breakdown and architecture specifications: [`docs/SAAS_ROADMAP.md`](./SAAS_ROADMAP.md).
+
+- [ ] **S1 — Commercial Foundations (Workspaces, Stripe, Redis Fanout)**
+  - [x] **Epic E1: Organizations, Workspaces, RBAC & Audit Log (`E1-Step-1` – `E1-Step-8`)**
+    - [x] ADR-0005 (`docs/adr/0005-organizations-workspaces-and-rbac.md`)
+    - [x] Flyway `V2__organizations_workspaces_rbac.sql` (`organizations`, `organization_members`, `workspaces`, `invitations`, `projects.organization_id`, `projects.workspace_id`)
+    - [x] Domain & RBAC Engine (`Organization`, `Workspace`, `OrgRole`, `OrgPermission`, `Invitation`, `PlanTier`)
+    - [x] REST API (`/api/v1/organizations/**`) + `InvitationNotifier` port & adapter
+    - [x] Angular Topbar Organization/Workspace switcher + `Org & Team` management screen
+    - [x] `E1-Step-5`: SHA-256 `token_hash` & `token_prefix` storage for invitations + `POST /api/v1/organizations/{orgId}/invitations/{id}/resend`
+    - [x] `E1-Step-6`: Organization 30-day soft-delete (`organizations.deleted_at`), live ingest drop (`org_deleted`), `POST /api/v1/organizations/{orgId}/restore` & scheduled purge
+    - [x] `E1-Step-7`: Automated tenant-isolation & SQL `WHERE` scope guard (`TenantIsolationGuardTest`) + cross-tenant IDOR integration tests
+    - [x] `E1-Step-8`: Flyway `V3__audit_log.sql`, `AuditLogEntry`, `AuditLogRepository`, `JdbcAuditLogRepository`, `GET /api/v1/organizations/{orgId}/audit-logs` & Angular Audit Log UI with filters
+  - [x] **Epic E4 & E2-Step-3: Usage Metering, Quota Guards & Advanced API Keys (`E4-Step-1` – `E4-Step-7`)**
+    - [x] ADR-0007 (`docs/adr/0007-usage-metering-quotas-and-api-keys.md`)
+    - [x] Flyway `V4__usage_counters_and_api_keys.sql` (`usage_counters` table, `api_keys.scopes`, `last_ip_hash`, `expires_at`)
+    - [x] Domain Layer (`UsageBucket`, `ProjectUsage`, `OrganizationUsage`, `ApiKey` scopes/rotation/IP-hash, `PlanTier` soft/hard limits)
+    - [x] In-memory contention-free `UsageMeterService` (`LongAdder` deltas, 10s scheduled flush to PG, real-time quota guard)
+    - [x] Fast live path quota check in `IngestEventUseCase` ($O(1)$ in-memory lookup) + drop reasons `insufficient_scope`, `quota_exceeded`
+    - [x] Outbound ports & adapters (`UsageRepository`, `JdbcUsageRepository`, `ProjectRepository.rotateApiKey`, `updateApiKeyUsage`)
+    - [x] REST API (`POST /api/v1/projects/{id}/keys/{keyId}/rotate`, `GET /api/v1/organizations/{orgId}/usage`)
+    - [x] Angular Frontend: Usage Metering & Quotas Card in Team tab with progress bar & project breakdown; Scopes selector & 24h key rotation in Ingest Keys settings
+    - [x] Automated unit tests (`ApiKeyTest`, `UsageMeterServiceTest`, `TenantIsolationGuardTest` 19/19 passing; `animation-engine.spec.ts` 7/7 passing)
+  - [x] **Epic E5: Onboarding Wizard, Activation Checklist & Architecture Archetypes (`E5-01` – `E5-06`)**
+    - [x] ADR-0008 (`docs/adr/0008-onboarding-activation-and-interactive-templates.md`)
+    - [x] Domain Archetypes in pure Java 21 (`online-shop`, `microservices`, `queue-worker`, `ai-rag`) in `DiagramGraph` and `TemplateDefinition`
+    - [x] 3-Step Interactive Onboarding Wizard (`.wizard-modal`): Project & Archetype selection -> Multi-language copy-paste code snippets pre-filled with key (cURL, Java, Node.js, Python, Go) -> "Waiting for first event..." live radar scanner
+    - [x] Live first event detection over WebSocket with Time-to-First-Event (TTFE) metric and celebration badge
+    - [x] Immediate pre-flight "Send Test Ping" button to trigger instant live verification from the browser
+    - [x] Interactive Activation Checklist (`.activation-checklist-dock`) tracking 5 onboarding milestones with persistence in `localStorage`
+    - [x] Topbar "Quick Start" trigger and Projects list setup integration
+  - [ ] **Epic 2: Stripe Billing & Quotas (`TASK-2.1` – `TASK-2.4`)**
+  - [ ] **Epic 3: Distributed Cluster (`TASK-3.1` – `TASK-3.4`)**
+- [x] **G1-S — Public Shop Demo (Business Flows / Live Shop)**
+  - [x] **Epic E17 (Core Engine): Entity Tokens & Carried Payloads (`E17-Step-1` – `E17-Step-3`)**
+    - [x] ADR-0006 (`docs/adr/0006-business-flows-and-live-shop.md`)
+    - [x] Protocol v1.1 (`docs/PROTOCOL.md` & `docs/event.schema.json` with `entity`, `carry`, `complete`, `fail`, `abandon`)
+    - [x] Pure Java 21 Domain Engine (`EntityInfo`, `CarryItem`, `CarryOp`, `CarryPayload`, `CarrySummary`)
+    - [x] Server-side carry state in `HopResolver` (ops `set/add/remove/clear`, totals, limits $\le 20$ items/event, $\le 50$ items/trace)
+    - [x] UI Stream extension (`UiEvent`: `CarryEvent`, `CompleteEvent`, `FailEvent`, `AbandonEvent`, `CrowdEvent`) & Snapshot with active entities
+    - [x] Ingest adapters (HTTP, UDP, TCP) parsing `entity` and `carry`
+    - [x] Unit test suite `CarryStateTest` (6/6 tests passing)
+  - [x] **Epic E18: Scenario Simulator & Business Templates (`E18-Step-1` – `E18-Step-3`)**
+    - [x] `TemplateDefinition` domain registry (`online-shop` and `microservices`)
+    - [x] Reference template `DiagramGraph.onlineShopDiagram()` (9 nodes `visit`, `browse`, `product`, `cart`, `checkout`, `payment`, `paid`, `payment-failed`, `abandoned` with `LR` direction)
+    - [x] `DemoSimulator` commerce scenario engine (personas: `buyer`, `abandoner`, `browser`, `hesitant` with catalog, prices, and terminal outcomes)
+    - [x] `TemplateResource` REST API (`GET /api/v1/templates`, `POST /api/v1/projects/{id}/template/{templateId}`) + Angular `api.service.ts`
+    - [x] Automated test suite `DemoSimulatorCommerceTest` (all tests passing)
+    - [x] Default seed project in `DataSeeder` updated to `onlineShopDiagram()`
+  - [x] **Epic E19 & E17-05: Customer Avatar & Cart Trail Renderer + Cozy Light Theme**
+    - [x] Token renderer with customer avatar badge (`.entity-avatar-badge`) and cart item badge (`.entity-carry-badge`)
+    - [x] Trailing item icons along Bezier curves inside SVG token group
+    - [x] Terminal business events animated in Canvas (`complete` arrival pulse, `fail` error shake, `abandon` fade)
+    - [x] *Cozy Light* warm boutique theme palette with WCAG AA compliance ($\ge 4.5:1$ contrast)
+    - [x] AnimationEngine unit tests (7/7 tests passing in `animation-engine.spec.ts`)
+  - [x] **Epic E21 & E22 & E25: Live Counters Strip + TV / Kiosk Mode + `/demo/shop` Page**
+    - [x] Live Counters Strip (`.live-counters-strip`): Live Visitors, Active Carts, Orders Completed, Revenue Today, Conversion Rate %
+    - [x] Revenue pulse animation on order completion
+    - [x] TV / Kiosk Mode with fullscreen toggle, Screen WakeLock API, Esc key handler, and enlarged KPI typography
+    - [x] Public Demo View (`/demo/shop` and `?demo=shop`) with template auto-loading, Cozy Light theme, and live synthetic shop stream
+    - [x] Offline client-side commerce simulator with persona walks (`buyer`, `abandoner`, `hesitant`) and template selector in canvas toolbar
+- [x] **G1-E — E-Commerce Connectors & Real Storefront Traffic (Gate G1-E / E20)**
+  - [x] ADR-0009 (`docs/adr/0009-ecommerce-connectors-and-storefront-tracking.md`)
+  - [x] Flyway `V5__connectors.sql` (`project_connectors` table with secret token hashing and JSON mapping)
+  - [x] Pure Java domain (`ConnectorType`, `ConnectorStatus`, `WebhookMapping`, `ConnectorConfig`, `WebhookPayloadParser`)
+  - [x] Outbound ports & adapters (`ConnectorRepository`, `JdbcConnectorRepository` with strict SQL tenant isolation)
+  - [x] Inbound REST API (`POST /api/v1/connectors/webhook/{secretToken}`, `GET /api/v1/projects/{id}/connectors`, `POST /api/v1/projects/{id}/connectors/{id}/test`)
+  - [x] Lightweight Storefront JavaScript tracker `flowtrace.js` (`GET /flowtrace.js`, < 3KB, zero cookies, non-blocking beacon, session-scoped anonymous ID)
+  - [x] Angular Frontend: E-Commerce Connectors card in Settings with one-click embed tag, presets for Shopify/WooCommerce/Stripe/Custom JSON, and interactive Webhook Test Bench
+  - [x] Automated unit tests (`WebhookPayloadParserTest` 3/3, `TenantIsolationGuardTest` 3/3, 22/22 backend tests passing; 7/7 frontend tests passing)
+- [ ] **S2 — Scale & Ecosystem (OpenTelemetry, Multi-SDK, Alerts, Partitioning)**
+- [ ] **S3 — Enterprise Ready (SAML SSO, SCIM, PII Masking, Audit Logs, Trace Diff)**
+
