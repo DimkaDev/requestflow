@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"status-info":"#60A5FA","tertiary-container":"#ffb13b","secondary-fixed":"#e9ddff","surface":"#111318","on-surface":"#e2e2e9","tertiary-fixed":"#ffddb5","surface-variant":"#33353a","on-secondary-fixed":"#23005c","on-error-container":"#ffdad6","node-source":"#60A5FA","on-tertiary-fixed-variant":"#643f00","node-end":"#F472B6","border-strong":"#343C4F","primary-fixed-dim":"#2fd9f4","background":"#111318","on-secondary-container":"#c4abff","tertiary-fixed-dim":"#ffb957","secondary":"#d0bcff","secondary-fixed-dim":"#d0bcff","status-error":"#F43F5E","surface-dim":"#111318","status-discovered":"#F59E0B","border-structural":"#262C3A","on-tertiary":"#462b00","inverse-on-surface":"#2e3036","node-datastore":"#34D399","bg-1":"#11141B","secondary-container":"#571bc1","on-secondary":"#3c0091","surface-bright":"#37393f","on-error":"#690005","on-primary-fixed-variant":"#004e5a","on-primary-container":"#005763","surface-tint":"#2fd9f4","node-decision":"#F59E0B","status-ok":"#34D399","status-warn":"#F59E0B","on-secondary-fixed-variant":"#5516be","inverse-surface":"#e2e2e9","primary":"#8aebff","on-tertiary-container":"#6e4600","surface-container-lowest":"#0c0e13","text-1":"#E8ECF4","node-service":"#8B5CF6","surface-container":"#1e1f25","error-container":"#93000a","node-external":"#94A3B8","surface-container-highest":"#33353a","surface-container-low":"#1a1b21","surface-container-high":"#282a2f","on-primary":"#00363e","text-2":"#A3ACBF","on-tertiary-fixed":"#2a1800","bg-2":"#171B24","inverse-primary":"#006877","bg-3":"#1E2330","text-3":"#7C869C","primary-fixed":"#a2eeff","on-background":"#e2e2e9","tertiary":"#ffd6a3","primary-container":"#22d3ee","outline-variant":"#3c494c","outline":"#859397","error":"#ffb4ab","on-primary-fixed":"#001f25","bg-0":"#0B0D12","on-surface-variant":"#bbc9cd","node-queue":"#22D3EE"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-sm":"0.5rem","space-xl":"1.5rem","space-md":"0.75rem","gutter-desktop":"1.5rem","space-xs":"0.25rem","gutter":"1rem","margin-desktop":"1.5rem","space-lg":"1rem","margin":"1rem"},"fontFamily":{"code-block":["JetBrains Mono"],"body-node-label":["Inter"],"display":["Inter"],"headline-lg":["Inter"],"code-sm":["JetBrains Mono"],"body-lg":["Inter"],"chip-metric":["Inter"],"label-md":["Inter"],"headline-md":["Inter"],"headline-sm":["Inter"],"label-sm":["Inter"],"headline-lg-mobile":["Inter"],"body-md":["Inter"],"display-mobile":["Inter"],"label-uppercase":["Inter"]},"fontSize":{"code-block":["13px",{"lineHeight":"20px","fontWeight":"400"}],"body-node-label":["14px",{"lineHeight":"20px","fontWeight":"600"}],"display":["48px",{"lineHeight":"52px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"600"}],"code-sm":["12px",{"lineHeight":"16px","fontWeight":"500"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"chip-metric":["11px",{"lineHeight":"14px","fontWeight":"500"}],"label-md":["13px",{"lineHeight":"18px","fontWeight":"500"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"label-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"headline-lg-mobile":["26px",{"lineHeight":"32px","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"display-mobile":["36px",{"lineHeight":"42px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-uppercase":["12px",{"lineHeight":"16px","letterSpacing":"0.08em","fontWeight":"500"}]}}}};</script></head><body class="bg-bg-0 text-text-1 font-body-md"><header class="fixed top-0 left-0 right-0 z-50 h-14 bg-bg-1 border-b border-border-structural"><div class="w-full h-14 px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-md shrink-0"><div class="flex items-center gap-space-sm"><div class="relative flex items-center justify-center w-8 h-8 rounded-lg bg-bg-2 border border-border-structural"><svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M4 18c4-4 4-8 8-8s4 4 8 0"></path></svg><div class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-node-queue shadow-[0_0_8px_#22D3EE]"></div></div><span class="font-headline-sm text-headline-sm text-text-1 tracking-tight">FlowTrace</span><span class="font-code-sm text-code-sm px-space-xs py-0.5 rounded bg-bg-3 text-text-3 border border-border-structural">v1.0</span></div><div class="h-4 w-px bg-border-structural"></div><button class="flex items-center gap-space-xs px-space-sm py-1 rounded-lg bg-bg-2 border border-border-structural text-text-2 hover:text-text-1 hover:border-border-strong transition-all font-label-md text-label-md"><span>Production Mesh</span><span class="material-symbols-outlined text-text-3 text-[16px]">expand_more</span></button><div class="flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-bg-2 border border-border-structural"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-ok opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-status-ok"></span></span><span class="font-chip-metric text-chip-metric text-status-ok uppercase tracking-wider font-semibold">Live</span></div><nav class="hidden lg:flex items-center gap-space-xs ml-space-sm" data-active-classes="bg-bg-3 text-text-1 font-semibold rounded-lg"><a aria-current="page" class="px-space-sm py-1 transition-colors bg-bg-3 text-text-1 font-semibold rounded-lg" data-path="live-topology" href="#">Live Topology</a><a class="px-space-sm py-1 rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 transition-colors font-label-md text-label-md" data-path="traces" href="#">Traces</a><a class="px-space-sm py-1 rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 transition-colors font-label-md text-label-md" data-path="service-mesh" href="#">Service Mesh</a><a class="px-space-sm py-1 rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 transition-colors font-label-md text-label-md" data-path="metrics" href="#">Metrics</a></nav></div><div class="flex items-center gap-space-sm"><div class="relative hidden sm:flex items-center"><span class="material-symbols-outlined absolute left-space-sm text-text-3 text-[18px] pointer-events-none">search</span><input class="w-60 lg:w-72 h-8 pl-8 pr-12 rounded-lg bg-bg-3 border border-border-structural text-text-1 placeholder:text-text-3 font-body-md text-body-md focus:outline-none focus:border-node-queue transition-colors" placeholder="search trace id…" type="text"/><kbd class="absolute right-space-sm px-1.5 py-0.5 rounded bg-bg-2 border border-border-structural text-text-3 font-code-sm text-[10px]">⌘K</kbd></div><button class="flex items-center justify-center w-8 h-8 rounded-lg bg-bg-2 border border-border-structural text-text-2 hover:text-text-1 hover:border-border-strong transition-all"><span class="material-symbols-outlined text-[18px]">dark_mode</span></button><button class="hidden md:flex items-center gap-space-xs px-space-sm h-8 rounded-lg bg-bg-3 border border-border-structural text-text-1 hover:border-border-strong hover:bg-bg-2 transition-all font-label-md text-label-md"><span class="material-symbols-outlined text-[16px] text-text-2">share</span><span>Share</span></button><button class="flex items-center justify-center w-8 h-8 rounded-lg bg-bg-2 border border-border-structural text-text-2 hover:text-text-1 hover:border-border-strong transition-all"><span class="material-symbols-outlined text-[18px]">settings</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-14 bg-bg-0 min-h-screen"><div class="flex flex-col w-full relative select-none overflow-hidden" style="height: calc(100vh - 3.5rem);">
+<div class="flex w-full h-full relative overflow-hidden bg-bg-0">
+<!-- Left Palette / Quick Scope Sub-rail -->
+<div class="hidden xl:flex flex-col w-14 shrink-0 bg-bg-1 border-r border-border-structural items-center py-space-md justify-between z-20">
+<div class="flex flex-col gap-space-sm items-center">
+<button class="w-9 h-9 rounded-lg bg-bg-3 text-text-1 flex items-center justify-center border border-border-strong hover:bg-bg-2 transition-colors" title="Hand Tool">
+<span class="material-symbols-outlined text-[20px]">pan_tool</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-bg-2 text-text-2 flex items-center justify-center hover:text-text-1 hover:bg-bg-3 transition-colors" title="Select / Box">
+<span class="material-symbols-outlined text-[20px]">near_me</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-bg-2 text-text-2 flex items-center justify-center hover:text-text-1 hover:bg-bg-3 transition-colors" title="Add Node">
+<span class="material-symbols-outlined text-[20px]">add_box</span>
+</button>
+<div class="w-6 h-px bg-border-structural my-space-xs"></div>
+<button class="w-9 h-9 rounded-lg bg-bg-2 text-text-2 flex items-center justify-center hover:text-text-1 hover:bg-bg-3 transition-colors" title="Filter Layers">
+<span class="material-symbols-outlined text-[20px]">layers</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-bg-2 text-text-2 flex items-center justify-center hover:text-text-1 hover:bg-bg-3 transition-colors" title="Topology Rules">
+<span class="material-symbols-outlined text-[20px]">route</span>
+</button>
+</div>
+<div class="flex flex-col gap-space-sm items-center">
+<button class="w-9 h-9 rounded-lg bg-bg-2 text-status-ok flex items-center justify-center hover:bg-bg-3 transition-colors relative" title="Graph Diagnostics">
+<span class="material-symbols-outlined text-[20px]">troubleshoot</span>
+<span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-bg-2 text-text-3 flex items-center justify-center hover:text-text-1 hover:bg-bg-3 transition-colors" title="Help & Shortcuts">
+<span class="material-symbols-outlined text-[18px]">help</span>
+</button>
+</div>
+</div>
+<!-- Center Canvas Viewport -->
+<div class="relative flex-1 h-full overflow-hidden" id="canvas-container">
+<!-- Canvas Dotted Background Grid (24px interval dots) -->
+<div class="absolute inset-0 pointer-events-none" style="background-color: #0B0D12; background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px); background-size: 24px 24px;"></div>
+<!-- Top Overlay Controls: Quick Stats & Breadcrumb -->
+<div class="absolute top-space-md left-space-lg flex items-center gap-space-md z-20 pointer-events-auto">
+<div class="flex items-center gap-space-sm px-space-md py-1.5 rounded-lg bg-bg-1/90 border border-border-structural backdrop-blur-md shadow-sm">
+<span class="font-code-sm text-code-sm text-text-3">MESH:</span>
+<span class="font-label-md text-label-md text-text-1 font-semibold">us-east-cluster-prod</span>
+<span class="w-1 h-1 rounded-full bg-border-strong"></span>
+<span class="font-code-sm text-code-sm text-node-queue">HTTP/2 + gRPC</span>
+</div>
+<div class="hidden md:flex items-center gap-space-sm px-space-md py-1.5 rounded-lg bg-bg-1/90 border border-border-structural backdrop-blur-md shadow-sm">
+<span class="flex h-2 w-2 rounded-full bg-status-ok"></span>
+<span class="font-label-md text-label-md text-text-2">Mesh Ingress:</span>
+<span class="font-code-sm text-code-sm text-text-1 font-medium">4,812 req/s</span>
+<span class="text-border-strong">|</span>
+<span class="font-label-md text-label-md text-text-2">p95 Latency:</span>
+<span class="font-code-sm text-code-sm text-status-warn font-medium">24.1ms</span>
+</div>
+</div>
+<!-- SVG Graph Connections & Animated Flow Particles -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient id="edge-active-gradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#22D3EE"></stop>
+<stop offset="100%" stop-color="#8B5CF6"></stop>
+</lineargradient>
+<radialgradient cx="50%" cy="50%" id="particle-cyan-glow" r="50%">
+<stop offset="0%" stop-color="#22D3EE" stop-opacity="1"></stop>
+<stop offset="60%" stop-color="#8B5CF6" stop-opacity="0.8"></stop>
+<stop offset="100%" stop-color="#8B5CF6" stop-opacity="0"></stop>
+</radialgradient>
+<radialgradient cx="50%" cy="50%" id="particle-error-glow" r="50%">
+<stop offset="0%" stop-color="#F43F5E" stop-opacity="1"></stop>
+<stop offset="50%" stop-color="#F43F5E" stop-opacity="0.8"></stop>
+<stop offset="100%" stop-color="#F43F5E" stop-opacity="0"></stop>
+</radialgradient>
+<marker id="arrowhead" markerheight="6" markerwidth="8" orient="auto" refx="7" refy="3">
+<polygon fill="#343C4F" points="0 0, 8 3, 0 6"></polygon>
+</marker>
+<marker id="arrowhead-active" markerheight="6" markerwidth="8" orient="auto" refx="7" refy="3">
+<polygon fill="#8B5CF6" points="0 0, 8 3, 0 6"></polygon>
+</marker>
+<marker id="arrowhead-error" markerheight="6" markerwidth="8" orient="auto" refx="7" refy="3">
+<polygon fill="#F43F5E" points="0 0, 8 3, 0 6"></polygon>
+</marker>
+</defs>
+<!-- Path 1: Website (460, 96) -> Load Balancer (460, 184) -->
+<path d="M 460 96 C 460 135, 460 145, 460 184" fill="none" id="path-web-lb" marker-end="url(#arrowhead)" stroke="#343C4F" stroke-linecap="round" stroke-width="2"></path>
+<!-- Path 2: Load Balancer (460, 256) -> Decision Premium (460, 344) -->
+<path d="M 460 256 C 460 295, 460 305, 460 344" fill="none" id="path-lb-decision" marker-end="url(#arrowhead)" stroke="#343C4F" stroke-linecap="round" stroke-width="2"></path>
+<!-- Path 3: Decision (460, 416) -> Service A (290, 514) [Yes Branch - Active Flow] -->
+<path d="M 460 416 C 460 465, 290 465, 290 514" fill="none" id="path-decision-svca" marker-end="url(#arrowhead-active)" stroke="url(#edge-active-gradient)" stroke-linecap="round" stroke-width="3"></path>
+<!-- Path 4: Decision (460, 416) -> Service B (630, 514) [No Branch - Error Flow] -->
+<path d="M 460 416 C 460 465, 630 465, 630 514" fill="none" id="path-decision-svcb" marker-end="url(#arrowhead-error)" stroke="#F43F5E" stroke-dasharray="6 4" stroke-linecap="round" stroke-width="2"></path>
+<!-- Path 5: Service A (290, 586) -> Database (460, 686) -->
+<path d="M 290 586 C 290 640, 460 632, 460 686" fill="none" id="path-svca-db" marker-end="url(#arrowhead)" stroke="#343C4F" stroke-linecap="round" stroke-width="2"></path>
+<!-- Path 6: Service B (630, 586) -> Database (460, 686) -->
+<path d="M 630 586 C 630 640, 460 632, 460 686" fill="none" id="path-svcb-db" marker-end="url(#arrowhead)" stroke="#343C4F" stroke-linecap="round" stroke-width="2"></path>
+<!-- Flow Particle 1: Website -> LB -->
+<g>
+<circle fill="url(#particle-cyan-glow)" r="12">
+<animatemotion dur="1.8s" path="M 460 96 C 460 135, 460 145, 460 184" repeatcount="indefinite"></animatemotion>
+</circle>
+<circle fill="#22D3EE" r="4.5">
+<animatemotion dur="1.8s" path="M 460 96 C 460 135, 460 145, 460 184" repeatcount="indefinite"></animatemotion>
+</circle>
+</g>
+<!-- Flow Particle 2: LB -> Decision -->
+<g>
+<circle fill="url(#particle-cyan-glow)" r="12">
+<animatemotion begin="0.6s" dur="1.8s" path="M 460 256 C 460 295, 460 305, 460 344" repeatcount="indefinite"></animatemotion>
+</circle>
+<circle fill="#22D3EE" r="4.5">
+<animatemotion begin="0.6s" dur="1.8s" path="M 460 256 C 460 295, 460 305, 460 344" repeatcount="indefinite"></animatemotion>
+</circle>
+</g>
+<!-- Flow Particle 3: Decision -> Service A -->
+<g>
+<circle fill="url(#particle-cyan-glow)" r="14">
+<animatemotion begin="1.2s" dur="2.1s" path="M 460 416 C 460 465, 290 465, 290 514" repeatcount="indefinite"></animatemotion>
+</circle>
+<circle fill="#8B5CF6" r="5">
+<animatemotion begin="1.2s" dur="2.1s" path="M 460 416 C 460 465, 290 465, 290 514" repeatcount="indefinite"></animatemotion>
+</circle>
+</g>
+<!-- Flow Particle 4: Decision -> Service B (Red Error Packet) -->
+<g>
+<circle fill="url(#particle-error-glow)" r="12">
+<animatemotion begin="0.4s" dur="2.3s" path="M 460 416 C 460 465, 630 465, 630 514" repeatcount="indefinite"></animatemotion>
+</circle>
+<circle fill="#F43F5E" r="4.5">
+<animatemotion begin="0.4s" dur="2.3s" path="M 460 416 C 460 465, 630 465, 630 514" repeatcount="indefinite"></animatemotion>
+</circle>
+</g>
+<!-- Flow Particle 5: Service A -> Database -->
+<g>
+<circle fill="url(#particle-cyan-glow)" r="10">
+<animatemotion begin="1.8s" dur="2.2s" path="M 290 586 C 290 640, 460 632, 460 686" repeatcount="indefinite"></animatemotion>
+</circle>
+<circle fill="#34D399" r="4">
+<animatemotion begin="1.8s" dur="2.2s" path="M 290 586 C 290 640, 460 632, 460 686" repeatcount="indefinite"></animatemotion>
+</circle>
+</g>
+</svg>
+<!-- Branch Decision Chips (positioned along splines) -->
+<div class="absolute z-10 pointer-events-none" style="left: 345px; top: 448px;">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-bg-2 border border-border-structural text-text-1 font-chip-metric text-chip-metric shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-node-queue"></span>
+<span>yes</span>
+<span class="text-text-3 font-code-sm">68%</span>
+</span>
+</div>
+<div class="absolute z-10 pointer-events-none" style="left: 540px; top: 448px;">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-bg-2 border border-status-error/40 text-status-error font-chip-metric text-chip-metric shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-status-error animate-pulse"></span>
+<span>no</span>
+<span class="text-status-error font-code-sm">32%</span>
+</span>
+</div>
+<!-- Canvas Interactive Nodes Container -->
+<div class="absolute inset-0 z-10 pointer-events-none">
+<!-- 1. WEBSITE NODE (Source) -->
+<div class="absolute pointer-events-auto cursor-pointer transition-transform hover:-translate-y-0.5" style="left: 348px; top: 24px; width: 224px; height: 72px;">
+<div class="relative w-full h-full rounded-[14px] bg-bg-2 border border-border-structural px-space-md py- space-xs flex items-center justify-between shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-border-strong group">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-[10px] bg-node-source/15 flex items-center justify-center text-node-source shrink-0">
+<span class="material-symbols-outlined text-[22px]">language</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-node-label text-body-node-label text-text-1 truncate group-hover:text-primary transition-colors">Website</span>
+<span class="font-code-sm text-code-sm text-text-3 truncate">web_ingress_01</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0 pl-1">
+<span class="font-code-sm text-code-sm text-node-source font-semibold tabular-nums">4.8k/s</span>
+<span class="font-chip-metric text-chip-metric text-status-ok flex items-center gap-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span> 100%
+              </span>
+</div>
+<!-- Bottom Port Anchor -->
+<div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong group-hover:scale-125 transition-transform"></div>
+</div>
+</div>
+<!-- 2. LOAD BALANCER NODE (Queue/Service) -->
+<div class="absolute pointer-events-auto cursor-pointer transition-transform hover:-translate-y-0.5" style="left: 348px; top: 184px; width: 224px; height: 72px;">
+<div class="relative w-full h-full rounded-[14px] bg-bg-2 border border-border-structural px-space-md py-space-xs flex items-center justify-between shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-border-strong group">
+<!-- Top Port Anchor -->
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong"></div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-[10px] bg-node-queue/15 flex items-center justify-center text-node-queue shrink-0">
+<span class="material-symbols-outlined text-[22px]">hub</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-node-label text-body-node-label text-text-1 truncate group-hover:text-node-queue transition-colors">Load Balancer</span>
+<span class="font-code-sm text-code-sm text-text-3 truncate">lb_edge_traff</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0 pl-1">
+<span class="font-code-sm text-code-sm text-node-queue font-semibold tabular-nums">4.8k/s</span>
+<span class="font-chip-metric text-chip-metric text-text-3">HAProxy</span>
+</div>
+<!-- Bottom Port Anchor -->
+<div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong group-hover:scale-125 transition-transform"></div>
+</div>
+</div>
+<!-- 3. DECISION NODE "Premium?" (Decision) -->
+<div class="absolute pointer-events-auto cursor-pointer transition-transform hover:-translate-y-0.5" style="left: 348px; top: 344px; width: 224px; height: 72px;">
+<div class="relative w-full h-full rounded-[14px] bg-bg-2 border border-border-structural pl-3.5 pr-space-md py-space-xs flex items-center justify-between shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-border-strong group overflow-hidden">
+<!-- 3px Solid Amber Left Accent Bar -->
+<div class="absolute left-0 top-0 bottom-0 w-[3px] bg-node-decision"></div>
+<!-- Top Port Anchor -->
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong"></div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-[10px] bg-node-decision/15 flex items-center justify-center text-node-decision shrink-0">
+<span class="material-symbols-outlined text-[22px]">alt_route</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-node-label text-body-node-label text-text-1 truncate group-hover:text-node-decision transition-colors">Premium?</span>
+<span class="font-code-sm text-code-sm text-text-3 truncate">dec_tier_check</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0 pl-1">
+<span class="font-code-sm text-code-sm text-node-decision font-semibold tabular-nums">4.8k/s</span>
+<span class="font-chip-metric text-chip-metric text-text-3">Auth Rule</span>
+</div>
+<!-- Bottom Port Anchor -->
+<div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong group-hover:scale-125 transition-transform"></div>
+</div>
+</div>
+<!-- 4A. SERVICE A (Selected State with Halo Glow) -->
+<div class="absolute pointer-events-auto cursor-pointer transition-transform" style="left: 178px; top: 514px; width: 224px; height: 72px;">
+<div class="relative w-full h-full rounded-[14px] bg-bg-2 px-space-md py-space-xs flex items-center justify-between shadow-[0_0_0_1.5px_rgba(34,211,238,0.5),0_0_24px_rgba(139,92,246,0.3)] border border-node-queue/80 group">
+<!-- Selected Indicator Ribbon/Ring -->
+<div class="absolute -top-2.5 left-3 px-1.5 py-0.2 rounded bg-node-queue text-bg-0 font-chip-metric text-[10px] font-bold tracking-wider uppercase">Active Focus</div>
+<!-- Top Port Anchor -->
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-node-queue"></div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-[10px] bg-node-service/20 flex items-center justify-center text-node-service shrink-0">
+<span class="material-symbols-outlined text-[22px]">memory</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-node-label text-body-node-label text-text-1 truncate font-semibold">Service A (Priority)</span>
+<span class="font-code-sm text-code-sm text-node-queue truncate">svc_priority_proc</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0 pl-1">
+<span class="font-code-sm text-code-sm text-node-queue font-semibold tabular-nums">3.2k/s</span>
+<span class="font-chip-metric text-chip-metric text-status-ok flex items-center gap-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span> 99.9%
+              </span>
+</div>
+<!-- Bottom Port Anchor -->
+<div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong group-hover:scale-125 transition-transform"></div>
+</div>
+</div>
+<!-- 4B. SERVICE B (Error Warning State) -->
+<div class="absolute pointer-events-auto cursor-pointer transition-transform hover:-translate-y-0.5" style="left: 518px; top: 514px; width: 224px; height: 72px;">
+<div class="relative w-full h-full rounded-[14px] bg-bg-2 px-space-md py-space-xs flex items-center justify-between border border-status-error shadow-[0_0_18px_rgba(244,63,94,0.25)] group">
+<!-- Top Port Anchor -->
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-status-error"></div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-[10px] bg-node-service/15 flex items-center justify-center text-node-service shrink-0">
+<span class="material-symbols-outlined text-[22px]">layers</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-node-label text-body-node-label text-text-1 truncate group-hover:text-status-error transition-colors">Service B (Standard)</span>
+<span class="font-code-sm text-code-sm text-text-3 truncate">svc_batch_worker</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0 pl-1">
+<span class="font-code-sm text-code-sm text-text-1 font-semibold tabular-nums">1.6k/s</span>
+<!-- Error Pill Badge -->
+<span class="font-chip-metric text-chip-metric text-status-error font-semibold bg-status-error/15 border border-status-error/30 px-1.5 py-0.5 rounded-full flex items-center gap-1 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-error animate-ping"></span> 148 err
+              </span>
+</div>
+<!-- Bottom Port Anchor -->
+<div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong group-hover:scale-125 transition-transform"></div>
+</div>
+</div>
+<!-- 5. DATABASE NODE (Primary Cluster) -->
+<div class="absolute pointer-events-auto cursor-pointer transition-transform hover:-translate-y-0.5" style="left: 348px; top: 686px; width: 224px; height: 72px;">
+<div class="relative w-full h-full rounded-[14px] bg-bg-2 border border-border-structural px-space-md py-space-xs flex items-center justify-between shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-border-strong group">
+<!-- Top Port Anchor -->
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong"></div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-[10px] bg-node-datastore/15 flex items-center justify-center text-node-datastore shrink-0">
+<span class="material-symbols-outlined text-[22px]">database</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-node-label text-body-node-label text-text-1 truncate group-hover:text-node-datastore transition-colors">Primary Cluster</span>
+<span class="font-code-sm text-code-sm text-text-3 truncate">db_aurora_core</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0 pl-1">
+<span class="font-code-sm text-code-sm text-node-datastore font-semibold tabular-nums">4.6k/s</span>
+<span class="font-chip-metric text-chip-metric text-status-ok">Postgres 16</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Minimap (Bottom-Right, Docked above toolbar edge) -->
+<div class="absolute bottom-20 right-6 w-40 h-28 rounded-xl bg-bg-1/95 border border-border-structural p-2 shadow-xl backdrop-blur-md z-20 flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-chip-metric text-[10px] uppercase tracking-wider text-text-3 font-semibold">Minimap</span>
+<span class="font-code-sm text-[10px] text-text-3">100%</span>
+</div>
+<!-- Scaled Mini Map Representation -->
+<div class="relative w-full h-20 bg-bg-0 rounded-lg overflow-hidden border border-border-structural/50">
+<svg class="w-full h-full" viewbox="0 0 160 80">
+<!-- Thumbnail Path Connections -->
+<path d="M 80 10 L 80 24 L 80 38 M 80 38 L 50 54 M 80 38 L 110 54 M 50 54 L 80 70 M 110 54 L 80 70" fill="none" stroke="#343C4F" stroke-width="1.5"></path>
+<!-- Node Dots -->
+<circle cx="80" cy="10" fill="#60A5FA" r="3"></circle>
+<circle cx="80" cy="24" fill="#22D3EE" r="3"></circle>
+<circle cx="80" cy="38" fill="#F59E0B" r="3"></circle>
+<circle cx="50" cy="54" fill="#8B5CF6" r="3.5" stroke="#22D3EE" stroke-width="1"></circle>
+<circle cx="110" cy="54" fill="#F43F5E" r="3"></circle>
+<circle cx="80" cy="70" fill="#34D399" r="3"></circle>
+<!-- Viewport Box Highlight -->
+<rect fill="none" height="76" opacity="0.8" rx="3" stroke="#22D3EE" stroke-dasharray="2 2" stroke-width="1" width="112" x="24" y="2"></rect>
+</svg>
+</div>
+</div>
+<!-- Floating Pill Toolbar (Bottom-Center) -->
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 pointer-events-auto">
+<div class="h-11 px-3.5 rounded-full bg-bg-1/90 border border-border-structural backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.6)] flex items-center gap-space-md">
+<!-- Play / Live Status -->
+<button class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-bg-3 border border-border-structural hover:border-border-strong text-text-1 transition-all">
+<span class="w-2 h-2 rounded-full bg-status-ok animate-pulse"></span>
+<span class="font-label-md text-label-md font-semibold text-status-ok">Live</span>
+</button>
+<div class="h-4 w-px bg-border-structural"></div>
+<!-- Speed Slider & Indicator -->
+<div class="flex items-center gap-2">
+<span class="font-code-sm text-code-sm text-text-3 font-medium">Speed:</span>
+<input class="w-16 h-1 bg-bg-3 rounded-lg appearance-none cursor-pointer accent-node-queue" max="4" min="0.25" step="0.25" type="range" value="1.0"/>
+<span class="font-code-sm text-code-sm text-text-1 font-semibold w-8 tabular-nums">1.0×</span>
+</div>
+<div class="h-4 w-px bg-border-structural"></div>
+<!-- Mode Toggle Pill -->
+<div class="flex items-center p-0.5 rounded-full bg-bg-0 border border-border-structural text-text-2 text-label-sm font-label-sm">
+<button class="px-2.5 py-1 rounded-full bg-bg-2 text-text-1 font-medium shadow-xs">Realtime</button>
+<button class="px-2.5 py-1 rounded-full text-text-3 hover:text-text-2">Smooth</button>
+</div>
+<!-- Labels Toggle Pill (Active) -->
+<button class="px-2.5 py-1 rounded-full bg-bg-3 border border-node-queue/50 text-node-queue font-label-sm text-label-sm font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check</span>
+<span>Labels</span>
+</button>
+<div class="h-4 w-px bg-border-structural"></div>
+<!-- Fit to Screen & Edit CTA -->
+<button class="w-7 h-7 rounded-lg bg-bg-2 border border-border-structural text-text-2 hover:text-text-1 flex items-center justify-center transition-colors" title="Fit to Screen">
+<span class="material-symbols-outlined text-[16px]">fit_screen</span>
+</button>
+<button class="px-3 py-1 rounded-lg bg-bg-3 border border-border-structural hover:border-border-strong text-text-1 font-label-md text-label-md flex items-center gap-1 transition-all">
+<span class="material-symbols-outlined text-[15px] text-text-3">edit</span>
+<span>Edit</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Right-Hand Inspector Drawer (360px Fixed Desktop) -->
+<aside class="w-[360px] shrink-0 h-full bg-bg-1 border-l border-border-structural flex flex-col z-30 shadow-2xl">
+<!-- Drawer Header -->
+<div class="p-space-lg border-b border-border-structural flex flex-col gap-space-sm bg-bg-1/90">
+<div class="flex items-center justify-between">
+<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-node-service/15 border border-node-service/30 text-node-service font-chip-metric text-chip-metric font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-node-service"></span>
+<span>Service A · Selected</span>
+</div>
+<button class="w-7 h-7 rounded-lg bg-bg-2 border border-border-structural text-text-3 hover:text-text-1 hover:border-border-strong flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-text-1 tracking-tight">Service A (Priority)</h2>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-code-sm text-code-sm text-text-2 px-1.5 py-0.5 rounded bg-bg-0 border border-border-structural">svc_priority_proc</span>
+<button class="text-text-3 hover:text-node-queue transition-colors flex items-center" title="Copy node key">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+<span class="text-text-3 font-code-sm text-xs ml-auto">v2.14.0</span>
+</div>
+</div>
+</div>
+<!-- Telemetry Metrics Section -->
+<div class="p-space-lg border-b border-border-structural flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-uppercase text-label-uppercase text-text-3 font-semibold">Realtime Telemetry</span>
+<span class="font-chip-metric text-chip-metric text-status-ok bg-status-ok/10 px-2 py-0.5 rounded border border-status-ok/20">Operational</span>
+</div>
+<!-- 2x2 Metric Stat Grid -->
+<div class="grid grid-cols-2 gap-space-sm">
+<div class="p-2.5 rounded-xl bg-bg-2 border border-border-structural flex flex-col">
+<span class="font-label-sm text-label-sm text-text-3">Ingress Rate</span>
+<span class="font-headline-sm text-headline-sm text-text-1 tabular-nums mt-0.5">3,240 <span class="font-body-md text-xs text-text-3 font-normal">req/s</span></span>
+</div>
+<div class="p-2.5 rounded-xl bg-bg-2 border border-border-structural flex flex-col">
+<span class="font-label-sm text-label-sm text-text-3">Egress Rate</span>
+<span class="font-headline-sm text-headline-sm text-text-1 tabular-nums mt-0.5">3,238 <span class="font-body-md text-xs text-text-3 font-normal">req/s</span></span>
+</div>
+<div class="p-2.5 rounded-xl bg-bg-2 border border-border-structural flex flex-col">
+<span class="font-label-sm text-label-sm text-text-3">p99 Latency</span>
+<span class="font-headline-sm text-headline-sm text-node-queue tabular-nums mt-0.5">18.4 <span class="font-body-md text-xs text-text-3 font-normal">ms</span></span>
+</div>
+<div class="p-2.5 rounded-xl bg-bg-2 border border-border-structural flex flex-col">
+<span class="font-label-sm text-label-sm text-text-3">Error Rate</span>
+<span class="font-headline-sm text-headline-sm text-status-ok tabular-nums mt-0.5">0.02 <span class="font-body-md text-xs text-text-3 font-normal">%</span></span>
+</div>
+</div>
+<!-- Mini Sparkline Area Chart -->
+<div class="p-3 rounded-xl bg-bg-0 border border-border-structural flex flex-col gap-2">
+<div class="flex items-center justify-between text-code-sm font-code-sm">
+<span class="text-text-3">Traffic Throughput (60s)</span>
+<span class="text-node-queue font-medium">3.24k req/s max</span>
+</div>
+<div class="w-full h-14 relative">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 280 60">
+<defs>
+<lineargradient id="sparkline-fill" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#22D3EE" stop-opacity="0.35"></stop>
+<stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.0"></stop>
+</lineargradient>
+<lineargradient id="sparkline-stroke" x1="0" x2="1" y1="0" y2="0">
+<stop offset="0%" stop-color="#22D3EE"></stop>
+<stop offset="100%" stop-color="#8B5CF6"></stop>
+</lineargradient>
+</defs>
+<!-- Filled Area -->
+<path d="M 0 50 L 0 35 C 20 28, 40 42, 60 30 C 80 18, 100 24, 120 15 C 140 10, 160 22, 180 18 C 200 12, 220 28, 240 16 C 260 8, 275 14, 280 10 L 280 60 Z" fill="url(#sparkline-fill)"></path>
+<!-- Top Path Stroke -->
+<path d="M 0 35 C 20 28, 40 42, 60 30 C 80 18, 100 24, 120 15 C 140 10, 160 22, 180 18 C 200 12, 220 28, 240 16 C 260 8, 275 14, 280 10" fill="none" stroke="url(#sparkline-stroke)" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Trace Stream List (Scrollable) -->
+<div class="flex-1 overflow-y-auto flex flex-col p-space-lg gap-space-sm">
+<div class="flex items-center justify-between sticky top-0 bg-bg-1/95 py-1 z-10">
+<span class="font-label-uppercase text-label-uppercase text-text-3 font-semibold">Live Trace Stream</span>
+<span class="font-code-sm text-code-sm text-text-3">Last 20 traces</span>
+</div>
+<!-- Trace 1 (Healthy) -->
+<div class="p-2.5 rounded-xl bg-bg-2 border border-border-structural hover:border-border-strong flex flex-col gap-1.5 transition-all cursor-pointer">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-status-ok"></span>
+<span class="font-code-sm text-code-sm text-text-1 font-semibold">0194fe2b_gw</span>
+</div>
+<span class="font-code-sm text-code-sm text-status-ok bg-status-ok/10 px-1.5 py-0.5 rounded border border-status-ok/20">14ms</span>
+</div>
+<div class="flex items-center gap-1 text-[11px] text-text-3 font-code-sm truncate">
+<span class="text-text-2">Website</span>
+<span>→</span>
+<span class="text-text-2">LB</span>
+<span>→</span>
+<span class="text-node-queue font-medium">Svc A</span>
+<span>→</span>
+<span class="text-text-2">DB</span>
+</div>
+</div>
+<!-- Trace 2 (Healthy) -->
+<div class="p-2.5 rounded-xl bg-bg-2 border border-border-structural hover:border-border-strong flex flex-col gap-1.5 transition-all cursor-pointer">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-status-ok"></span>
+<span class="font-code-sm text-code-sm text-text-1 font-semibold">0194fe2a_p9</span>
+</div>
+<span class="font-code-sm text-code-sm text-status-ok bg-status-ok/10 px-1.5 py-0.5 rounded border border-status-ok/20">22ms</span>
+</div>
+<div class="flex items-center gap-1 text-[11px] text-text-3 font-code-sm truncate">
+<span class="text-text-2">Website</span>
+<span>→</span>
+<span class="text-text-2">LB</span>
+<span>→</span>
+<span class="text-node-queue font-medium">Svc A</span>
+<span>→</span>
+<span class="text-text-2">DB</span>
+</div>
+</div>
+<!-- Trace 3 (Warning Latency) -->
+<div class="p-2.5 rounded-xl bg-bg-2 border border-status-warn/40 hover:border-status-warn flex flex-col gap-1.5 transition-all cursor-pointer bg-status-warn/5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-status-warn animate-pulse"></span>
+<span class="font-code-sm text-code-sm text-text-1 font-semibold">0194fe26_x7</span>
+</div>
+<span class="font-code-sm text-code-sm text-status-warn bg-status-warn/15 px-1.5 py-0.5 rounded border border-status-warn/30 font-semibold">118ms</span>
+</div>
+<div class="flex items-center gap-1 text-[11px] text-text-3 font-code-sm truncate">
+<span class="text-text-2">Website</span>
+<span>→</span>
+<span class="text-text-2">LB</span>
+<span>→</span>
+<span class="text-status-warn font-medium">Svc A [slow]</span>
+<span>→</span>
+<span class="text-text-2">DB</span>
+</div>
+</div>
+<!-- Trace 4 (Healthy) -->
+<div class="p-2.5 rounded-xl bg-bg-2 border border-border-structural hover:border-border-strong flex flex-col gap-1.5 transition-all cursor-pointer">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-status-ok"></span>
+<span class="font-code-sm text-code-sm text-text-1 font-semibold">0194fe21_km</span>
+</div>
+<span class="font-code-sm text-code-sm text-status-ok bg-status-ok/10 px-1.5 py-0.5 rounded border border-status-ok/20">19ms</span>
+</div>
+<div class="flex items-center gap-1 text-[11px] text-text-3 font-code-sm truncate">
+<span class="text-text-2">Website</span>
+<span>→</span>
+<span class="text-text-2">LB</span>
+<span>→</span>
+<span class="text-node-queue font-medium">Svc A</span>
+<span>→</span>
+<span class="text-text-2">DB</span>
+</div>
+</div>
+<!-- Trace 5 (Healthy) -->
+<div class="p-2.5 rounded-xl bg-bg-2 border border-border-structural hover:border-border-strong flex flex-col gap-1.5 transition-all cursor-pointer">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-status-ok"></span>
+<span class="font-code-sm text-code-sm text-text-1 font-semibold">0194fe19_0a</span>
+</div>
+<span class="font-code-sm text-code-sm text-status-ok bg-status-ok/10 px-1.5 py-0.5 rounded border border-status-ok/20">16ms</span>
+</div>
+<div class="flex items-center gap-1 text-[11px] text-text-3 font-code-sm truncate">
+<span class="text-text-2">Website</span>
+<span>→</span>
+<span class="text-text-2">LB</span>
+<span>→</span>
+<span class="text-node-queue font-medium">Svc A</span>
+<span>→</span>
+<span class="text-text-2">DB</span>
+</div>
+</div>
+</div>
+<!-- Drawer Footer Actions -->
+<div class="p-space-md border-t border-border-structural flex items-center gap-space-sm bg-bg-1/95">
+<button class="flex-1 h-9 rounded-lg bg-bg-3 border border-border-structural hover:border-border-strong text-text-1 font-label-md text-label-md transition-colors flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">terminal</span>
+<span>View Logs</span>
+</button>
+<button class="h-9 px-3 rounded-lg bg-gradient-to-r from-node-queue to-node-service text-bg-0 font-label-md text-label-md font-semibold hover:opacity-90 transition-opacity flex items-center gap-1">
+<span>Span Waterfall</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</aside>
+</div>
+</div></main></body></html>

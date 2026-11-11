@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; } .canvas-dot-grid { background-color: #0B0D12; background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px); background-size: 24px 24px; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-surface": "#e2e2e9", "on-tertiary-fixed-variant": "#643f00", "outline": "#859397", "border-structural": "#262C3A", "on-error-container": "#ffdad6", "node-end": "#F472B6", "background": "#111318", "on-surface-variant": "#bbc9cd", "tertiary": "#ffd6a3", "tertiary-fixed-dim": "#ffb957", "secondary-fixed": "#e9ddff", "status-error": "#F43F5E", "on-tertiary-container": "#6e4600", "status-warn": "#F59E0B", "on-tertiary-fixed": "#2a1800", "error-container": "#93000a", "node-service": "#8B5CF6", "on-secondary-fixed": "#23005c", "status-info": "#60A5FA", "secondary-fixed-dim": "#d0bcff", "bg-2": "#171B24", "primary-container": "#22d3ee", "surface-container": "#1e1f25", "inverse-on-surface": "#2e3036", "on-primary-fixed": "#001f25", "surface-container-high": "#282a2f", "node-decision": "#F59E0B", "surface-container-highest": "#33353a", "on-secondary-fixed-variant": "#5516be", "surface-container-lowest": "#0c0e13", "on-secondary-container": "#c4abff", "on-secondary": "#3c0091", "node-external": "#94A3B8", "text-2": "#A3ACBF", "surface-variant": "#33353a", "secondary-container": "#571bc1", "bg-3": "#1E2330", "border-strong": "#343C4F", "tertiary-container": "#ffb13b", "secondary": "#d0bcff", "surface-container-low": "#1a1b21", "on-primary": "#00363e", "on-background": "#e2e2e9", "surface-tint": "#2fd9f4", "on-tertiary": "#462b00", "status-ok": "#34D399", "bg-0": "#0B0D12", "surface": "#111318", "inverse-surface": "#e2e2e9", "on-primary-container": "#005763", "tertiary-fixed": "#ffddb5", "on-error": "#690005", "inverse-primary": "#006877", "text-3": "#7C869C", "primary": "#8aebff", "surface-dim": "#111318", "primary-fixed": "#a2eeff", "on-primary-fixed-variant": "#004e5a", "surface-bright": "#37393f", "outline-variant": "#3c494c", "node-queue": "#22D3EE", "bg-1": "#11141B", "status-discovered": "#F59E0B", "primary-fixed-dim": "#2fd9f4", "node-datastore": "#34D399", "text-1": "#E8ECF4", "node-source": "#60A5FA", "error": "#ffb4ab" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-xs": "0.25rem", "space-lg": "1rem", "space-sm": "0.5rem", "margin": "1rem", "gutter": "1rem", "space-xl": "1.5rem", "gutter-desktop": "1.5rem", "margin-desktop": "1.5rem", "space-md": "0.75rem" }, "fontFamily": { "code-sm": [ "JetBrains Mono" ], "chip-metric": [ "Inter" ], "label-md": [ "Inter" ], "headline-sm": [ "Inter" ], "headline-md": [ "Inter" ], "code-block": [ "JetBrains Mono" ], "label-uppercase": [ "Inter" ], "display-mobile": [ "Inter" ], "headline-lg": [ "Inter" ], "display": [ "Inter" ], "body-md": [ "Inter" ], "body-lg": [ "Inter" ], "headline-lg-mobile": [ "Inter" ], "body-node-label": [ "Inter" ], "label-sm": [ "Inter" ] }, "fontSize": { "code-sm": [ "12px", { "lineHeight": "16px", "fontWeight": "500" } ], "chip-metric": [ "11px", { "lineHeight": "14px", "fontWeight": "500" } ], "label-md": [ "13px", { "lineHeight": "18px", "fontWeight": "500" } ], "headline-sm": [ "20px", { "lineHeight": "28px", "fontWeight": "600" } ], "headline-md": [ "24px", { "lineHeight": "32px", "fontWeight": "600" } ], "code-block": [ "13px", { "lineHeight": "20px", "fontWeight": "400" } ], "label-uppercase": [ "12px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500" } ], "display-mobile": [ "36px", { "lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "headline-lg": [ "32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "display": [ "48px", { "lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "600" } ], "body-md": [ "14px", { "lineHeight": "20px", "fontWeight": "400" } ], "body-lg": [ "16px", { "lineHeight": "24px", "fontWeight": "400" } ], "headline-lg-mobile": [ "26px", { "lineHeight": "32px", "fontWeight": "600" } ], "body-node-label": [ "14px", { "lineHeight": "20px", "fontWeight": "600" } ], "label-sm": [ "12px", { "lineHeight": "16px", "fontWeight": "400" } ] } } } };</script></head><body class="bg-bg-0 text-text-1 font-body-md text-body-md min-h-screen selection:bg-primary selection:text-on-primary"><header class="fixed top-0 w-full z-50 bg-bg-1/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.5)]"><div class="h-14 w-full px-margin-desktop flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-md group" data-path="overview" href="#"><div class="w-8 h-8 rounded-lg bg-bg-2 flex items-center justify-center p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"><svg class="w-full h-full fill-none" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 7C4 5.34315 5.34315 4 7 4H17C18.6569 4 20 5.34315 20 7V17C20 18.6569 18.6569 20 17 20H7C5.34315 20 4 18.6569 4 17V7Z" stroke="url(#grad-icon)" stroke-width="1.5"></path><path d="M8 15C10.5 15 11 9 16 9" stroke="url(#grad-icon)" stroke-linecap="round" stroke-width="2"></path><circle cx="16" cy="9" fill="#22D3EE" r="1.5"></circle><defs><lineargradient gradientunits="userSpaceOnUse" id="grad-icon" x1="4" x2="20" y1="4" y2="20"><stop stop-color="#22D3EE"></stop><stop offset="1" stop-color="#8B5CF6"></stop></lineargradient></defs></svg></div><div class="flex items-center gap-space-sm"><span class="font-headline-sm text-headline-sm text-text-1 tracking-tight hidden sm:inline">FlowTrace</span><span class="font-label-uppercase text-label-uppercase text-text-3 px-space-xs py-0.5 rounded bg-bg-3 hidden lg:inline">v1.0</span></div></a><div class="h-4 w-px bg-bg-3 hidden md:block"></div><nav class="hidden md:flex items-center gap-space-xs" data-active-classes="bg-bg-3 text-text-1 font-label-md text-label-md rounded-lg"><a class="px-space-md py-1.5 rounded-lg text-text-2 hover:bg-bg-3 hover:text-text-1 font-label-md text-label-md transition-colors" data-path="tokens" href="#">Tokens</a><a class="px-space-md py-1.5 rounded-lg text-text-2 hover:bg-bg-3 hover:text-text-1 font-label-md text-label-md transition-colors" data-path="components" href="#">Components</a><a class="px-space-md py-1.5 rounded-lg text-text-2 hover:bg-bg-3 hover:text-text-1 font-label-md text-label-md transition-colors" data-path="nodes" href="#">Nodes</a><a class="px-space-md py-1.5 rounded-lg text-text-2 hover:bg-bg-3 hover:text-text-1 font-label-md text-label-md transition-colors" data-path="motion" href="#">Motion</a></nav></div><div class="flex items-center gap-space-md"><div class="relative hidden sm:flex items-center"><span class="material-symbols-outlined absolute left-2.5 text-text-3 pointer-events-none text-[18px]">search</span><input class="h-8 pl-8 pr-8 w-44 md:w-60 bg-bg-3 text-text-1 placeholder-text-3 rounded-lg font-label-sm text-label-sm focus:outline-none focus:ring-1 focus:ring-node-queue transition-all" placeholder="Search components, tokens..." type="text"/><kbd class="absolute right-2 px-1.5 py-0.5 bg-bg-2 text-text-3 rounded font-code-sm text-code-sm hidden md:inline">⌘K</kbd></div><div class="flex items-center gap-1.5 bg-bg-3 p-1 rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"><span class="flex items-center justify-center w-6 h-6 rounded-full bg-bg-2 text-node-queue"><span class="material-symbols-outlined text-[14px]">dark_mode</span></span><span class="flex items-center justify-center w-6 h-6 rounded-full text-text-3 hover:text-text-2 transition-colors cursor-pointer"><span class="material-symbols-outlined text-[14px]">light_mode</span></span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-14 canvas-dot-grid min-h-screen"><div class="flex flex-col w-full text-text-1 selection:bg-node-queue selection:text-bg-0">
+<!-- ========================================================================= -->
+<!-- 1. HERO TITLEBAR & SYSTEM STATUS SPECIFICATION                           -->
+<!-- ========================================================================= -->
+<section class="w-full border-b border-border-structural bg-bg-1/60 backdrop-blur-md px-margin-desktop py-space-xl">
+<div class="max-w-[1392px] mx-auto flex flex-col lg:flex-row lg:items-end justify-between gap-space-lg">
+<div class="space-y-space-sm">
+<div class="flex items-center gap-space-sm flex-wrap">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-bg-3 border border-border-structural font-code-sm text-code-sm text-node-queue">
+<span class="w-1.5 h-1.5 rounded-full bg-node-queue animate-pulse"></span>
+            SPEC v1.0.4
+          </span>
+<span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-bg-3 border border-border-structural font-label-uppercase text-label-uppercase text-text-3">
+            CALM TELEMETRY
+          </span>
+<span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-status-ok/10 border border-status-ok/30 font-label-uppercase text-label-uppercase text-status-ok">
+<span class="material-symbols-outlined text-[13px]">verified</span>
+            WCAG AA VERIFIED
+          </span>
+<span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-bg-3 border border-border-structural font-code-sm text-code-sm text-text-2">
+            BASE 4PX GRID
+          </span>
+</div>
+<h1 class="font-display text-display text-text-1 tracking-tight">
+          FlowTrace Design System Board
+        </h1>
+<p class="font-body-lg text-body-lg text-text-2 max-w-3xl">
+          Visual tokens, atomic interactive primitives, and telemetry graph specifications engineered for high-density developer operations. Calm obsidian substrates paired with kinetic precision conduits.
+        </p>
+</div>
+<!-- Action Meta Strip -->
+<div class="flex items-center gap-space-sm shrink-0">
+<button class="h-9 px-space-md rounded-[10px] bg-bg-3 border border-border-structural text-text-1 font-label-md text-label-md hover:border-border-strong hover:bg-bg-2 transition-all flex items-center gap-2" id="copyAllTokensBtn">
+<span class="material-symbols-outlined text-[16px] text-node-queue">data_object</span>
+          Export JSON Tokens
+        </button>
+<button class="h-9 px-space-md rounded-[10px] bg-gradient-to-r from-node-queue to-node-service text-bg-0 font-label-md text-label-md font-semibold hover:brightness-110 active:scale-[0.98] transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(34,211,238,0.25)]">
+<span class="material-symbols-outlined text-[16px]">play_arrow</span>
+          Runtime Interactive
+        </button>
+</div>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 2. NAVIGATION BAR PATTERN & INTERACTIVE TABS                              -->
+<!-- ========================================================================= -->
+<section class="w-full border-b border-border-structural bg-bg-1/40 px-margin-desktop">
+<div class="max-w-[1392px] mx-auto flex items-center justify-between overflow-x-auto">
+<div class="flex items-center gap-space-lg" id="tabNavGroup">
+<button class="group relative py-space-md px-1 text-node-queue font-label-md text-label-md flex items-center gap-2 transition-colors" data-tab="tokens">
+<span class="material-symbols-outlined text-[18px]">palette</span>
+          Token Architecture
+          <span class="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-node-queue to-node-service"></span>
+</button>
+<button class="group relative py-space-md px-1 text-text-2 hover:text-text-1 font-label-md text-label-md flex items-center gap-2 transition-colors" data-tab="typography">
+<span class="material-symbols-outlined text-[18px]">match_case</span>
+          Typography Scale
+        </button>
+<button class="group relative py-space-md px-1 text-text-2 hover:text-text-1 font-label-md text-label-md flex items-center gap-2 transition-colors" data-tab="controls">
+<span class="material-symbols-outlined text-[18px]">toggle_on</span>
+          Buttons &amp; Inputs
+        </button>
+<button class="group relative py-space-md px-1 text-text-2 hover:text-text-1 font-label-md text-label-md flex items-center gap-2 transition-colors" data-tab="nodes">
+<span class="material-symbols-outlined text-[18px]">hub</span>
+          Telemetry Node States (6)
+        </button>
+<button class="group relative py-space-md px-1 text-text-2 hover:text-text-1 font-label-md text-label-md flex items-center gap-2 transition-colors" data-tab="connectors">
+<span class="material-symbols-outlined text-[18px]">timeline</span>
+          Conduits &amp; Vectors
+        </button>
+<button class="group relative py-space-md px-1 text-text-2 hover:text-text-1 font-label-md text-label-md flex items-center gap-2 transition-colors" data-tab="surfaces">
+<span class="material-symbols-outlined text-[18px]">layers</span>
+          Overlays &amp; Code
+        </button>
+</div>
+<div class="hidden sm:flex items-center gap-3 text-text-3 font-code-sm text-code-sm">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-status-ok"></span> 60 FPS Telemetry Canvas</span>
+</div>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- MAIN SYSTEM BOARD WRAPPER                                                 -->
+<!-- ========================================================================= -->
+<div class="w-full px-margin-desktop py-space-xl max-w-[1392px] mx-auto space-y-16">
+<!-- ======================================================================= -->
+<!-- SECTION 2: COLOR SYSTEM SWATCHES & CHROMATIC TILES                     -->
+<!-- ======================================================================= -->
+<section class="space-y-space-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-2 border-b border-border-structural/60 pb-space-sm">
+<div>
+<span class="font-code-sm text-code-sm text-node-queue tracking-widest uppercase">Tokens // 01</span>
+<h2 class="font-headline-md text-headline-md text-text-1">Color Palette Substrates &amp; Functional Semantics</h2>
+</div>
+<p class="font-label-sm text-label-sm text-text-3">Deep obsidian substrates, electric conduit gradients, semantic diagnostics</p>
+</div>
+<!-- Color Category Matrix -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-space-lg">
+<!-- Category A: Surfaces & Chassis -->
+<div class="bg-bg-1 rounded-xl border border-border-structural p-space-md space-y-space-md shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+<div class="flex items-center justify-between">
+<span class="font-label-uppercase text-label-uppercase text-text-2">Surface Elevations</span>
+<span class="font-code-sm text-code-sm text-text-3">6 tokens</span>
+</div>
+<div class="space-y-2">
+<div class="flex items-center justify-between p-2 rounded-lg bg-bg-0 border border-border-structural">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-bg-0 border border-border-strong"></div>
+<div>
+<div class="font-body-node-label text-body-node-label text-text-1">Base Canvas</div>
+<div class="font-code-sm text-code-sm text-text-3">Level 0 Canvas Base</div>
+</div>
+</div>
+<span class="font-code-sm text-code-sm text-text-2 bg-bg-2 px-2 py-0.5 rounded border border-border-structural">#0B0D12</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-bg-1 border border-border-structural">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-bg-1 border border-border-strong"></div>
+<div>
+<div class="font-body-node-label text-body-node-label text-text-1">Panel Shell</div>
+<div class="font-code-sm text-code-sm text-text-3">Level 1 Docked Bar</div>
+</div>
+</div>
+<span class="font-code-sm text-code-sm text-text-2 bg-bg-2 px-2 py-0.5 rounded border border-border-structural">#11141B</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-bg-2 border border-border-structural">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-bg-2 border border-border-strong"></div>
+<div>
+<div class="font-body-node-label text-body-node-label text-text-1">Node Surface</div>
+<div class="font-code-sm text-code-sm text-text-3">Level 2 Node &amp; Card</div>
+</div>
+</div>
+<span class="font-code-sm text-code-sm text-text-2 bg-bg-3 px-2 py-0.5 rounded border border-border-structural">#171B24</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-bg-3 border border-border-structural">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-bg-3 border border-border-strong"></div>
+<div>
+<div class="font-body-node-label text-body-node-label text-text-1">Hover / Input</div>
+<div class="font-code-sm text-code-sm text-text-3">Level 3 Transient</div>
+</div>
+</div>
+<span class="font-code-sm text-code-sm text-text-2 bg-bg-2 px-2 py-0.5 rounded border border-border-structural">#1E2330</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-bg-1 border border-border-structural">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-border-structural"></div>
+<div>
+<div class="font-body-node-label text-body-node-label text-text-1">Border Default</div>
+<div class="font-code-sm text-code-sm text-text-3">1px Substrate Divider</div>
+</div>
+</div>
+<span class="font-code-sm text-code-sm text-text-2 bg-bg-2 px-2 py-0.5 rounded border border-border-structural">#262C3A</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-bg-1 border border-border-structural">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-border-strong"></div>
+<div>
+<div class="font-body-node-label text-body-node-label text-text-1">Border Strong</div>
+<div class="font-code-sm text-code-sm text-text-3">Hover &amp; Connectors</div>
+</div>
+</div>
+<span class="font-code-sm text-code-sm text-text-2 bg-bg-2 px-2 py-0.5 rounded border border-border-structural">#343C4F</span>
+</div>
+</div>
+</div>
+<!-- Category B: Brand & Kinetic Conduits -->
+<div class="bg-bg-1 rounded-xl border border-border-structural p-space-md space-y-space-md shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+<div class="flex items-center justify-between">
+<span class="font-label-uppercase text-label-uppercase text-text-2">Motion &amp; Kinetic Spectrum</span>
+<span class="font-code-sm text-code-sm text-node-queue">Active Flow</span>
+</div>
+<div class="space-y-2">
+<div class="p-3 rounded-lg bg-bg-2 border border-border-structural space-y-2">
+<div class="h-10 rounded-md bg-gradient-to-r from-node-queue to-node-service shadow-[0_0_16px_rgba(34,211,238,0.25)] flex items-center justify-end px-3">
+<span class="font-code-sm text-code-sm text-bg-0 font-semibold">linear 135deg</span>
+</div>
+<div class="flex justify-between items-center text-label-sm font-label-sm">
+<span class="text-text-1 font-semibold">Conduit Accent Gradient</span>
+<span class="font-code-sm text-code-sm text-text-3">#22D3EE → #8B5CF6</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-bg-2 border border-border-structural">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-node-queue shadow-[0_0_12px_rgba(34,211,238,0.4)]"></div>
+<div>
+<div class="font-body-node-label text-body-node-label text-text-1">Cyan Accent</div>
+<div class="font-code-sm text-code-sm text-text-3">Source &amp; Focus Ring</div>
+</div>
+</div>
+<span class="font-code-sm text-code-sm text-node-queue bg-bg-3 px-2 py-0.5 rounded border border-border-structural">#22D3EE</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-bg-2 border border-border-structural">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-node-service shadow-[0_0_12px_rgba(139,92,246,0.3)]"></div>
+<div>
+<div class="font-body-node-label text-body-node-label text-text-1">Violet Accent</div>
+<div class="font-code-sm text-code-sm text-text-3">Service &amp; Mesh Sink</div>
+</div>
+</div>
+<span class="font-code-sm text-code-sm text-node-service bg-bg-3 px-2 py-0.5 rounded border border-border-structural">#8B5CF6</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-bg-2 border border-border-structural">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-text-1"></div>
+<div>
+<div class="font-body-node-label text-body-node-label text-text-1">Text-1 Primary</div>
+<div class="font-code-sm text-code-sm text-text-3">High Contrast Typography</div>
+</div>
+</div>
+<span class="font-code-sm text-code-sm text-text-1 bg-bg-3 px-2 py-0.5 rounded border border-border-structural">#E8ECF4</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-bg-2 border border-border-structural">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-text-3"></div>
+<div>
+<div class="font-body-node-label text-body-node-label text-text-1">Text-3 Muted</div>
+<div class="font-code-sm text-code-sm text-text-3">Subdued Metadata</div>
+</div>
+</div>
+<span class="font-code-sm text-code-sm text-text-3 bg-bg-3 px-2 py-0.5 rounded border border-border-structural">#7C869C</span>
+</div>
+</div>
+</div>
+<!-- Category C: Health & Status Semantics -->
+<div class="bg-bg-1 rounded-xl border border-border-structural p-space-md space-y-space-md shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+<div class="flex items-center justify-between">
+<span class="font-label-uppercase text-label-uppercase text-text-2">Diagnostic Health</span>
+<span class="font-code-sm text-code-sm text-status-ok">Live Telemetry</span>
+</div>
+<div class="space-y-2">
+<div class="flex items-center justify-between p-2 rounded-lg bg-bg-2 border border-border-structural">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-status-ok/20 border border-status-ok flex items-center justify-center">
+<span class="w-2.5 h-2.5 rounded-full bg-status-ok"></span>
+</div>
+<div>
+<div class="font-body-node-label text-body-node-label text-status-ok">OK / Healthy</div>
+<div class="font-code-sm text-code-sm text-text-3">Latency &lt; 200ms</div>
+</div>
+</div>
+<span class="font-code-sm text-code-sm text-status-ok bg-bg-3 px-2 py-0.5 rounded border border-border-structural">#34D399</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-bg-2 border border-border-structural">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-status-warn/20 border border-status-warn flex items-center justify-center">
+<span class="w-2.5 h-2.5 rounded-full bg-status-warn"></span>
+</div>
+<div>
+<div class="font-body-node-label text-body-node-label text-status-warn">Warning / Warn</div>
+<div class="font-code-sm text-code-sm text-text-3">Degraded Throughput</div>
+</div>
+</div>
+<span class="font-code-sm text-code-sm text-status-warn bg-bg-3 px-2 py-0.5 rounded border border-border-structural">#F59E0B</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-bg-2 border border-border-structural">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-status-error/20 border border-status-error flex items-center justify-center">
+<span class="w-2.5 h-2.5 rounded-full bg-status-error"></span>
+</div>
+<div>
+<div class="font-body-node-label text-body-node-label text-status-error">Error / Critical</div>
+<div class="font-code-sm text-code-sm text-text-3">5xx Spikes / Drops</div>
+</div>
+</div>
+<span class="font-code-sm text-code-sm text-status-error bg-bg-3 px-2 py-0.5 rounded border border-border-structural">#F43F5E</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-bg-2 border border-border-structural">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-status-info/20 border border-status-info flex items-center justify-center">
+<span class="w-2.5 h-2.5 rounded-full bg-status-info"></span>
+</div>
+<div>
+<div class="font-body-node-label text-body-node-label text-status-info">Info / Ingestion</div>
+<div class="font-code-sm text-code-sm text-text-3">Passive Discovery</div>
+</div>
+</div>
+<span class="font-code-sm text-code-sm text-status-info bg-bg-3 px-2 py-0.5 rounded border border-border-structural">#60A5FA</span>
+</div>
+</div>
+</div>
+<!-- Category D: Node Semantic Architecture Tints -->
+<div class="bg-bg-1 rounded-xl border border-border-structural p-space-md space-y-space-md shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+<div class="flex items-center justify-between">
+<span class="font-label-uppercase text-label-uppercase text-text-2">Node Typology Tints</span>
+<span class="font-code-sm text-code-sm text-node-service">14% Tint Alpha</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<div class="p-2 rounded-lg bg-bg-2 border border-border-structural flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="w-3 h-3 rounded bg-node-source"></span>
+<span class="font-code-sm text-code-sm text-text-3">#60A5FA</span>
+</div>
+<span class="font-label-md text-label-md text-text-1">Source</span>
+</div>
+<div class="p-2 rounded-lg bg-bg-2 border border-border-structural flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="w-3 h-3 rounded bg-node-service"></span>
+<span class="font-code-sm text-code-sm text-text-3">#8B5CF6</span>
+</div>
+<span class="font-label-md text-label-md text-text-1">Service</span>
+</div>
+<div class="p-2 rounded-lg bg-bg-2 border border-border-structural flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="w-3 h-3 rounded bg-node-decision"></span>
+<span class="font-code-sm text-code-sm text-text-3">#F59E0B</span>
+</div>
+<span class="font-label-md text-label-md text-text-1">Decision</span>
+</div>
+<div class="p-2 rounded-lg bg-bg-2 border border-border-structural flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="w-3 h-3 rounded bg-node-datastore"></span>
+<span class="font-code-sm text-code-sm text-text-3">#34D399</span>
+</div>
+<span class="font-label-md text-label-md text-text-1">Datastore</span>
+</div>
+<div class="p-2 rounded-lg bg-bg-2 border border-border-structural flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="w-3 h-3 rounded bg-node-queue"></span>
+<span class="font-code-sm text-code-sm text-text-3">#22D3EE</span>
+</div>
+<span class="font-label-md text-label-md text-text-1">Queue</span>
+</div>
+<div class="p-2 rounded-lg bg-bg-2 border border-border-structural flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="w-3 h-3 rounded bg-node-end"></span>
+<span class="font-code-sm text-code-sm text-text-3">#F472B6</span>
+</div>
+<span class="font-label-md text-label-md text-text-1">End / Sink</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================================================================= -->
+<!-- SECTION 3: TYPOGRAPHY SCALE & METADATA MONOSPACE                       -->
+<!-- ======================================================================= -->
+<section class="space-y-space-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-2 border-b border-border-structural/60 pb-space-sm">
+<div>
+<span class="font-code-sm text-code-sm text-node-queue tracking-widest uppercase">Typography // 02</span>
+<h2 class="font-headline-md text-headline-md text-text-1">Type Hierarchy: Inter Display &amp; JetBrains Mono</h2>
+</div>
+<p class="font-label-sm text-label-sm text-text-3">Paired structural tokens strictly enforcing typographic weight &amp; line-height pairs</p>
+</div>
+<div class="bg-bg-1 rounded-xl border border-border-structural divide-y divide-border-structural">
+<!-- Display Level -->
+<div class="p-space-lg grid grid-cols-1 md:grid-cols-12 gap-4 items-baseline">
+<div class="md:col-span-3">
+<span class="font-code-sm text-code-sm text-node-queue font-semibold">Display / 48px</span>
+<div class="font-code-sm text-code-sm text-text-3">font-display · 52px line-height · -0.02em</div>
+</div>
+<div class="md:col-span-9">
+<p class="font-display text-display text-text-1">Watch every request live</p>
+</div>
+</div>
+<!-- H1 / Headline-Lg -->
+<div class="p-space-lg grid grid-cols-1 md:grid-cols-12 gap-4 items-baseline">
+<div class="md:col-span-3">
+<span class="font-code-sm text-code-sm text-node-queue font-semibold">Headline-Lg / 32px</span>
+<div class="font-code-sm text-code-sm text-text-3">font-headline-lg · 40px line-height</div>
+</div>
+<div class="md:col-span-9">
+<h1 class="font-headline-lg text-headline-lg text-text-1">Distributed System Topology</h1>
+</div>
+</div>
+<!-- H2 / Headline-Md -->
+<div class="p-space-lg grid grid-cols-1 md:grid-cols-12 gap-4 items-baseline">
+<div class="md:col-span-3">
+<span class="font-code-sm text-code-sm text-node-queue font-semibold">Headline-Md / 24px</span>
+<div class="font-code-sm text-code-sm text-text-3">font-headline-md · 32px line-height</div>
+</div>
+<div class="md:col-span-9">
+<h2 class="font-headline-md text-headline-md text-text-1">Node Properties &amp; Execution Traces</h2>
+</div>
+</div>
+<!-- H3 / Headline-Sm -->
+<div class="p-space-lg grid grid-cols-1 md:grid-cols-12 gap-4 items-baseline">
+<div class="md:col-span-3">
+<span class="font-code-sm text-code-sm text-node-queue font-semibold">Headline-Sm / 20px</span>
+<div class="font-code-sm text-code-sm text-text-3">font-headline-sm · 28px line-height</div>
+</div>
+<div class="md:col-span-9">
+<h3 class="font-headline-sm text-headline-sm text-text-1">Inspector Parameter Drawer</h3>
+</div>
+</div>
+<!-- Body & Body-Lg -->
+<div class="p-space-lg grid grid-cols-1 md:grid-cols-12 gap-4 items-baseline">
+<div class="md:col-span-3">
+<span class="font-code-sm text-code-sm text-node-queue font-semibold">Body-Lg &amp; Body-Md</span>
+<div class="font-code-sm text-code-sm text-text-3">16px / 24px and 14px / 20px Regular</div>
+</div>
+<div class="md:col-span-9 space-y-2">
+<p class="font-body-lg text-body-lg text-text-1">FlowTrace provides high-fidelity visualization for microservice choreographies with real-time backpressure instrumentation.</p>
+<p class="font-body-md text-body-md text-text-2">Nodes continuously stream synthetic payload markers and telemetry metrics across gRPC channels with sub-millisecond precision.</p>
+</div>
+</div>
+<!-- Caption, Labels, Tabular Numbers & Monospace Copy -->
+<div class="p-space-lg grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+<div class="md:col-span-3">
+<span class="font-code-sm text-code-sm text-node-queue font-semibold">Tabular &amp; Mono Key</span>
+<div class="font-code-sm text-code-sm text-text-3">JetBrains Mono 12px + Copy Action</div>
+</div>
+<div class="md:col-span-9 flex flex-wrap items-center gap-4">
+<span class="font-chip-metric text-chip-metric tabular-nums text-text-2 bg-bg-2 px-2.5 py-1 rounded-full border border-border-structural">
+              99.98% SLO · 1,420 RPS · p99 18.4ms
+            </span>
+<span class="font-label-uppercase text-label-uppercase text-text-3 px-2 py-0.5 rounded bg-bg-3 border border-border-structural">
+              OVERLAY LABELS
+            </span>
+<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-bg-0 border border-border-structural hover:border-node-queue transition-colors group cursor-pointer" onclick="navigator.clipboard.writeText('trace_0194fe2b_gw'); const toast = document.getElementById('copiedToast'); toast.classList.remove('opacity-0','translate-y-2'); setTimeout(() =&gt; toast.classList.add('opacity-0','translate-y-2'), 2000);">
+<span class="font-code-sm text-code-sm text-node-queue">trace_0194fe2b_gw</span>
+<span class="material-symbols-outlined text-[14px] text-text-3 group-hover:text-text-1 transition-colors">content_copy</span>
+</div>
+<span class="font-code-sm text-code-sm text-status-ok opacity-0 translate-y-2 transition-all duration-200" id="copiedToast">copied!</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================================================================= -->
+<!-- SECTION 4: BUTTONS & INPUT CONTROLS                                    -->
+<!-- ======================================================================= -->
+<section class="space-y-space-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-2 border-b border-border-structural/60 pb-space-sm">
+<div>
+<span class="font-code-sm text-code-sm text-node-queue tracking-widest uppercase">Components // 03</span>
+<h2 class="font-headline-md text-headline-md text-text-1">Interactive Primitives: Buttons &amp; Field Inputs</h2>
+</div>
+<p class="font-label-sm text-label-sm text-text-3">Engineered focus rings, dual-layer rings, hover kinetics</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-space-lg">
+<!-- Button States -->
+<div class="bg-bg-1 rounded-xl border border-border-structural p-space-lg space-y-space-md">
+<div class="flex items-center justify-between border-b border-border-structural pb-2">
+<span class="font-label-uppercase text-label-uppercase text-text-2">Button Architecture</span>
+<span class="font-code-sm text-code-sm text-text-3">10px Border Radius</span>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-md items-center">
+<!-- Primary -->
+<div class="space-y-1.5 text-center">
+<button class="w-full h-9 px-4 rounded-[10px] bg-gradient-to-r from-node-queue to-node-service text-bg-0 font-label-md text-label-md font-semibold hover:brightness-110 active:scale-[0.98] transition-all shadow-[0_0_16px_rgba(34,211,238,0.2)]">
+                Deploy Graph
+              </button>
+<div class="font-code-sm text-code-sm text-text-3">Primary CTA</div>
+</div>
+<!-- Secondary -->
+<div class="space-y-1.5 text-center">
+<button class="w-full h-9 px-4 rounded-[10px] bg-bg-3 border border-border-structural text-text-1 font-label-md text-label-md hover:bg-bg-2 hover:border-border-strong active:scale-[0.98] transition-all">
+                Validate
+              </button>
+<div class="font-code-sm text-code-sm text-text-3">Secondary</div>
+</div>
+<!-- Ghost -->
+<div class="space-y-1.5 text-center">
+<button class="w-full h-9 px-4 rounded-[10px] text-text-2 hover:text-text-1 hover:bg-bg-3 font-label-md text-label-md transition-colors">
+                Inspect
+              </button>
+<div class="font-code-sm text-code-sm text-text-3">Ghost</div>
+</div>
+<!-- Disabled -->
+<div class="space-y-1.5 text-center">
+<button class="w-full h-9 px-4 rounded-[10px] bg-bg-3 border border-border-structural/50 text-text-3 font-label-md text-label-md opacity-40 cursor-not-allowed" disabled="">
+                Locked
+              </button>
+<div class="font-code-sm text-code-sm text-text-3">Disabled</div>
+</div>
+</div>
+<!-- Micro Button Sizing Comparison -->
+<div class="pt-4 border-t border-border-structural/60 flex items-center justify-between flex-wrap gap-3">
+<span class="font-label-sm text-label-sm text-text-2">Hero Action Height (44px):</span>
+<button class="h-11 px-6 rounded-[10px] bg-gradient-to-r from-node-queue to-node-service text-bg-0 font-label-md text-label-md font-semibold hover:brightness-110 shadow-[0_0_24px_rgba(34,211,238,0.3)] transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">bolt</span>
+              Initialize Synthetic Probe
+            </button>
+</div>
+</div>
+<!-- Input Field States -->
+<div class="bg-bg-1 rounded-xl border border-border-structural p-space-lg space-y-space-md">
+<div class="flex items-center justify-between border-b border-border-structural pb-2">
+<span class="font-label-uppercase text-label-uppercase text-text-2">Input Form Controls</span>
+<span class="font-code-sm text-code-sm text-text-3">Height 36px</span>
+</div>
+<div class="space-y-3">
+<!-- Default Input -->
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-text-2 flex justify-between">
+<span>Default State</span>
+<span class="font-code-sm text-code-sm text-text-3">bg #1E2330 · border #262C3A</span>
+</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-2.5 top-2 text-text-3 text-[18px]">search</span>
+<input class="w-full h-9 pl-9 pr-3 rounded-[10px] bg-bg-3 border border-border-structural font-body-md text-body-md text-text-1 placeholder-text-3 focus:outline-none" placeholder="Filter node key or trace ID..." type="text"/>
+</div>
+</div>
+<!-- Focused Input -->
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-node-queue flex justify-between">
+<span>Focused (Dual-ring halo simulation)</span>
+<span class="font-code-sm text-code-sm text-node-queue">0 0 0 2px #0B0D12, 0 0 0 4px #22D3EE</span>
+</label>
+<input class="w-full h-9 px-3 rounded-[10px] bg-bg-3 border border-node-queue font-body-md text-body-md text-text-1 shadow-[0_0_0_2px_#0B0D12,0_0_0_4px_#22D3EE] focus:outline-none" type="text" value="service.payment-auth.v2"/>
+</div>
+<!-- Error Input -->
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-status-error flex justify-between">
+<span>Validation Failure State</span>
+<span class="font-code-sm text-code-sm text-status-error">border #F43F5E</span>
+</label>
+<input class="w-full h-9 px-3 rounded-[10px] bg-bg-3 border border-status-error font-body-md text-body-md text-text-1 focus:outline-none" type="text" value="regex([unclosed-pattern"/>
+<div class="flex items-center gap-1 font-label-sm text-label-sm text-status-error pt-0.5">
+<span class="material-symbols-outlined text-[14px]">error</span>
+                Invalid regex pattern for node trace identifier
+              </div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================================================================= -->
+<!-- SECTION 5: CHIPS, BADGES & TELEMETRY PILLS                             -->
+<!-- ======================================================================= -->
+<section class="space-y-space-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-2 border-b border-border-structural/60 pb-space-sm">
+<div>
+<span class="font-code-sm text-code-sm text-node-queue tracking-widest uppercase">Chips &amp; Badges // 04</span>
+<h2 class="font-headline-md text-headline-md text-text-1">Latency Badges &amp; Status Micro-Indicators</h2>
+</div>
+<p class="font-label-sm text-label-sm text-text-3">Pill-shaped 20px-24px micro-tags for high-density edge &amp; node annotation</p>
+</div>
+<div class="bg-bg-1 rounded-xl border border-border-structural p-space-lg">
+<div class="flex flex-wrap items-center gap-4">
+<!-- Neutral -->
+<div class="flex flex-col gap-1.5 items-center">
+<span class="h-6 px-3 rounded-full bg-bg-3 border border-border-structural text-text-2 font-chip-metric text-chip-metric flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[12px] text-text-3">speed</span>
+              24 traces/s
+            </span>
+<span class="font-code-sm text-code-sm text-text-3">Neutral Metric</span>
+</div>
+<!-- OK / Success -->
+<div class="flex flex-col gap-1.5 items-center">
+<span class="h-6 px-3 rounded-full bg-status-ok/10 border border-status-ok/30 text-status-ok font-chip-metric text-chip-metric flex items-center gap-1.5 shadow-[0_0_8px_rgba(52,211,153,0.15)]">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+              120ms ok
+            </span>
+<span class="font-code-sm text-code-sm text-text-3">Status OK</span>
+</div>
+<!-- Warning -->
+<div class="flex flex-col gap-1.5 items-center">
+<span class="h-6 px-3 rounded-full bg-status-warn/10 border border-status-warn/30 text-status-warn font-chip-metric text-chip-metric flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[13px] text-status-warn">warning</span>
+              Degraded
+            </span>
+<span class="font-code-sm text-code-sm text-text-3">Status Warn</span>
+</div>
+<!-- Error -->
+<div class="flex flex-col gap-1.5 items-center">
+<span class="h-6 px-3 rounded-full bg-status-error/10 border border-status-error/30 text-status-error font-chip-metric text-chip-metric flex items-center gap-1.5 shadow-[0_0_8px_rgba(244,63,94,0.2)]">
+<span class="material-symbols-outlined text-[13px] text-status-error">close</span>
+              502 Bad Gateway
+            </span>
+<span class="font-code-sm text-code-sm text-text-3">Status Error</span>
+</div>
+<!-- Accent Highlight -->
+<div class="flex flex-col gap-1.5 items-center">
+<span class="h-6 px-3 rounded-full bg-gradient-to-r from-node-queue/20 to-node-service/20 border border-node-queue/50 text-node-queue font-chip-metric text-chip-metric flex items-center gap-1.5 shadow-[0_0_12px_rgba(34,211,238,0.25)]">
+<span class="material-symbols-outlined text-[13px]">auto_awesome</span>
+              New Checkpoint
+            </span>
+<span class="font-code-sm text-code-sm text-text-3">Accent Tint</span>
+</div>
+<!-- Tabular Latency Chip -->
+<div class="flex flex-col gap-1.5 items-center">
+<span class="h-5 px-2 rounded-full bg-bg-2 border border-border-structural text-text-2 font-chip-metric text-chip-metric tabular-nums flex items-center">
+              p99: 4.8ms
+            </span>
+<span class="font-code-sm text-code-sm text-text-3">Edge Latency</span>
+</div>
+<!-- Counter Pill -->
+<div class="flex flex-col gap-1.5 items-center">
+<span class="h-5 px-2 rounded-full bg-bg-3 border border-border-strong text-node-queue font-code-sm text-code-sm tabular-nums">
+              +1,289 req
+            </span>
+<span class="font-code-sm text-code-sm text-text-3">Node Count</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================================================================= -->
+<!-- SECTION 6: WORKFLOW NODE CARDS - THE 6 SPECIFIED STATES                -->
+<!-- EXACT DIMENSIONS: 208px min width x 72px height, 14px radius, 40x40 icon -->
+<!-- ======================================================================= -->
+<section class="space-y-space-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-2 border-b border-border-structural/60 pb-space-sm">
+<div>
+<span class="font-code-sm text-code-sm text-node-queue tracking-widest uppercase">Topology Canvas // 05</span>
+<h2 class="font-headline-md text-headline-md text-text-1">Telemetry Node Cards: 6 Canonical States</h2>
+</div>
+<p class="font-label-sm text-label-sm text-text-3">208×72px structural unit, 14px radius, 40×40 icon tile, connection ports</p>
+</div>
+<!-- Node Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 py-4">
+<!-- STATE 1: IDLE / DEFAULT -->
+<div class="flex flex-col items-center gap-3">
+<div class="font-code-sm text-code-sm text-text-3">01 // IDLE DEFAULT</div>
+<div class="relative w-[220px] min-h-[72px] bg-bg-2 rounded-[14px] border border-border-structural p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_8px_24px_rgba(0,0,0,0.35)] transition-all">
+<!-- Port Top -->
+<div class="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border border-border-strong"></div>
+<!-- Port Bottom -->
+<div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border border-border-strong"></div>
+<div class="flex items-center gap-3">
+<!-- 40x40 Icon Tile with 14% tint alpha -->
+<div class="w-10 h-10 rounded-[10px] bg-node-service/15 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px] text-node-service">dns</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center justify-between gap-1">
+<span class="font-body-node-label text-body-node-label text-text-1 truncate">API Gateway</span>
+<span class="font-chip-metric text-chip-metric text-text-3 tabular-nums">1.4k/s</span>
+</div>
+<div class="font-code-sm text-code-sm text-text-3 truncate">gateway_01</div>
+</div>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-text-3">Default obsidian chassis</span>
+</div>
+<!-- STATE 2: HOVER -->
+<div class="flex flex-col items-center gap-3">
+<div class="font-code-sm text-code-sm text-text-3">02 // HOVER (LIFT + EXPANDED PORTS)</div>
+<div class="relative w-[220px] min-h-[72px] bg-bg-2 rounded-[14px] border border-border-strong p-3 -translate-y-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_12px_28px_rgba(0,0,0,0.5)] transition-all cursor-pointer">
+<!-- Expanded Ports (12px hover state) -->
+<div class="absolute -top-2 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-bg-0 border-2 border-border-strong shadow-[0_0_8px_rgba(34,211,238,0.5)]"></div>
+<div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-bg-0 border-2 border-border-strong shadow-[0_0_8px_rgba(34,211,238,0.5)]"></div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-[10px] bg-node-queue/15 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px] text-node-queue">alt_route</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center justify-between gap-1">
+<span class="font-body-node-label text-body-node-label text-text-1 truncate">Ingress Router</span>
+<span class="font-chip-metric text-chip-metric text-node-queue tabular-nums">3.8k/s</span>
+</div>
+<div class="font-code-sm text-code-sm text-text-2 truncate">ingress_core</div>
+</div>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-text-2">translateY(-1px), border-strong</span>
+</div>
+<!-- STATE 3: SELECTED -->
+<div class="flex flex-col items-center gap-3">
+<div class="font-code-sm text-code-sm text-node-queue">03 // SELECTED (CONDUIT HALO)</div>
+<div class="relative w-[220px] min-h-[72px] bg-bg-2 rounded-[14px] p-3 shadow-[0_0_0_1.5px_#22D3EE,0_0_24px_rgba(139,92,246,0.35)] transition-all">
+<!-- Port Top Active -->
+<div class="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-node-queue shadow-[0_0_8px_#22D3EE]"></div>
+<div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-node-service shadow-[0_0_8px_#8B5CF6]"></div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-[10px] bg-gradient-to-br from-node-queue/20 to-node-service/20 flex items-center justify-center shrink-0 border border-node-queue/40">
+<span class="material-symbols-outlined text-[22px] text-node-queue">memory</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center justify-between gap-1">
+<span class="font-body-node-label text-body-node-label text-text-1 truncate font-semibold">Payment Auth</span>
+<span class="font-chip-metric text-chip-metric text-node-queue font-semibold tabular-nums">Active</span>
+</div>
+<div class="font-code-sm text-code-sm text-text-2 truncate">svc_auth_09</div>
+</div>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-node-queue">1.5px gradient halo &amp; glow</span>
+</div>
+<!-- STATE 4: ACTIVE / ARRIVAL PULSE -->
+<div class="flex flex-col items-center gap-3">
+<div class="font-code-sm text-code-sm text-node-queue">04 // ACTIVE / PACKET ARRIVAL</div>
+<div class="relative w-[220px] min-h-[72px] bg-bg-2 rounded-[14px] border border-node-queue/80 p-3 scale-[1.03] shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all">
+<!-- Port Top / Bottom with pulsing rings -->
+<div class="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-node-queue animate-ping"></div>
+<div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-node-queue"></div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-[10px] bg-node-queue/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px] text-node-queue animate-bounce">sync_alt</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center justify-between gap-1">
+<span class="font-body-node-label text-body-node-label text-text-1 truncate font-bold">Kafka Queue</span>
+<span class="font-chip-metric text-chip-metric text-node-queue font-bold tabular-nums">+482</span>
+</div>
+<div class="font-code-sm text-code-sm text-node-queue truncate">event_stream</div>
+</div>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-node-queue">scale(1.03), cyan arrival halo</span>
+</div>
+<!-- STATE 5: ERROR / DEGRADED -->
+<div class="flex flex-col items-center gap-3">
+<div class="font-code-sm text-code-sm text-status-error">05 // ERROR / CRITICAL FAILURE</div>
+<div class="relative w-[220px] min-h-[72px] bg-bg-2 rounded-[14px] border border-status-error p-3 shadow-[0_0_20px_rgba(244,63,94,0.3)] transition-all">
+<!-- Port with error tint -->
+<div class="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-status-error"></div>
+<div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-status-error"></div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-[10px] bg-status-error/15 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px] text-status-error">report_problem</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center justify-between gap-1">
+<span class="font-body-node-label text-body-node-label text-status-error truncate">Order Relational</span>
+<span class="font-chip-metric text-chip-metric text-status-error font-semibold tabular-nums">FAIL</span>
+</div>
+<div class="font-code-sm text-code-sm text-status-error/80 truncate">pg_cluster_01</div>
+</div>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-status-error">border #F43F5E &amp; red halo</span>
+</div>
+<!-- STATE 6: DISCOVERED / UNMAPPED -->
+<div class="flex flex-col items-center gap-3">
+<div class="font-code-sm text-code-sm text-status-warn">06 // DISCOVERED / UNMAPPED</div>
+<div class="relative w-[220px] min-h-[72px] bg-bg-2/80 rounded-[14px] border border-dashed border-status-warn p-3 shadow-[0_4px_16px_rgba(245,158,11,0.15)] transition-all">
+<!-- Port Top / Bottom in amber -->
+<div class="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border border-status-warn"></div>
+<div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border border-status-warn"></div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-[10px] bg-status-warn/15 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px] text-status-warn">radar</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center justify-between gap-1">
+<span class="font-body-node-label text-body-node-label text-text-1 truncate">Shadow Lambda</span>
+<span class="font-chip-metric text-chip-metric bg-status-warn/20 text-status-warn px-1 rounded font-bold">NEW</span>
+</div>
+<div class="font-code-sm text-code-sm text-status-warn truncate">auto-discovered</div>
+</div>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-status-warn">dashed #F59E0B &amp; discovery pill</span>
+</div>
+</div>
+</section>
+<!-- ======================================================================= -->
+<!-- SECTION 7: FLOW CONNECTORS, TOKENS & TRACE ELEMENTS                    -->
+<!-- ======================================================================= -->
+<section class="space-y-space-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-2 border-b border-border-structural/60 pb-space-sm">
+<div>
+<span class="font-code-sm text-code-sm text-node-queue tracking-widest uppercase">Conduits // 06</span>
+<h2 class="font-headline-md text-headline-md text-text-1">Vector Connectors, Cubic Splines &amp; Kinetic Tokens</h2>
+</div>
+<p class="font-label-sm text-label-sm text-text-3">Active packet motion, mid-edge metric badges, error conduits</p>
+</div>
+<div class="bg-bg-1 rounded-xl border border-border-structural p-space-lg space-y-space-lg relative overflow-hidden">
+<!-- Interactive SVG Canvas Simulation -->
+<div class="relative w-full h-72 bg-bg-0 rounded-xl border border-border-structural overflow-hidden flex items-center justify-center">
+<!-- Interactive Node Anchors (Visual only for graph realism) -->
+<div class="absolute left-6 top-1/2 -translate-y-1/2 z-10 hidden sm:flex items-center gap-2 p-2.5 rounded-[12px] bg-bg-2 border border-border-structural">
+<span class="w-3 h-3 rounded-full bg-node-queue"></span>
+<span class="font-code-sm text-code-sm text-text-1">auth.service</span>
+</div>
+<div class="absolute right-6 top-1/2 -translate-y-1/2 z-10 hidden sm:flex items-center gap-2 p-2.5 rounded-[12px] bg-bg-2 border border-border-structural">
+<span class="w-3 h-3 rounded-full bg-node-service"></span>
+<span class="font-code-sm text-code-sm text-text-1">billing.vault</span>
+</div>
+<!-- SVG Paths -->
+<svg class="w-full h-full" fill="none" viewbox="0 0 900 280" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient id="edgeGrad" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#22D3EE"></stop>
+<stop offset="100%" stop-color="#8B5CF6"></stop>
+</lineargradient>
+<radialgradient cx="50%" cy="50%" id="packetGlow" r="50%">
+<stop offset="0%" stop-color="#22D3EE" stop-opacity="1"></stop>
+<stop offset="50%" stop-color="#8B5CF6" stop-opacity="0.5"></stop>
+<stop offset="100%" stop-color="#8B5CF6" stop-opacity="0"></stop>
+</radialgradient>
+<radialgradient cx="50%" cy="50%" id="errGlow" r="50%">
+<stop offset="0%" stop-color="#F43F5E" stop-opacity="1"></stop>
+<stop offset="100%" stop-color="#F43F5E" stop-opacity="0"></stop>
+</radialgradient>
+<marker id="arrowhead" markerheight="8" markerwidth="8" orient="auto" refx="6" refy="4">
+<path d="M 0 0 L 8 4 L 0 8 z" fill="#343C4F"></path>
+</marker>
+<marker id="arrowhead-active" markerheight="8" markerwidth="8" orient="auto" refx="6" refy="4">
+<path d="M 0 0 L 8 4 L 0 8 z" fill="#22D3EE"></path>
+</marker>
+</defs>
+<!-- Edge 1: Abandoned / Discovered Dashed Conduit -->
+<path d="M 120 70 C 350 30, 550 30, 780 70" opacity="0.45" stroke="#F59E0B" stroke-dasharray="6 4" stroke-width="2"></path>
+<!-- Edge 2: Primary Active Gradient Spline with Traveling Token -->
+<path d="M 120 140 C 350 220, 550 60, 780 140" id="activePath" marker-end="url(#arrowhead-active)" stroke="url(#edgeGrad)" stroke-linecap="round" stroke-width="3"></path>
+<!-- Edge 3: Standard Idle Edge -->
+<path d="M 120 210 C 350 250, 550 250, 780 210" marker-end="url(#arrowhead)" stroke="#343C4F" stroke-linecap="round" stroke-width="2"></path>
+<!-- Active Kinetic Token on Edge 2 -->
+<!-- Halo (12px outer glow) -->
+<circle cx="450" cy="140" fill="url(#packetGlow)" r="12">
+<animate attributename="cx" dur="4s" repeatcount="indefinite" values="220;680;220"></animate>
+<animate attributename="cy" dur="4s" repeatcount="indefinite" values="175;105;175"></animate>
+</circle>
+<!-- Core (6px) -->
+<circle cx="450" cy="140" fill="#22D3EE" r="4">
+<animate attributename="cx" dur="4s" repeatcount="indefinite" values="220;680;220"></animate>
+<animate attributename="cy" dur="4s" repeatcount="indefinite" values="175;105;175"></animate>
+</circle>
+<!-- Error Kinetic Token on Edge 1 -->
+<circle cx="380" cy="48" fill="url(#errGlow)" r="8">
+<animate attributename="opacity" dur="1.2s" repeatcount="indefinite" values="0.4;1;0.4"></animate>
+</circle>
+<circle cx="380" cy="48" fill="#F43F5E" r="3"></circle>
+</svg>
+<!-- Midpoint Edge Telemetry Badge overlay -->
+<div class="absolute top-[52%] left-1/2 -translate-x-1/2 -translate-y-1/2 bg-bg-2 border border-border-structural px-2.5 py-0.5 rounded-full text-text-1 font-chip-metric text-chip-metric shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex items-center gap-1.5 pointer-events-none">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+<span class="tabular-nums">99.4% conv · 14ms</span>
+</div>
+</div>
+<!-- Conduits Annotation Strip -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md text-text-3 font-label-sm text-label-sm">
+<div class="flex items-center gap-2 p-2 rounded-lg bg-bg-2 border border-border-structural">
+<div class="w-6 h-0.5 bg-gradient-to-r from-node-queue to-node-service"></div>
+<span>Active 3px conduit with traveling kinetic trail</span>
+</div>
+<div class="flex items-center gap-2 p-2 rounded-lg bg-bg-2 border border-border-structural">
+<div class="w-6 h-0.5 bg-status-warn border-dashed"></div>
+<span>Dashed 6 4 discovery path with telemetry chip</span>
+</div>
+<div class="flex items-center gap-2 p-2 rounded-lg bg-bg-2 border border-border-structural">
+<div class="w-2.5 h-2.5 rounded-full bg-status-error shadow-[0_0_8px_#F43F5E]"></div>
+<span>Error packet marker with radial degradation aura</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================================================================= -->
+<!-- SECTION 8: NAVIGATION, OVERLAYS, TOAST & CODE BLOCK                     -->
+<!-- ======================================================================= -->
+<section class="space-y-space-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-2 border-b border-border-structural/60 pb-space-sm">
+<div>
+<span class="font-code-sm text-code-sm text-node-queue tracking-widest uppercase">Surfaces &amp; Syntax // 07</span>
+<h2 class="font-headline-md text-headline-md text-text-1">Floating Overlays, Toast Notifications &amp; Code Syntax</h2>
+</div>
+<p class="font-label-sm text-label-sm text-text-3">Level 3-4 elevation, code containers with click-to-copy, precision toast</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- Code Block Container (7 Cols) -->
+<div class="lg:col-span-7 bg-bg-0 rounded-xl border border-border-structural overflow-hidden shadow-2xl">
+<!-- Code Block Header -->
+<div class="h-10 px-space-md bg-bg-1 border-b border-border-structural flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-border-strong"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-border-strong"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-border-strong"></span>
+<span class="ml-2 font-code-sm text-code-sm text-text-3">synthetic_probe.sh</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-code-sm text-code-sm text-text-3 bg-bg-3 px-2 py-0.5 rounded border border-border-structural">BASH</span>
+<button class="flex items-center gap-1 font-code-sm text-code-sm text-text-2 hover:text-text-1 px-2 py-0.5 rounded hover:bg-bg-3 transition-colors" id="copyCodeBtn">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+<span id="copyCodeLabel">Copy</span>
+</button>
+</div>
+</div>
+<!-- Code Snippet -->
+<pre class="p-space-lg font-code-block text-code-block leading-relaxed overflow-x-auto text-text-1"><code><span class="text-node-service">curl</span> -X POST https://telemetry.flowtrace.internal/v1/traces \
+  -H <span class="text-status-ok">"Content-Type: application/json"</span> \
+  -H <span class="text-status-ok">"X-Flow-Mesh-Key: fl_live_948fec00"</span> \
+  -d <span class="text-text-2">'{</span>
+    <span class="text-node-queue">"trace_id"</span>: <span class="text-status-ok">"0194fe2b-7b00-a681"</span>,
+    <span class="text-node-queue">"node"</span>: <span class="text-status-ok">"gateway_01"</span>,
+    <span class="text-node-queue">"route"</span>: <span class="text-status-ok">"/api/v2/settlement"</span>,
+    <span class="text-node-queue">"metrics"</span>: {
+      <span class="text-node-queue">"latency_ms"</span>: <span class="text-node-decision">14.2</span>,
+      <span class="text-node-queue">"p99_status"</span>: <span class="text-status-ok">"nominal"</span>,
+      <span class="text-node-queue">"backpressure"</span>: <span class="text-node-service">false</span>
+    }
+  <span class="text-text-2">}'</span></code></pre>
+</div>
+<!-- Floating Overlays & Toast (5 Cols) -->
+<div class="lg:col-span-5 space-y-space-lg">
+<!-- Specimen: Toast Notification -->
+<div class="w-full bg-bg-2 rounded-xl border border-border-structural p-4 shadow-[0_12px_40px_rgba(0,0,0,0.6)] relative overflow-hidden flex items-start gap-3">
+<div class="w-8 h-8 rounded-lg bg-status-ok/15 flex items-center justify-center shrink-0 border border-status-ok/30">
+<span class="material-symbols-outlined text-[18px] text-status-ok">check_circle</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<h4 class="font-body-node-label text-body-node-label text-text-1">Endpoint Connected</h4>
+<span class="font-code-sm text-code-sm text-text-3">just now</span>
+</div>
+<p class="font-body-md text-body-md text-text-2 mt-0.5">
+                UDP ingestion listening on <span class="font-code-sm text-code-sm text-node-queue">port 4318</span>. Graph auto-wired to active pipeline.
+              </p>
+</div>
+<button class="text-text-3 hover:text-text-1 p-0.5 transition-colors">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- Micro Parameter Spec Table -->
+<div class="bg-bg-1 rounded-xl border border-border-structural p-space-md space-y-3">
+<div class="flex items-center justify-between">
+<span class="font-label-uppercase text-label-uppercase text-text-2">Inspector Spec Matrix</span>
+<span class="font-code-sm text-code-sm text-text-3">Docked 360px</span>
+</div>
+<div class="space-y-2 text-label-sm font-label-sm">
+<div class="flex items-center justify-between p-2 rounded bg-bg-2 border border-border-structural">
+<span class="text-text-3 font-code-sm text-code-sm">canvas.dot_grid</span>
+<span class="text-text-1 font-code-sm text-code-sm">24px · rgba(255,255,255,0.06)</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded bg-bg-2 border border-border-structural">
+<span class="text-text-3 font-code-sm text-code-sm">node.border_radius</span>
+<span class="text-text-1 font-code-sm text-code-sm">14px (0.875rem)</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded bg-bg-2 border border-border-structural">
+<span class="text-text-3 font-code-sm text-code-sm">edge.cubic_smoothing</span>
+<span class="text-node-queue font-code-sm text-code-sm">cubic-bezier(0.4, 0, 0.2, 1)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Micro Interaction Scripts -->
+<script>
+    // Tab switching micro-interactions
+    const tabNavGroup = document.getElementById('tabNavGroup');
+    if (tabNavGroup) {
+      const tabs = tabNavGroup.querySelectorAll('button');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => {
+            t.classList.remove('text-node-queue');
+            t.classList.add('text-text-2');
+            const underline = t.querySelector('span.absolute');
+            if (underline) underline.remove();
+          });
+          tab.classList.remove('text-text-2');
+          tab.classList.add('text-node-queue');
+          const indicator = document.createElement('span');
+          indicator.className = 'absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-node-queue to-node-service';
+          tab.appendChild(indicator);
+        });
+      });
+    }
+
+    // Code copy feedback
+    const copyCodeBtn = document.getElementById('copyCodeBtn');
+    const copyCodeLabel = document.getElementById('copyCodeLabel');
+    if (copyCodeBtn && copyCodeLabel) {
+      copyCodeBtn.addEventListener('click', () => {
+        copyCodeLabel.textContent = 'Copied!';
+        copyCodeBtn.classList.add('text-status-ok');
+        setTimeout(() => {
+          copyCodeLabel.textContent = 'Copy';
+          copyCodeBtn.classList.remove('text-status-ok');
+        }, 2000);
+      });
+    }
+
+    // Export Tokens Simulation
+    const copyAllTokensBtn = document.getElementById('copyAllTokensBtn');
+    if (copyAllTokensBtn) {
+      copyAllTokensBtn.addEventListener('click', () => {
+        const tokens = {
+          name: "FlowTrace Design Tokens",
+          version: "1.0.4",
+          surfaces: { base: "#0B0D12", panel: "#11141B", node: "#171B24", hover: "#1E2330" },
+          accents: { cyan: "#22D3EE", violet: "#8B5CF6" },
+          status: { ok: "#34D399", warn: "#F59E0B", error: "#F43F5E", info: "#60A5FA" }
+        };
+        navigator.clipboard.writeText(JSON.stringify(tokens, null, 2));
+        const originalText = copyAllTokensBtn.innerHTML;
+        copyAllTokensBtn.innerHTML = '<span class="material-symbols-outlined text-[16px] text-status-ok">check</span> Tokens Exported!';
+        setTimeout(() => {
+          copyAllTokensBtn.innerHTML = originalText;
+        }, 2500);
+      });
+    }
+  </script>
+</div></main><footer class="w-full bg-bg-1/90 backdrop-blur-md py-space-xl mt-auto"><div class="w-full px-margin-desktop flex flex-col sm:flex-row items-center justify-between gap-space-md text-text-3 font-label-sm text-label-sm"><div class="flex items-center gap-space-md"><span class="text-text-2 font-label-md text-label-md">FlowTrace UI Kit</span><span>© 2025 Precision Telemetry Architecture</span></div><div class="flex items-center gap-space-lg"><a class="hover:text-text-1 transition-colors" data-path="overview" href="#">Documentation</a><a class="hover:text-text-1 transition-colors" data-path="components" href="#">Library</a><a class="hover:text-text-1 transition-colors" data-path="nodes" href="#">Graph Runtime</a></div></div></footer></body></html>

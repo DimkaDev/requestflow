@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-container-low": "#fef1e9", "surface-dim": "#e4d8d0", "on-error-container": "#93000a", "surface": "#FBF7F2", "surface-container": "#F0E7DD", "primary-fixed-dim": "#ffb690", "secondary": "#b4136d", "primary-fixed": "#ffdbca", "primary-container": "#FFEDD5", "on-surface-variant": "#6E6359", "tertiary-fixed": "#e9ddff", "surface-bright": "#FFFFFF", "error": "#E11D48", "on-secondary-fixed": "#3e0022", "primary": "#9d4300", "on-primary": "#ffffff", "on-surface": "#201b16", "inverse-on-surface": "#fbeee6", "on-primary-fixed": "#341100", "success": "#059669", "surface-container-lowest": "#ffffff", "surface-container-highest": "#E0D2C2", "on-tertiary-fixed-variant": "#5516be", "error-container": "#FFE4E6", "tertiary-fixed-dim": "#d0bcff", "on-error": "#ffffff", "on-primary-fixed-variant": "#783200", "on-tertiary": "#ffffff", "inverse-primary": "#ffb690", "inverse-surface": "#362f2a", "surface-variant": "#ece0d8", "on-primary-container": "#9A3412", "background": "#fff8f5", "outline": "#EADFD3", "on-tertiary-fixed": "#23005c", "on-secondary-container": "#600037", "on-tertiary-container": "#3e0096", "on-background": "#201b16", "secondary-container": "#fd56a7", "outline-variant": "#DACAB9", "secondary-fixed": "#ffd9e4", "surface-container-high": "#E8DDD0", "tertiary": "#6d3bd7", "surface-tint": "#9d4300", "text-tertiary": "#8C8073", "on-secondary-fixed-variant": "#8c0053", "tertiary-container": "a985ff", "on-secondary": "#ffffff", "warning": "#D97706", "secondary-fixed-dim": "#ffb0cd" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-lg": "1.5rem", "space-md": "1rem", "gutter-mobile": "1rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "space-xl": "2rem", "gutter": "1.5rem", "margin": "2rem", "space-2xl": "3rem", "margin-mobile": "1rem" }, "fontFamily": { "body-sm": ["Inter"], "body-md": ["Inter"], "label-lg": ["Inter"], "headline-xl": ["Inter"], "headline-lg": ["Inter"], "label-sm": ["Inter"], "label-md": ["Inter"], "headline-sm": ["Inter"], "headline-md": ["Inter"], "headline-xl-mobile": ["Inter"], "body-lg": ["Inter"], "headline-lg-mobile": ["Inter"], "code-md": ["JetBrains Mono"] }, "fontSize": { "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "headline-xl": ["40px", { "lineHeight": "48px", "fontWeight": "700" }], "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }], "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }], "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "600" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "headline-xl-mobile": ["30px", { "lineHeight": "38px", "fontWeight": "700" }], "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }], "headline-lg-mobile": ["26px", { "lineHeight": "34px", "fontWeight": "600" }], "code-md": ["13px", { "lineHeight": "20px", "fontWeight": "400" }] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col"><header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(43,37,32,0.04)]"><div class="h-16 max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between gap-4"><div class="flex items-center gap-5 min-w-0"><div class="flex items-center gap-2 flex-shrink-0"><div class="w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-[20px]">hub</span></div><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface hidden sm:inline-block">FlowTrace</span></div><div class="h-4 w-px bg-outline-variant/60 hidden md:block"></div><div class="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-full bg-surface-container text-on-surface"><span class="material-symbols-outlined text-[16px] text-primary">storefront</span><span class="font-label-md text-label-md">Atelier Nordic</span><span class="material-symbols-outlined text-[14px] text-on-surface-variant">expand_more</span></div><div class="h-4 w-px bg-outline-variant/60 hidden lg:block"></div><nav class="hidden lg:flex items-center gap-2" data-active-classes="text-on-surface font-label-lg font-semibold"><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="shops-overview" href="#">Shops</a><span class="material-symbols-outlined text-[14px] text-text-tertiary">chevron_right</span><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="connect-store" href="#">Connect</a><span class="material-symbols-outlined text-[14px] text-text-tertiary">chevron_right</span><a aria-current="page" class="transition-colors text-on-surface font-label-lg font-semibold" data-path="map-fields" href="#">Step 2: Map Fields</a></nav></div><div class="flex items-center gap-4 flex-shrink-0"><nav class="flex items-center gap-6" data-active-classes="text-on-surface"><a class="hidden sm:inline-block font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="documentation" href="#">Documentation</a></nav><a aria-label="Close and exit wizard" class="w-8 h-8 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface flex items-center justify-center transition-colors" data-path="shops-overview" href="#"><span class="material-symbols-outlined text-[18px]">close</span></a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 pb-24 bg-surface min-h-[calc(100vh-4rem)]"><div class="max-w-7xl mx-auto px-6 lg:px-12 py-space-lg"><div class="flex flex-col w-full space-y-8">
+<!-- Stepper & Top Context Header -->
+<div class="flex flex-col gap-6">
+<!-- Stepper Pipeline -->
+<div class="flex flex-wrap items-center justify-between gap-4 bg-surface-bright p-3.5 rounded-2xl shadow-sm">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-success text-on-primary flex items-center justify-center font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-text-tertiary">Step 1</span>
+<span class="font-label-md text-label-md text-on-surface">Store Connected</span>
+</div>
+</div>
+<div class="h-0.5 w-12 bg-outline-variant/60 hidden sm:block"></div>
+<div class="flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-primary to-secondary text-on-primary shadow-sm">
+<div class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center font-label-md text-label-md font-bold">2</div>
+<span class="font-label-lg text-label-lg font-semibold pr-1">Map Payload Fields</span>
+<span class="material-symbols-outlined text-[16px] animate-pulse">schema</span>
+</div>
+<div class="h-0.5 w-12 bg-outline-variant/60 hidden sm:block"></div>
+<div class="flex items-center gap-2 opacity-60">
+<div class="w-7 h-7 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center font-label-md text-label-md">3</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-text-tertiary">Step 3</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Live Verify</span>
+</div>
+</div>
+<div class="hidden xl:flex items-center gap-2 text-success font-label-md text-label-md bg-surface-container-low px-3 py-1 rounded-full">
+<span class="w-2 h-2 rounded-full bg-success animate-ping"></span>
+<span>Auto-synced with Atelier Nordic Webhooks</span>
+</div>
+</div>
+<!-- Editorial Page Title & Controls Bar -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+<div>
+<div class="flex items-center gap-2 text-primary font-label-md text-label-md tracking-wider uppercase mb-1">
+<span class="material-symbols-outlined text-[16px]">cable</span>
+<span>Schema Transformer</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Map your webhook data</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+          Match incoming event keys to customer flow milestones. Configured once, updates propagate in real-time.
+        </p>
+</div>
+<!-- Preset Selector Bar -->
+<div class="flex items-center gap-2.5 bg-surface-container-low p-1.5 rounded-xl self-start lg:self-auto">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-bright rounded-lg shadow-sm text-on-surface font-label-md text-label-md cursor-pointer hover:bg-surface transition-colors">
+<span class="material-symbols-outlined text-primary text-[18px]">view_quilt</span>
+<span>Preset: Shopify Order Webhook (v2024-04)</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[14px]">expand_more</span>
+</div>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface transition-colors font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">history</span>
+<span>Load ping (2m ago)</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface transition-colors font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">data_object</span>
+<span>Paste JSON</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Main Split Layout (45% Payload / 55% Mapping Workspace) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<!-- Left Column: Interactive Raw JSON Inspector -->
+<div class="lg:col-span-5 flex flex-col space-y-3">
+<div class="bg-surface-bright rounded-2xl p-5 shadow-sm space-y-4">
+<!-- Panel Header -->
+<div class="flex items-center justify-between pb-3 bg-surface-bright">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">terminal</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Sample Ingest Payload</h2>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-label-sm text-label-sm text-text-tertiary">POST /api/webhooks/shopify</span>
+<span class="font-code-md text-label-sm bg-surface-container px-1.5 py-0.5 rounded text-on-surface-variant">2.1 KB</span>
+</div>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary-container font-label-sm text-label-sm text-on-primary-container">
+<span class="material-symbols-outlined text-[14px]">touch_app</span>
+            Click key to map
+          </span>
+</div>
+<!-- JSON Interactive Code Block -->
+<div class="bg-surface-container-low rounded-xl p-4 font-code-md text-code-md leading-relaxed text-on-surface relative overflow-x-auto shadow-inner select-none">
+<div class="grid grid-cols-[auto_1fr] gap-x-4">
+<!-- Line Numbers -->
+<div class="text-right text-text-tertiary/60 font-code-md select-none space-y-1">
+<div>01</div><div>02</div><div>03</div><div>04</div><div>05</div><div>06</div><div>07</div><div>08</div><div>09</div><div>10</div><div>11</div><div>12</div><div>13</div><div>14</div><div>15</div><div>16</div><div>17</div><div>18</div><div>19</div><div>20</div><div>21</div><div>22</div><div>23</div>
+</div>
+<!-- Code Content with interactive targets -->
+<div class="space-y-1">
+<div class="text-text-tertiary">{</div>
+<!-- event_type -->
+<div class="group flex items-center justify-between rounded px-1 -mx-1 hover:bg-surface-bright transition-all cursor-pointer">
+<span>
+                    <span class="text-primary font-semibold">"event_type"</span>: <span class="text-secondary font-medium">"checkout_completed"</span>,
+                </span>
+<span class="opacity-0 group-hover:opacity-100 font-label-sm text-label-sm bg-primary text-on-primary px-1.5 py-0.5 rounded transition-opacity">+ Map</span>
+</div>
+<!-- timestamp -->
+<div class="px-1 -mx-1 text-on-surface-variant">
+                  <span class="text-text-tertiary">"timestamp"</span>: "2024-04-12T14:32:05Z",
+              </div>
+<!-- customer node -->
+<div class="px-1 -mx-1 text-on-surface">
+                  <span class="text-primary font-semibold">"customer"</span>: {
+              </div>
+<!-- customer.id -->
+<div class="group flex items-center justify-between rounded px-1 -mx-1 bg-primary/10 transition-all cursor-pointer">
+<span>
+                      <span class="text-primary font-semibold">"id"</span>: <span class="text-secondary">"cust_8942"</span>,
+                </span>
+<span class="font-label-sm text-label-sm bg-primary text-on-primary px-1.5 py-0.5 rounded">Mapped</span>
+</div>
+<!-- customer.name -->
+<div class="group flex items-center justify-between rounded px-1 -mx-1 hover:bg-surface-bright transition-all cursor-pointer">
+<span>
+                      <span class="text-primary font-semibold">"name"</span>: <span class="text-on-surface font-medium">"Astrid Lindgren"</span>,
+                </span>
+<span class="opacity-0 group-hover:opacity-100 font-label-sm text-label-sm bg-primary text-on-primary px-1.5 py-0.5 rounded">+ Map</span>
+</div>
+<!-- customer.email -->
+<div class="px-1 -mx-1 text-on-surface-variant">
+                    <span class="text-text-tertiary">"email"</span>: "astrid@nordicstudio.se",
+              </div>
+<!-- customer.locale -->
+<div class="px-1 -mx-1 text-on-surface-variant">
+                    <span class="text-text-tertiary">"locale"</span>: "sv-SE"
+              </div>
+<div>  },</div>
+<!-- cart -->
+<div>  <span class="text-primary font-semibold">"cart"</span>: {</div>
+<div class="px-1 -mx-1 text-on-surface-variant">    <span class="text-text-tertiary">"token"</span>: "tok_99182a",</div>
+<div class="group flex items-center justify-between rounded px-1 -mx-1 hover:bg-surface-bright transition-all cursor-pointer">
+<span>    <span class="text-primary font-semibold">"step_status"</span>: <span class="text-success font-medium">"paid_success"</span></span>
+<span class="opacity-0 group-hover:opacity-100 font-label-sm text-label-sm bg-primary text-on-primary px-1.5 py-0.5 rounded">+ Map</span>
+</div>
+<div>  },</div>
+<!-- line_items array -->
+<div>  <span class="text-primary font-semibold">"line_items"</span>: [ {</div>
+<!-- line_items.title -->
+<div class="group flex items-center justify-between rounded px-1 -mx-1 bg-primary/10 transition-all cursor-pointer">
+<span>    <span class="text-primary font-semibold">"title"</span>: <span class="text-on-surface">"Lavender Soy Candle..."</span>,</span>
+<span class="font-label-sm text-label-sm bg-primary text-on-primary px-1.5 py-0.5 rounded">Mapped</span>
+</div>
+<!-- line_items.price -->
+<div class="group flex items-center justify-between rounded px-1 -mx-1 bg-primary/10 transition-all cursor-pointer">
+<span>    <span class="text-primary font-semibold">"price"</span>: <span class="text-primary font-bold">24.00</span>,</span>
+<span class="font-label-sm text-label-sm bg-primary text-on-primary px-1.5 py-0.5 rounded">Mapped</span>
+</div>
+<!-- line_items.currency -->
+<div class="px-1 -mx-1 text-on-surface-variant">    <span class="text-text-tertiary">"currency"</span>: "EUR",</div>
+<!-- line_items.quantity -->
+<div class="group flex items-center justify-between rounded px-1 -mx-1 hover:bg-surface-bright transition-all cursor-pointer">
+<span>    <span class="text-primary font-semibold">"quantity"</span>: <span class="text-on-surface font-semibold">1</span>,</span>
+<span class="opacity-0 group-hover:opacity-100 font-label-sm text-label-sm bg-primary text-on-primary px-1.5 py-0.5 rounded">+ Map</span>
+</div>
+<div class="px-1 -mx-1 text-on-surface-variant">    <span class="text-text-tertiary">"sku"</span>: "LAV-MUG-01"</div>
+<div>  } ],</div>
+<!-- payment -->
+<div>  <span class="text-primary font-semibold">"payment"</span>: {</div>
+<div class="group flex items-center justify-between rounded px-1 -mx-1 hover:bg-surface-bright transition-all cursor-pointer">
+<span>    <span class="text-primary font-semibold">"status"</span>: <span class="text-success font-medium">"settled"</span></span>
+<span class="opacity-0 group-hover:opacity-100 font-label-sm text-label-sm bg-primary text-on-primary px-1.5 py-0.5 rounded">+ Map</span>
+</div>
+<div>  }</div>
+<div class="text-text-tertiary">}</div>
+</div>
+</div>
+</div>
+<!-- Ingest Health Badge -->
+<div class="flex items-center justify-between bg-surface p-3 rounded-xl text-on-surface font-label-sm text-label-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-success text-[16px]">verified</span>
+<span>Schema validation active</span>
+</div>
+<span class="text-text-tertiary">Matches 94% of historical payloads</span>
+</div>
+</div>
+<!-- Quick Tips Card -->
+<div class="bg-primary-container/40 rounded-2xl p-4 flex gap-3 items-start">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center flex-shrink-0 text-on-primary-container">
+<span class="material-symbols-outlined text-[18px]">lightbulb</span>
+</div>
+<div class="space-y-1">
+<div class="font-label-md text-label-md text-on-primary-container">Live Transformation Engine</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            FlowTrace normalizes keys automatically. Nested keys can be referenced directly using dot notation like <code class="font-code-md text-[12px] bg-surface-bright px-1 py-0.5 rounded text-on-surface">customer.locale</code>.
+          </div>
+</div>
+</div>
+</div>
+<!-- Right Column: Mapping Rules (55% width) -->
+<div class="lg:col-span-7 flex flex-col space-y-4">
+<div class="bg-surface-bright rounded-2xl p-6 shadow-sm space-y-5">
+<!-- Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Field Transformation Rules</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Configured for Atelier Nordic storefront entities</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-1 rounded-full bg-success/10 text-success font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">task_alt</span>
+              6/6 Fields Mapped
+            </span>
+</div>
+</div>
+<!-- Mapping Matrix Rows -->
+<div class="flex flex-col space-y-3">
+<!-- Row 1: Target Node / Stage -->
+<div class="group bg-surface rounded-xl p-3.5 hover:bg-surface-container-low transition-all duration-200">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+<div class="flex items-center gap-3 min-w-[150px]">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">alt_route</span>
+</div>
+<div>
+<div class="flex items-center gap-1 font-label-lg text-label-lg text-on-surface">
+<span>Flow Stage</span>
+<span class="material-symbols-outlined text-[14px] text-text-tertiary">info</span>
+</div>
+<div class="font-label-sm text-label-sm text-text-tertiary">Milestone trigger</div>
+</div>
+</div>
+<!-- Center: JSON Source Path -->
+<div class="flex items-center gap-2 flex-1 min-w-0">
+<span class="font-label-sm text-label-sm text-text-tertiary">From</span>
+<div class="flex items-center gap-1 bg-surface-bright px-2.5 py-1.5 rounded-lg shadow-sm font-code-md text-code-md text-primary max-w-full truncate">
+<span class="material-symbols-outlined text-[14px] text-primary">code</span>
+<span class="truncate">cart.step_status</span>
+</div>
+</div>
+<!-- Right: Live Output Chip -->
+<div class="flex items-center justify-between md:justify-end gap-3 min-w-[180px]">
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-success/15 text-success font-label-md text-label-md">
+<span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+<span>Paid ✓ Node</span>
+</div>
+<div class="text-success flex items-center">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Row 2: Customer Identity -->
+<div class="group bg-surface rounded-xl p-3.5 hover:bg-surface-container-low transition-all duration-200">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+<div class="flex items-center gap-3 min-w-[150px]">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">person</span>
+</div>
+<div>
+<div class="flex items-center gap-1 font-label-lg text-label-lg text-on-surface">
+<span>Customer Avatar</span>
+<span class="material-symbols-outlined text-[14px] text-text-tertiary">info</span>
+</div>
+<div class="font-label-sm text-label-sm text-text-tertiary">Unique entity hash</div>
+</div>
+</div>
+<!-- Center: Path -->
+<div class="flex items-center gap-2 flex-1 min-w-0">
+<span class="font-label-sm text-label-sm text-text-tertiary">From</span>
+<div class="flex items-center gap-1 bg-surface-bright px-2.5 py-1.5 rounded-lg shadow-sm font-code-md text-code-md text-on-surface max-w-full truncate">
+<span class="material-symbols-outlined text-[14px] text-primary">code</span>
+<span class="truncate">customer.id + name</span>
+</div>
+</div>
+<!-- Right: Live Preview Token -->
+<div class="flex items-center justify-between md:justify-end gap-3 min-w-[180px]">
+<div class="flex items-center gap-2 bg-surface-bright px-2.5 py-1 rounded-full shadow-sm">
+<!-- Cozy Mini Entity Badge -->
+<div class="w-5 h-5 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-sm text-[10px] font-bold">
+                    🦊
+                  </div>
+<span class="font-label-md text-label-md text-on-surface">Astrid (cust_8942)</span>
+</div>
+<div class="text-success flex items-center">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Row 3: Item Title -->
+<div class="group bg-surface rounded-xl p-3.5 hover:bg-surface-container-low transition-all duration-200">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+<div class="flex items-center gap-3 min-w-[150px]">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">inventory_2</span>
+</div>
+<div>
+<div class="flex items-center gap-1 font-label-lg text-label-lg text-on-surface">
+<span>Item Name</span>
+<span class="material-symbols-outlined text-[14px] text-text-tertiary">info</span>
+</div>
+<div class="font-label-sm text-label-sm text-text-tertiary">Cart line metadata</div>
+</div>
+</div>
+<!-- Center: Path -->
+<div class="flex items-center gap-2 flex-1 min-w-0">
+<span class="font-label-sm text-label-sm text-text-tertiary">From</span>
+<div class="flex items-center gap-1 bg-surface-bright px-2.5 py-1.5 rounded-lg shadow-sm font-code-md text-code-md text-on-surface max-w-full truncate">
+<span class="material-symbols-outlined text-[14px] text-primary">code</span>
+<span class="truncate">line_items[0].title</span>
+</div>
+</div>
+<!-- Right: Preview -->
+<div class="flex items-center justify-between md:justify-end gap-3 min-w-[180px]">
+<span class="font-label-md text-label-md text-on-surface bg-surface-bright px-2.5 py-1 rounded-md shadow-sm truncate max-w-[160px]" title="Lavender Soy Candle + Ceramic Mug">
+                  "Lavender Soy Candle..."
+                </span>
+<div class="text-success flex items-center">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Row 4: Item Price / Revenue -->
+<div class="group bg-surface rounded-xl p-3.5 hover:bg-surface-container-low transition-all duration-200">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+<div class="flex items-center gap-3 min-w-[150px]">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+</div>
+<div>
+<div class="flex items-center gap-1 font-label-lg text-label-lg text-on-surface">
+<span>Item Price</span>
+<span class="material-symbols-outlined text-[14px] text-text-tertiary">info</span>
+</div>
+<div class="font-label-sm text-label-sm text-text-tertiary">Aggregates revenue</div>
+</div>
+</div>
+<!-- Center: Path -->
+<div class="flex items-center gap-2 flex-1 min-w-0">
+<span class="font-label-sm text-label-sm text-text-tertiary">From</span>
+<div class="flex items-center gap-1 bg-surface-bright px-2.5 py-1.5 rounded-lg shadow-sm font-code-md text-code-md text-on-surface max-w-full truncate">
+<span class="material-symbols-outlined text-[14px] text-primary">code</span>
+<span class="truncate">line_items[0].price</span>
+</div>
+</div>
+<!-- Right: Preview -->
+<div class="flex items-center justify-between md:justify-end gap-3 min-w-[180px]">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">€24.00</span>
+<div class="text-success flex items-center">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Row 5: Quantity -->
+<div class="group bg-surface rounded-xl p-3.5 hover:bg-surface-container-low transition-all duration-200">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+<div class="flex items-center gap-3 min-w-[150px]">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">shopping_bag</span>
+</div>
+<div>
+<div class="flex items-center gap-1 font-label-lg text-label-lg text-on-surface">
+<span>Quantity</span>
+<span class="material-symbols-outlined text-[14px] text-text-tertiary">info</span>
+</div>
+<div class="font-label-sm text-label-sm text-text-tertiary">Creature backpack badge</div>
+</div>
+</div>
+<!-- Center: Path -->
+<div class="flex items-center gap-2 flex-1 min-w-0">
+<span class="font-label-sm text-label-sm text-text-tertiary">From</span>
+<div class="flex items-center gap-1 bg-surface-bright px-2.5 py-1.5 rounded-lg shadow-sm font-code-md text-code-md text-on-surface max-w-full truncate">
+<span class="material-symbols-outlined text-[14px] text-primary">code</span>
+<span class="truncate">line_items[0].quantity</span>
+</div>
+</div>
+<!-- Right: Preview -->
+<div class="flex items-center justify-between md:justify-end gap-3 min-w-[180px]">
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-surface-container text-on-surface font-label-md text-label-md">
+<span class="material-symbols-outlined text-[14px] text-primary">package_2</span>
+                  1 item
+                </span>
+<div class="text-success flex items-center">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Row 6: Status / Result -->
+<div class="group bg-surface rounded-xl p-3.5 hover:bg-surface-container-low transition-all duration-200">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+<div class="flex items-center gap-3 min-w-[150px]">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-success">
+<span class="material-symbols-outlined text-[18px]">task_alt</span>
+</div>
+<div>
+<div class="flex items-center gap-1 font-label-lg text-label-lg text-on-surface">
+<span>Outcome State</span>
+<span class="material-symbols-outlined text-[14px] text-text-tertiary">info</span>
+</div>
+<div class="font-label-sm text-label-sm text-text-tertiary">Event disposition</div>
+</div>
+</div>
+<!-- Center: Path -->
+<div class="flex items-center gap-2 flex-1 min-w-0">
+<span class="font-label-sm text-label-sm text-text-tertiary">From</span>
+<div class="flex items-center gap-1 bg-surface-bright px-2.5 py-1.5 rounded-lg shadow-sm font-code-md text-code-md text-on-surface max-w-full truncate">
+<span class="material-symbols-outlined text-[14px] text-primary">code</span>
+<span class="truncate">payment.status</span>
+</div>
+</div>
+<!-- Right: Preview -->
+<div class="flex items-center justify-between md:justify-end gap-3 min-w-[180px]">
+<span class="px-3 py-1 rounded-full bg-success text-on-primary font-label-md text-label-md shadow-sm">
+                  Settled (Success) ✓
+                </span>
+<div class="text-success flex items-center">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Add Custom Field Row Trigger -->
+<button class="w-full py-2.5 rounded-xl bg-surface hover:bg-surface-container transition-colors text-on-surface font-label-md text-label-md flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">add_circle</span>
+<span>Add Custom Attribute Mapping</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Bottom Section: Canvas Live Simulation Engine -->
+<div class="bg-surface-bright rounded-2xl p-6 shadow-sm space-y-6">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-primary-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">autoplay</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Mini Flow Simulation</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">See how this exact payload renders in your active store journey canvas</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-gradient-to-r from-primary to-secondary hover:brightness-105 text-on-primary font-label-lg text-label-lg shadow-sm transition-all" id="testEventBtn">
+<span class="material-symbols-outlined text-[18px] mr-1.5">play_arrow</span>
+          Dispatch Test Event
+        </button>
+</div>
+</div>
+<!-- Live Track Visualization -->
+<div class="relative bg-surface rounded-2xl p-8 overflow-hidden">
+<!-- Background subtle dots -->
+<div class="absolute inset-0 opacity-40 bg-[radial-gradient(#DACAB9_1px,transparent_1px)] [background-size:16px_16px]"></div>
+<div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4 max-w-4xl mx-auto py-4">
+<!-- Step 1: Visit -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-xl bg-surface-bright shadow-sm flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">door_front</span>
+</div>
+<span class="font-label-md text-label-md text-text-tertiary">Visit</span>
+</div>
+<div class="h-0.5 w-8 md:w-16 bg-outline-variant"></div>
+<!-- Step 2: Browse -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-xl bg-surface-bright shadow-sm flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<span class="font-label-md text-label-md text-text-tertiary">Browse</span>
+</div>
+<div class="h-0.5 w-8 md:w-16 bg-outline-variant"></div>
+<!-- Step 3: Product -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-xl bg-surface-bright shadow-sm flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">local_mall</span>
+</div>
+<span class="font-label-md text-label-md text-text-tertiary">Product</span>
+</div>
+<div class="h-0.5 w-8 md:w-16 bg-outline-variant"></div>
+<!-- Step 4: Cart -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-xl bg-surface-bright shadow-sm flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
+</div>
+<span class="font-label-md text-label-md text-text-tertiary">Cart</span>
+</div>
+<div class="h-0.5 w-8 md:w-16 bg-outline-variant"></div>
+<!-- Step 5: Checkout -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-xl bg-surface-bright shadow-sm flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">credit_card</span>
+</div>
+<span class="font-label-md text-label-md text-text-tertiary">Checkout</span>
+</div>
+<div class="h-0.5 w-8 md:w-16 bg-outline-variant"></div>
+<!-- Step 6: Paid Node (Active Target!) -->
+<div class="relative flex flex-col items-center gap-2">
+<!-- Floating Order Toast -->
+<div class="absolute -top-10 whitespace-nowrap bg-on-surface text-surface-bright px-2.5 py-1 rounded-full shadow-md font-label-sm text-[11px] font-medium flex items-center gap-1 animate-bounce">
+<span class="text-secondary font-bold">+€24.00</span>
+<span>Order Placed!</span>
+</div>
+<!-- Pulsing Target Node Container -->
+<div class="relative w-14 h-14 rounded-2xl bg-gradient-to-tr from-primary to-secondary p-0.5 shadow-md">
+<div class="w-full h-full bg-surface-bright rounded-[14px] flex items-center justify-center relative">
+<!-- 40px Creature Avatar (Fox) -->
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-inner relative">
+<span aria-label="fox" class="text-[20px] select-none" role="img">🦊</span>
+<!-- Mini Item Overlay (Candle Icon) -->
+<div class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-secondary text-on-secondary flex items-center justify-center text-[10px] shadow-sm">
+                  🕯️
+                </div>
+</div>
+<!-- Item Count Badge -->
+<div class="absolute -top-1.5 -right-1.5 bg-primary text-on-primary font-label-sm text-[10px] px-1.5 py-0.2 rounded-full font-bold shadow-sm">
+                1
+              </div>
+</div>
+<!-- Pulsing active aura -->
+<div class="absolute -inset-1.5 rounded-2xl bg-secondary/20 animate-ping -z-10"></div>
+</div>
+<div class="flex items-center gap-1 font-label-md text-label-md text-success font-semibold">
+<span>Paid ✓</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Secondary Management Action Links -->
+<div class="flex flex-wrap items-center justify-between gap-4 pt-2">
+<div class="flex items-center gap-4">
+<button class="font-label-md text-label-md text-text-tertiary hover:text-on-surface transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">restart_alt</span>
+          Reset to Default Shopify Mapping
+        </button>
+<span class="text-text-tertiary/40">•</span>
+<button class="font-label-md text-label-md text-text-tertiary hover:text-on-surface transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+          Export Schema .json
+        </button>
+</div>
+<div class="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-success"></span>
+<span>Ready for verification step</span>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Simple simulation interaction trigger
+  document.getElementById('testEventBtn')?.addEventListener('click', function() {
+    const btn = this;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="material-symbols-outlined text-[18px] mr-1.5 animate-spin">refresh</span> Emitting...';
+    btn.classList.add('opacity-80');
+    setTimeout(() => {
+      btn.innerHTML = '<span class="material-symbols-outlined text-[18px] mr-1.5">done</span> Dispatched 1 Event!';
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.classList.remove('opacity-80');
+      }, 2000);
+    }, 800);
+  });
+</script></div></main><footer class="fixed bottom-0 left-0 right-0 z-40 bg-surface-bright/95 backdrop-blur-xl shadow-[0_-2px_12px_rgba(43,37,32,0.06)]"><div class="h-20 max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between gap-4"><div class="flex items-center gap-3"><a class="inline-flex items-center justify-center px-4 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg transition-colors" data-path="connect-store" href="#"><span class="material-symbols-outlined text-[18px] mr-1.5">arrow_back</span>Back</a><span class="hidden sm:inline-block font-label-md text-label-md text-text-tertiary">Step 2 of 3</span></div><div class="flex items-center gap-3"><a class="inline-flex items-center justify-center px-4 py-2.5 rounded-xl bg-surface-bright hover:bg-surface-container text-on-surface font-label-lg text-label-lg transition-colors" data-path="draft-saved" href="#"><span class="material-symbols-outlined text-[18px] mr-1.5 text-on-surface-variant">save</span>Save draft</a><a class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary to-secondary hover:brightness-105 text-on-primary font-label-lg text-label-lg shadow-sm transition-all" data-path="validation-summary" href="#">Continue to Step 3: Check<span class="material-symbols-outlined text-[18px] ml-1.5">arrow_forward</span></a></div></div></footer></body></html>

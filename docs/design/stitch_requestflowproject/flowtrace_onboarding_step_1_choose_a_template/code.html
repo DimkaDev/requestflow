@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>FlowTrace Setup</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface":"#111318","inverse-surface":"#e2e2e9","secondary":"#d0bcff","on-tertiary-container":"#6e4600","bg-0":"#0B0D12","surface-container-high":"#282a2f","primary-container":"#22d3ee","status-info":"#60A5FA","tertiary-fixed-dim":"#ffb957","secondary-fixed-dim":"#d0bcff","outline-variant":"#3c494c","on-primary-fixed-variant":"#004e5a","surface-tint":"#2fd9f4","on-background":"#e2e2e9","on-primary":"#00363e","secondary-fixed":"#e9ddff","on-tertiary-fixed-variant":"#643f00","status-error":"#F43F5E","surface-container":"#1e1f25","on-error-container":"#ffdad6","status-ok":"#34D399","text-3":"#7C869C","on-tertiary-fixed":"#2a1800","tertiary-container":"#ffb13b","error":"#ffb4ab","on-tertiary":"#462b00","background":"#111318","on-surface":"#e2e2e9","surface-container-lowest":"#0c0e13","surface-container-low":"#1a1b21","inverse-primary":"#006877","bg-3":"#1E2330","text-1":"#E8ECF4","on-primary-fixed":"#001f25","error-container":"#93000a","border-structural":"#262C3A","node-decision":"#F59E0B","surface-bright":"#37393f","node-source":"#60A5FA","outline":"#859397","on-surface-variant":"#bbc9cd","secondary-container":"#571bc1","bg-1":"#11141B","on-secondary-fixed-variant":"#5516be","surface-variant":"#33353a","border-strong":"#343C4F","on-secondary-fixed":"#23005c","node-queue":"#22D3EE","inverse-on-surface":"#2e3036","on-primary-container":"#005763","status-warn":"#F59E0B","status-discovered":"#F59E0B","node-datastore":"#34D399","primary":"#8aebff","node-service":"#8B5CF6","text-2":"#A3ACBF","on-error":"#690005","bg-2":"#171B24","surface-dim":"#111318","on-secondary-container":"#c4abff","primary-fixed-dim":"#2fd9f4","tertiary-fixed":"#ffddb5","tertiary":"#ffd6a3","surface-container-highest":"#33353a","node-end":"#F472B6","node-external":"#94A3B8","on-secondary":"#3c0091","primary-fixed":"#a2eeff"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-xl":"1.5rem","margin-desktop":"1.5rem","space-xs":"0.25rem","gutter":"1rem","space-lg":"1rem","gutter-desktop":"1.5rem","space-md":"0.75rem","space-sm":"0.5rem","margin":"1rem"},fontFamily:{"label-uppercase":["Inter"],"chip-metric":["Inter"],"headline-lg-mobile":["Inter"],"label-md":["Inter"],"label-sm":["Inter"],"code-block":["JetBrains Mono"],"display-mobile":["Inter"],"headline-md":["Inter"],"code-sm":["JetBrains Mono"],"body-md":["Inter"],"headline-sm":["Inter"],"body-lg":["Inter"],"body-node-label":["Inter"],"display":["Inter"],"headline-lg":["Inter"]},fontSize:{"label-uppercase":["12px",{"lineHeight":"16px","letterSpacing":"0.08em","fontWeight":"500"}],"chip-metric":["11px",{"lineHeight":"14px","fontWeight":"500"}],"headline-lg-mobile":["26px",{"lineHeight":"32px","fontWeight":"600"}],"label-md":["13px",{"lineHeight":"18px","fontWeight":"500"}],"label-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"code-block":["13px",{"lineHeight":"20px","fontWeight":"400"}],"display-mobile":["36px",{"lineHeight":"42px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],"code-sm":["12px",{"lineHeight":"16px","fontWeight":"500"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"body-node-label":["14px",{"lineHeight":"20px","fontWeight":"600"}],"display":["48px",{"lineHeight":"52px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"600"}]}}}};</script></head><body class="bg-bg-0 text-text-1 font-body-md text-body-md min-h-screen"><header class="fixed top-0 left-0 right-0 z-50 bg-bg-1/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.5)]"><div class="h-14 max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between"><div class="flex items-center gap-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-bg-3 flex items-center justify-center relative"><div class="w-2.5 h-2.5 rounded-full bg-gradient-to-tr from-primary-container to-node-service shadow-[0_0_8px_rgba(34,211,238,0.7)]"></div></div><div class="flex items-center gap-2"><span class="font-body-node-label text-body-node-label tracking-tight text-text-1">FlowTrace</span><span class="font-label-sm text-label-sm text-text-3 font-code-sm">/</span><span class="font-label-md text-label-md text-text-2">Setup</span></div></div><div class="hidden sm:flex items-center px-2.5 py-0.5 rounded-full bg-bg-3"><span class="font-chip-metric text-chip-metric text-primary-container tracking-wide uppercase">Onboarding Mode</span></div></div><nav class="hidden md:flex items-center gap-8" data-active-classes="text-primary-container font-label-md"><a aria-current="page" class="transition-colors text-primary-container font-label-md" data-path="step-1-environment-and-cluster" href="#">1. Environment</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="step-2-instrumentation-agents" href="#">2. Instrumentation</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="step-3-topology-verification" href="#">3. Verify Live Stream</a></nav><div class="flex items-center gap-5"><a class="flex items-center gap-1.5 font-label-md text-label-md text-text-2 hover:text-text-1 transition-colors" data-path="documentation-and-help" href="#"><span class="material-symbols-outlined text-[18px] text-text-3">help</span><span class="hidden sm:inline">Docs</span></a><a class="p-1.5 text-text-3 hover:text-status-warn transition-colors rounded-lg hover:bg-bg-3" data-path="exit-setup" href="#" title="Save and Exit Setup"><span class="material-symbols-outlined text-[20px]">close</span></a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-14 min-h-[calc(100vh-56px)] bg-bg-0 flex flex-col items-center justify-start"><div class="w-full max-w-4xl mx-auto px-6 py-8 sm:py-12 flex-1 flex flex-col justify-center"><div class="flex flex-col w-full relative">
+<div class="w-full max-w-5xl mx-auto flex flex-col gap-8 pb-10">
+<!-- Top Wizard Stepper Track -->
+<div class="w-full flex flex-col gap-3">
+<div class="flex items-center justify-between text-label-sm font-label-sm">
+<!-- Step 1 (Current Active) -->
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded-full flex items-center justify-center bg-gradient-to-tr from-primary-container to-node-service text-bg-0 font-body-node-label text-chip-metric shadow-[0_0_12px_rgba(34,211,238,0.4)]">
+            1
+          </div>
+<span class="text-text-1 font-medium font-label-md text-label-md">Template</span>
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+</div>
+<!-- Step 2 (Pending) -->
+<div class="flex items-center gap-2 text-text-3">
+<div class="w-5 h-5 rounded-full flex items-center justify-center bg-bg-3 font-code-sm text-chip-metric text-text-3">
+            2
+          </div>
+<span class="font-label-md text-label-md text-text-3">Connect telemetry</span>
+</div>
+<!-- Step 3 (Pending) -->
+<div class="flex items-center gap-2 text-text-3">
+<div class="w-5 h-5 rounded-full flex items-center justify-center bg-bg-3 font-code-sm text-chip-metric text-text-3">
+            3
+          </div>
+<span class="font-label-md text-label-md text-text-3">Verify live stream</span>
+</div>
+</div>
+<!-- Segmented Track Bar -->
+<div class="w-full h-1 bg-bg-3 rounded-full overflow-hidden flex gap-1">
+<div class="h-full w-1/3 rounded-full bg-gradient-to-r from-primary-container via-surface-tint to-node-service shadow-[0_0_8px_rgba(34,211,238,0.6)]"></div>
+<div class="h-full w-1/3 rounded-full bg-bg-2"></div>
+<div class="h-full w-1/3 rounded-full bg-bg-2"></div>
+</div>
+</div>
+<!-- Header Section -->
+<div class="flex flex-col gap-2 pt-2">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+<span class="text-primary-container font-label-uppercase text-label-uppercase tracking-wider">STEP 1 OF 3 · GET STARTED</span>
+</div>
+<div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
+<h1 class="text-headline-lg font-headline-lg text-text-1 tracking-tight">
+          What do you want to watch?
+        </h1>
+<span class="text-text-3 font-code-sm text-code-sm self-start sm:self-auto px-2 py-0.5 rounded bg-bg-3">
+          6 architectures available
+        </span>
+</div>
+<p class="text-text-2 font-body-md text-body-md max-w-2xl">
+        Choose a pre-configured architecture template to initialize an instant live topology map, or start completely clean with auto-discovery.
+      </p>
+</div>
+<!-- Template Cards Grid (2 rows x 3 columns) -->
+<div aria-label="Architecture Templates" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="template-grid" role="radiogroup">
+<!-- Card 1: Web App -->
+<div aria-checked="false" class="group relative flex flex-col justify-between p-4 rounded-xl bg-bg-2 transition-all duration-200 cursor-pointer hover:bg-bg-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_8px_24px_rgba(0,0,0,0.35)] focus:outline-none" data-card="web-app" role="radio" tabindex="0">
+<div class="flex flex-col gap-3">
+<!-- Mini Preview Diagram -->
+<div class="relative w-full h-32 rounded-lg bg-[#0F1219] overflow-hidden flex items-center justify-center p-2">
+<!-- Background dot grid overlay inside preview -->
+<div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px); background-size: 12px 12px;"></div>
+<svg class="w-full h-full relative z-10" fill="none" viewbox="0 0 240 100" xmlns="http://www.w3.org/2000/svg">
+<!-- Paths -->
+<path d="M 45 50 C 70 50, 80 50, 105 50" stroke="#343C4F" stroke-linecap="round" stroke-width="2"></path>
+<path d="M 145 50 C 165 50, 175 50, 195 50" stroke="#343C4F" stroke-linecap="round" stroke-width="2"></path>
+<!-- Traveling Token -->
+<circle class="shadow-[0_0_8px_#22D3EE]" fill="#22D3EE" r="3">
+<animatemotion dur="2.4s" path="M 45 50 L 195 50" repeatcount="indefinite"></animatemotion>
+</circle>
+<!-- Node 1: Browser -->
+<g transform="translate(15, 34)">
+<rect fill="#171B24" height="32" rx="8" width="32"></rect>
+<rect height="14" rx="2" stroke="#60A5FA" stroke-width="1.5" width="18" x="7" y="9"></rect>
+<line stroke="#60A5FA" stroke-width="1.5" x1="7" x2="25" y1="13" y2="13"></line>
+</g>
+<!-- Node 2: Gateway API -->
+<g transform="translate(105, 34)">
+<rect fill="#171B24" height="32" rx="8" width="40"></rect>
+<text fill="#8B5CF6" font-family="JetBrains Mono" font-size="9" font-weight="600" text-anchor="middle" x="20" y="20">API</text>
+</g>
+<!-- Node 3: PostgreSQL -->
+<g transform="translate(195, 34)">
+<rect fill="#171B24" height="32" rx="8" width="32"></rect>
+<ellipse cx="16" cy="11" rx="9" ry="3.5" stroke="#34D399" stroke-width="1.5"></ellipse>
+<path d="M 7 11 V 21 C 7 23 11 25 16 25 C 21 25 25 23 25 21 V 11" stroke="#34D399" stroke-width="1.5"></path>
+</g>
+</svg>
+</div>
+<!-- Header & Copy -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-body-node-label text-body-node-label text-text-1 group-hover:text-primary transition-colors">Web app</span>
+<span class="w-3.5 h-3.5 rounded-full bg-bg-3"></span>
+</div>
+<p class="font-body-md text-body-md text-text-2 text-xs leading-relaxed line-clamp-2">
+              Edge ingress, auth gateway, SSR frontend, API router, and primary PostgreSQL datastore.
+            </p>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between border-t border-border-structural/30">
+<span class="px-2 py-0.5 rounded-full bg-bg-3 font-chip-metric text-chip-metric text-text-3">4 nodes · 3 services</span>
+<span class="font-code-sm text-chip-metric text-text-3 group-hover:text-text-1 transition-colors">HTTP / TLS</span>
+</div>
+</div>
+<!-- Card 2: Microservices (SELECTED STATE) -->
+<div aria-checked="true" class="group relative flex flex-col justify-between p-4 rounded-xl bg-bg-2 transition-all duration-200 cursor-pointer shadow-[0_0_0_1px_rgba(34,211,238,0.5),0_0_24px_rgba(139,92,246,0.25)] focus:outline-none" data-card="microservices" role="radio" tabindex="0">
+<!-- Glowing Selected Badge Indicator -->
+<div class="absolute -top-2.5 right-4 z-20 flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-primary-container to-node-service text-bg-0 shadow-[0_0_10px_rgba(34,211,238,0.4)]">
+<span class="material-symbols-outlined text-[13px] font-bold">check</span>
+<span class="font-chip-metric text-chip-metric font-semibold tracking-wide uppercase">Selected</span>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Mini Preview Diagram -->
+<div class="relative w-full h-32 rounded-lg bg-[#0F1219] overflow-hidden flex items-center justify-center p-2">
+<div class="absolute inset-0 opacity-25" style="background-image: radial-gradient(rgba(34,211,238,0.2) 1px, transparent 1px); background-size: 12px 12px;"></div>
+<svg class="w-full h-full relative z-10" fill="none" viewbox="0 0 240 100" xmlns="http://www.w3.org/2000/svg">
+<!-- Edge Lines -->
+<path d="M 40 50 C 65 50, 70 26, 95 26" stroke="#22D3EE" stroke-dasharray="2 2" stroke-linecap="round" stroke-width="1.8"></path>
+<path d="M 40 50 C 65 50, 70 74, 95 74" stroke="#8B5CF6" stroke-linecap="round" stroke-width="1.8"></path>
+<path d="M 140 26 C 160 26, 170 42, 190 42" stroke="#343C4F" stroke-width="1.5"></path>
+<path d="M 140 74 C 160 74, 170 58, 190 58" stroke="#343C4F" stroke-width="1.5"></path>
+<!-- Mesh Cross Link -->
+<path d="M 117 40 L 117 60" stroke="#343C4F" stroke-dasharray="3 3" stroke-width="1.5"></path>
+<!-- Animated Traveling Tokens -->
+<circle fill="#22D3EE" filter="drop-shadow(0 0 4px #22D3EE)" r="3.5">
+<animatemotion dur="1.8s" path="M 40 50 C 65 50, 70 26, 95 26" repeatcount="indefinite"></animatemotion>
+</circle>
+<circle fill="#8B5CF6" filter="drop-shadow(0 0 4px #8B5CF6)" r="3.5">
+<animatemotion dur="2.1s" path="M 40 50 C 65 50, 70 74, 95 74" repeatcount="indefinite"></animatemotion>
+</circle>
+<circle fill="#34D399" filter="drop-shadow(0 0 3px #34D399)" r="2.5">
+<animatemotion dur="2.6s" path="M 140 26 C 160 26, 170 42, 190 42" repeatcount="indefinite"></animatemotion>
+</circle>
+<!-- Ingress Node -->
+<g transform="translate(10, 36)">
+<rect fill="#171B24" height="28" rx="7" width="28"></rect>
+<path d="M 9 14 H 19 M 15 10 L 19 14 L 15 18" stroke="#22D3EE" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+</g>
+<!-- Service A (Auth / Dispatch) -->
+<g transform="translate(95, 12)">
+<rect fill="#171B24" height="28" rx="7" width="45"></rect>
+<text fill="#E8ECF4" font-family="JetBrains Mono" font-size="8" text-anchor="middle" x="22.5" y="17">orders</text>
+</g>
+<!-- Service B (Worker / Ingest) -->
+<g transform="translate(95, 60)">
+<rect fill="#171B24" height="28" rx="7" width="45"></rect>
+<text fill="#E8ECF4" font-family="JetBrains Mono" font-size="8" text-anchor="middle" x="22.5" y="17">billing</text>
+</g>
+<!-- Redis / Cache Node -->
+<g transform="translate(190, 36)">
+<rect fill="#171B24" height="28" rx="7" width="32"></rect>
+<circle cx="16" cy="14" r="6" stroke="#34D399" stroke-width="1.5"></circle>
+</g>
+</svg>
+</div>
+<!-- Header & Copy -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-body-node-label text-body-node-label text-text-1">Microservices</span>
+<div class="w-4 h-4 rounded-full bg-gradient-to-r from-primary-container to-node-service flex items-center justify-center">
+<span class="material-symbols-outlined text-[11px] text-bg-0 font-bold">check</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-text-2 text-xs leading-relaxed line-clamp-2">
+              Distributed service mesh with Envoy ingress, gRPC worker pools, Redis cache, and message queue.
+            </p>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between border-t border-primary-container/20">
+<span class="px-2 py-0.5 rounded-full bg-primary-container/10 font-chip-metric text-chip-metric text-primary-container font-medium">7 nodes · Mesh topology</span>
+<span class="font-code-sm text-chip-metric text-primary-container">gRPC / OTEL</span>
+</div>
+</div>
+<!-- Card 3: Queue Worker -->
+<div aria-checked="false" class="group relative flex flex-col justify-between p-4 rounded-xl bg-bg-2 transition-all duration-200 cursor-pointer hover:bg-bg-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_8px_24px_rgba(0,0,0,0.35)] focus:outline-none" data-card="queue-worker" role="radio" tabindex="0">
+<div class="flex flex-col gap-3">
+<!-- Mini Preview Diagram -->
+<div class="relative w-full h-32 rounded-lg bg-[#0F1219] overflow-hidden flex items-center justify-center p-2">
+<div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px); background-size: 12px 12px;"></div>
+<svg class="w-full h-full relative z-10" fill="none" viewbox="0 0 240 100" xmlns="http://www.w3.org/2000/svg">
+<path d="M 40 50 L 85 50" stroke="#343C4F" stroke-width="2"></path>
+<path d="M 125 50 C 145 50, 150 28, 175 28" stroke="#343C4F" stroke-width="1.8"></path>
+<path d="M 125 50 C 145 50, 150 72, 175 72" stroke="#343C4F" stroke-width="1.8"></path>
+<!-- Glowing amber/cyan token -->
+<circle fill="#F59E0B" filter="drop-shadow(0 0 5px #F59E0B)" r="3.5">
+<animatemotion dur="1.7s" path="M 40 50 L 125 50" repeatcount="indefinite"></animatemotion>
+</circle>
+<circle fill="#22D3EE" filter="drop-shadow(0 0 4px #22D3EE)" r="3">
+<animatemotion begin="0.8s" dur="1.5s" path="M 125 50 C 145 50, 150 28, 175 28" repeatcount="indefinite"></animatemotion>
+</circle>
+<!-- Node: Producer -->
+<g transform="translate(10, 36)">
+<rect fill="#171B24" height="28" rx="7" width="28"></rect>
+<circle cx="14" cy="14" r="5" stroke="#60A5FA" stroke-width="1.5"></circle>
+</g>
+<!-- Node: Kafka/RabbitMQ Queue -->
+<g transform="translate(85, 34)">
+<rect fill="#171B24" height="32" rx="8" width="40"></rect>
+<line stroke="#F59E0B" stroke-linecap="round" stroke-width="2" x1="93" x2="117" y1="44" y2="44"></line>
+<line stroke="#F59E0B" stroke-linecap="round" stroke-width="2" x1="93" x2="117" y1="50" y2="50"></line>
+<line stroke="#F59E0B" stroke-linecap="round" stroke-width="2" x1="93" x2="117" y1="56" y2="56"></line>
+</g>
+<!-- Worker Nodes -->
+<g transform="translate(175, 14)">
+<rect fill="#171B24" height="26" rx="6" width="42"></rect>
+<text fill="#22D3EE" font-family="JetBrains Mono" font-size="8" text-anchor="middle" x="21" y="16">wrk-1</text>
+</g>
+<g transform="translate(175, 58)">
+<rect fill="#171B24" height="26" rx="6" width="42"></rect>
+<text fill="#22D3EE" font-family="JetBrains Mono" font-size="8" text-anchor="middle" x="21" y="16">wrk-2</text>
+</g>
+</svg>
+</div>
+<!-- Header & Copy -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-body-node-label text-body-node-label text-text-1 group-hover:text-primary transition-colors">Queue worker</span>
+<span class="w-3.5 h-3.5 rounded-full bg-bg-3"></span>
+</div>
+<p class="font-body-md text-body-md text-text-2 text-xs leading-relaxed line-clamp-2">
+              Asynchronous task processing pipeline with producer, RabbitMQ / Kafka broker, and distributed workers.
+            </p>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between border-t border-border-structural/30">
+<span class="px-2 py-0.5 rounded-full bg-bg-3 font-chip-metric text-chip-metric text-text-3">5 nodes · Asynchronous</span>
+<span class="font-code-sm text-chip-metric text-text-3 group-hover:text-text-1 transition-colors">AMQP / Kafka</span>
+</div>
+</div>
+<!-- Card 4: AI Agent -->
+<div aria-checked="false" class="group relative flex flex-col justify-between p-4 rounded-xl bg-bg-2 transition-all duration-200 cursor-pointer hover:bg-bg-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_8px_24px_rgba(0,0,0,0.35)] focus:outline-none" data-card="ai-agent" role="radio" tabindex="0">
+<div class="flex flex-col gap-3">
+<!-- Mini Preview Diagram -->
+<div class="relative w-full h-32 rounded-lg bg-[#0F1219] overflow-hidden flex items-center justify-center p-2">
+<div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px); background-size: 12px 12px;"></div>
+<svg class="w-full h-full relative z-10" fill="none" viewbox="0 0 240 100" xmlns="http://www.w3.org/2000/svg">
+<path d="M 36 50 L 78 50" stroke="#343C4F" stroke-width="1.8"></path>
+<path d="M 122 50 C 140 50, 142 26, 160 26" stroke="#343C4F" stroke-width="1.5"></path>
+<path d="M 122 50 C 140 50, 142 74, 160 74" stroke="#343C4F" stroke-width="1.5"></path>
+<path d="M 122 50 L 200 50" stroke="#8B5CF6" stroke-dasharray="3 3" stroke-width="1.8"></path>
+<!-- Pulsing Violet LLM Token -->
+<circle fill="#8B5CF6" filter="drop-shadow(0 0 6px #8B5CF6)" r="3.5">
+<animatemotion dur="1.2s" path="M 36 50 L 78 50" repeatcount="indefinite"></animatemotion>
+</circle>
+<circle fill="#22D3EE" filter="drop-shadow(0 0 5px #22D3EE)" r="3">
+<animatemotion begin="0.6s" dur="1.4s" path="M 122 50 L 200 50" repeatcount="indefinite"></animatemotion>
+</circle>
+<!-- Node: Prompt Input -->
+<g transform="translate(10, 36)">
+<rect fill="#171B24" height="28" rx="6" width="26"></rect>
+<path d="M 8 14 L 18 14 M 14 10 L 18 14 L 14 18" stroke="#60A5FA" stroke-linecap="round" stroke-width="1.5"></path>
+</g>
+<!-- Node: Agent Brain -->
+<g transform="translate(78, 30)">
+<rect fill="#171B24" height="40" rx="10" stroke="#8B5CF6" stroke-opacity="0.5" stroke-width="1.2" width="44"></rect>
+<circle cx="22" cy="20" r="8" stroke="#8B5CF6" stroke-width="1.5"></circle>
+<circle cx="22" cy="20" fill="#8B5CF6" r="3"></circle>
+</g>
+<!-- Node: Vector DB -->
+<g transform="translate(160, 12)">
+<rect fill="#171B24" height="26" rx="6" width="36"></rect>
+<text fill="#34D399" font-family="JetBrains Mono" font-size="7" text-anchor="middle" x="18" y="16">VECTR</text>
+</g>
+<!-- Node: Tools -->
+<g transform="translate(160, 62)">
+<rect fill="#171B24" height="26" rx="6" width="36"></rect>
+<text fill="#F59E0B" font-family="JetBrains Mono" font-size="7" text-anchor="middle" x="18" y="16">TOOLS</text>
+</g>
+</svg>
+</div>
+<!-- Header & Copy -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-body-node-label text-body-node-label text-text-1 group-hover:text-primary transition-colors">AI agent</span>
+<span class="w-3.5 h-3.5 rounded-full bg-bg-3"></span>
+</div>
+<p class="font-body-md text-body-md text-text-2 text-xs leading-relaxed line-clamp-2">
+              LLM agent chain, vector database (Pinecone/Milvus), prompt cache, tool dispatcher, and streaming output.
+            </p>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between border-t border-border-structural/30">
+<span class="px-2 py-0.5 rounded-full bg-bg-3 font-chip-metric text-chip-metric text-text-3">6 nodes · RAG pipeline</span>
+<span class="font-code-sm text-chip-metric text-text-3 group-hover:text-text-1 transition-colors">LangChain / SSE</span>
+</div>
+</div>
+<!-- Card 5: Online Shop -->
+<div aria-checked="false" class="group relative flex flex-col justify-between p-4 rounded-xl bg-bg-2 transition-all duration-200 cursor-pointer hover:bg-bg-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_8px_24px_rgba(0,0,0,0.35)] focus:outline-none" data-card="online-shop" role="radio" tabindex="0">
+<div class="flex flex-col gap-3">
+<!-- Mini Preview Diagram -->
+<div class="relative w-full h-32 rounded-lg bg-[#0F1219] overflow-hidden flex items-center justify-center p-2">
+<div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px); background-size: 12px 12px;"></div>
+<svg class="w-full h-full relative z-10" fill="none" viewbox="0 0 240 100" xmlns="http://www.w3.org/2000/svg">
+<path d="M 30 50 L 80 50 L 130 50 L 180 50" stroke="#343C4F" stroke-width="1.8"></path>
+<!-- Flow dots moving toward Paid state -->
+<circle fill="#34D399" filter="drop-shadow(0 0 4px #34D399)" r="3.5">
+<animatemotion dur="2.8s" path="M 30 50 L 210 50" repeatcount="indefinite"></animatemotion>
+</circle>
+<!-- Node: Storefront -->
+<g transform="translate(10, 36)">
+<rect fill="#171B24" height="28" rx="6" width="26"></rect>
+<path d="M 7 12 L 19 12 M 9 12 V 20 M 17 20 V 12" stroke="#60A5FA" stroke-width="1.3"></path>
+</g>
+<!-- Node: Cart -->
+<g transform="translate(64, 36)">
+<rect fill="#171B24" height="28" rx="6" width="32"></rect>
+<text fill="#E8ECF4" font-family="JetBrains Mono" font-size="7" text-anchor="middle" x="16" y="17">cart</text>
+</g>
+<!-- Node: Checkout -->
+<g transform="translate(116, 36)">
+<rect fill="#171B24" height="28" rx="6" width="36"></rect>
+<text fill="#F59E0B" font-family="JetBrains Mono" font-size="7" text-anchor="middle" x="18" y="17">chkout</text>
+</g>
+<!-- Node: Stripe API -->
+<g transform="translate(172, 34)">
+<rect fill="#171B24" height="32" rx="7" stroke="#34D399" stroke-opacity="0.4" stroke-width="1.2" width="36"></rect>
+<text fill="#34D399" font-family="JetBrains Mono" font-size="7.5" font-weight="600" text-anchor="middle" x="18" y="19">PAID</text>
+</g>
+</svg>
+</div>
+<!-- Header & Copy -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-body-node-label text-body-node-label text-text-1 group-hover:text-primary transition-colors">Online shop</span>
+<span class="w-3.5 h-3.5 rounded-full bg-bg-3"></span>
+</div>
+<p class="font-body-md text-body-md text-text-2 text-xs leading-relaxed line-clamp-2">
+              Complete e-commerce funnel: Browse, Product page, Cart, Checkout, Stripe API, and Order fulfillment.
+            </p>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between border-t border-border-structural/30">
+<span class="px-2 py-0.5 rounded-full bg-bg-3 font-chip-metric text-chip-metric text-text-3">8 nodes · E-commerce</span>
+<span class="font-code-sm text-chip-metric text-text-3 group-hover:text-text-1 transition-colors">Stripe / Webhook</span>
+</div>
+</div>
+<!-- Card 6: Blank Canvas -->
+<div aria-checked="false" class="group relative flex flex-col justify-between p-4 rounded-xl bg-bg-2 transition-all duration-200 cursor-pointer hover:bg-bg-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_8px_24px_rgba(0,0,0,0.35)] focus:outline-none" data-card="blank-canvas" role="radio" tabindex="0">
+<div class="flex flex-col gap-3">
+<!-- Mini Preview Diagram: Clean grid with radar ping -->
+<div class="relative w-full h-32 rounded-lg bg-[#0F1219] overflow-hidden flex items-center justify-center p-2">
+<div class="absolute inset-0 opacity-40" style="background-image: radial-gradient(rgba(255,255,255,0.2) 1px, transparent 1px); background-size: 16px 16px;"></div>
+<!-- Expanding pulse ping rings -->
+<div class="absolute w-20 h-20 rounded-full border border-primary-container/20 animate-ping opacity-40"></div>
+<div class="absolute w-12 h-12 rounded-full border border-node-service/30"></div>
+<!-- Centered Dashed Node Frame -->
+<div class="relative z-10 w-14 h-14 rounded-xl border border-dashed border-border-strong flex flex-col items-center justify-center bg-bg-2/80 backdrop-blur-sm group-hover:border-primary-container/60 transition-colors">
+<span class="material-symbols-outlined text-[20px] text-text-3 group-hover:text-primary-container transition-colors">add</span>
+</div>
+</div>
+<!-- Header & Copy -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-body-node-label text-body-node-label text-text-1 group-hover:text-primary transition-colors">Blank canvas</span>
+<span class="w-3.5 h-3.5 rounded-full bg-bg-3"></span>
+</div>
+<p class="font-body-md text-body-md text-text-2 text-xs leading-relaxed line-clamp-2">
+              Start with an empty workspace. Nodes and connection edges will auto-discover as events stream in.
+            </p>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between border-t border-border-structural/30">
+<span class="px-2 py-0.5 rounded-full bg-bg-3 font-chip-metric text-chip-metric text-text-3">0 nodes · Auto-discovery</span>
+<span class="font-code-sm text-chip-metric text-node-decision">Dynamic mode</span>
+</div>
+</div>
+</div>
+<!-- Bottom Action Bar Section -->
+<div class="w-full mt-2 pt-6 border-t border-border-structural/60 flex flex-col-reverse sm:flex-row items-center justify-between gap-4">
+<!-- Skip Action -->
+<a class="flex items-center gap-1.5 font-label-md text-label-md text-text-3 hover:text-text-1 transition-colors px-2 py-1.5 rounded-lg hover:bg-bg-3/50" data-path="step-1-skip-blank" href="#">
+<span>Skip template and start blank</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</a>
+<!-- Right Action Group -->
+<div class="flex items-center gap-5 w-full sm:w-auto justify-between sm:justify-end">
+<span class="hidden md:flex items-center gap-1.5 text-text-3 font-code-sm text-code-sm">
+<span>Press</span>
+<kbd class="px-1.5 py-0.5 rounded bg-bg-3 font-code-sm text-chip-metric text-text-2">Enter ↵</kbd>
+<span>to continue</span>
+</span>
+<button class="w-full sm:w-auto h-11 px-6 rounded-lg bg-gradient-to-r from-primary-container via-surface-tint to-node-service text-bg-0 font-body-node-label text-body-md flex items-center justify-center gap-2 shadow-[0_4px_16px_rgba(34,211,238,0.25)] hover:shadow-[0_4px_24px_rgba(34,211,238,0.45)] hover:brightness-105 active:scale-[0.98] transition-all cursor-pointer" id="btn-continue" type="button">
+<span>Continue</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function() {
+  const cards = document.querySelectorAll('[data-card]');
+  const continueBtn = document.getElementById('btn-continue');
+  
+  const selectedClasses = [
+    'shadow-[0_0_0_1px_rgba(34,211,238,0.5),0_0_24px_rgba(139,92,246,0.25)]'
+  ];
+  const unselectedClasses = [
+    'shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_8px_24px_rgba(0,0,0,0.35)]'
+  ];
+
+  function selectCard(card) {
+    cards.forEach(c => {
+      c.setAttribute('aria-checked', 'false');
+      c.classList.remove(...selectedClasses);
+      c.classList.add(...unselectedClasses);
+      
+      const badge = c.querySelector('.absolute.-top-2\\.5');
+      if (badge) badge.remove();
+
+      const radio = c.querySelector('[class*="rounded-full"][class*="bg-"]');
+      if (radio && !radio.closest('.absolute')) {
+        radio.className = 'w-3.5 h-3.5 rounded-full bg-bg-3';
+        radio.innerHTML = '';
+      }
+    });
+
+    card.setAttribute('aria-checked', 'true');
+    card.classList.remove(...unselectedClasses);
+    card.classList.add(...selectedClasses);
+
+    // Add badge
+    const badge = document.createElement('div');
+    badge.className = 'absolute -top-2.5 right-4 z-20 flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-primary-container to-node-service text-bg-0 shadow-[0_0_10px_rgba(34,211,238,0.4)]';
+    badge.innerHTML = '<span class="material-symbols-outlined text-[13px] font-bold">check</span><span class="font-chip-metric text-chip-metric font-semibold tracking-wide uppercase">Selected</span>';
+    card.appendChild(badge);
+
+    // Update radio icon
+    const headerRow = card.querySelector('.flex.items-center.justify-between');
+    if (headerRow) {
+      const targetDot = headerRow.children[1];
+      if (targetDot) {
+        targetDot.className = 'w-4 h-4 rounded-full bg-gradient-to-r from-primary-container to-node-service flex items-center justify-center';
+        targetDot.innerHTML = '<span class="material-symbols-outlined text-[11px] text-bg-0 font-bold">check</span>';
+      }
+    }
+  }
+
+  cards.forEach(c => {
+    c.addEventListener('click', () => selectCard(c));
+    c.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        selectCard(c);
+      }
+    });
+  });
+
+  // Global enter triggers continue button click
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && document.activeElement.tagName !== 'BUTTON' && !document.activeElement.hasAttribute('data-card')) {
+      if (continueBtn) {
+        continueBtn.focus();
+        continueBtn.click();
+      }
+    }
+  });
+
+  if (continueBtn) {
+    continueBtn.addEventListener('click', () => {
+      const activeCard = document.querySelector('[data-card][aria-checked="true"]');
+      const template = activeCard ? activeCard.getAttribute('data-card') : 'microservices';
+      // Smooth visual feedback on submit
+      continueBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span><span>Configuring...</span>';
+      setTimeout(() => {
+        const nextLink = document.querySelector('header nav a[data-path="step-2-instrumentation-agents"]');
+        if (nextLink) {
+          nextLink.click();
+        } else {
+          continueBtn.innerHTML = '<span>Continue</span><span class="material-symbols-outlined text-[18px]">arrow_forward</span>';
+        }
+      }, 500);
+    });
+  }
+})();
+</script></div></main><footer class="w-full bg-bg-1 py-4"><div class="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col sm:flex-row items-center justify-between gap-2 text-text-3 font-label-sm text-label-sm"><span>FlowTrace Telemetry Daemon v2.14.0-edge</span><div class="flex items-center gap-4"><span>System Engine: Ready</span><span class="inline-block w-1.5 h-1.5 rounded-full bg-status-ok"></span></div></div></footer></body></html>

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"tertiary":"#ffd6a3","on-primary-fixed-variant":"#004e5a","status-error":"#F43F5E","primary-fixed-dim":"#2fd9f4","on-secondary":"#3c0091","on-secondary-container":"#c4abff","primary-container":"#22d3ee","primary-fixed":"#a2eeff","border-structural":"#262C3A","node-queue":"#22D3EE","node-decision":"#F59E0B","node-datastore":"#34D399","text-3":"#7C869C","inverse-on-surface":"#2e3036","bg-3":"#1E2330","on-surface-variant":"#bbc9cd","surface-container-highest":"#33353a","on-primary-fixed":"#001f25","status-warn":"#F59E0B","status-ok":"#34D399","border-strong":"#343C4F","on-tertiary-fixed":"#2a1800","on-error":"#690005","bg-0":"#0B0D12","surface-bright":"#37393f","on-error-container":"#ffdad6","secondary":"#d0bcff","surface-dim":"#111318","node-service":"#8B5CF6","primary":"#8aebff","tertiary-container":"#ffb13b","surface-variant":"#33353a","surface-container-low":"#1a1b21","on-primary":"#00363e","on-tertiary":"#462b00","tertiary-fixed":"#ffddb5","surface":"#111318","on-secondary-fixed-variant":"#5516be","background":"#111318","inverse-surface":"#e2e2e9","text-1":"#E8ECF4","node-source":"#60A5FA","secondary-fixed":"#e9ddff","on-secondary-fixed":"#23005c","text-2":"#A3ACBF","inverse-primary":"#006877","secondary-fixed-dim":"#d0bcff","on-tertiary-container":"#6e4600","bg-2":"#171B24","on-background":"#e2e2e9","outline":"#859397","tertiary-fixed-dim":"#ffb957","outline-variant":"#3c494c","error-container":"#93000a","on-primary-container":"#005763","on-tertiary-fixed-variant":"#643f00","secondary-container":"#571bc1","bg-1":"#11141B","surface-container-lowest":"#0c0e13","node-end":"#F472B6","status-info":"#60A5FA","status-discovered":"#F59E0B","surface-container":"#1e1f25","node-external":"#94A3B8","on-surface":"#e2e2e9","surface-container-high":"#282a2f","surface-tint":"#2fd9f4","error":"#ffb4ab"},borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},spacing:{"space-sm":"0.5rem",gutter:"1rem","space-xs":"0.25rem","space-xl":"1.5rem",margin:"1rem","space-md":"0.75rem","space-lg":"1rem","margin-desktop":"1.5rem","gutter-desktop":"1.5rem"},fontFamily:{"body-md":["Inter"],"chip-metric":["Inter"],"headline-lg":["Inter"],"headline-sm":["Inter"],"code-block":["JetBrains Mono"],"label-md":["Inter"],"body-lg":["Inter"],"display-mobile":["Inter"],"body-node-label":["Inter"],"label-uppercase":["Inter"],display:["Inter"],"headline-md":["Inter"],"code-sm":["JetBrains Mono"],"headline-lg-mobile":["Inter"],"label-sm":["Inter"]},fontSize:{"body-md":["14px",{lineHeight:"20px",fontWeight:"400"}],"chip-metric":["11px",{lineHeight:"14px",fontWeight:"500"}],"headline-lg":["32px",{lineHeight:"40px",letterSpacing:"-0.01em",fontWeight:"600"}],"headline-sm":["20px",{lineHeight:"28px",fontWeight:"600"}],"code-block":["13px",{lineHeight:"20px",fontWeight:"400"}],"label-md":["13px",{lineHeight:"18px",fontWeight:"500"}],"body-lg":["16px",{lineHeight:"24px",fontWeight:"400"}],"display-mobile":["36px",{lineHeight:"42px",letterSpacing:"-0.01em",fontWeight:"600"}],"body-node-label":["14px",{lineHeight:"20px",fontWeight:"600"}],"label-uppercase":["12px",{lineHeight:"16px",letterSpacing:"0.08em",fontWeight:"500"}],display:["48px",{lineHeight:"52px",letterSpacing:"-0.02em",fontWeight:"600"}],"headline-md":["24px",{lineHeight:"32px",fontWeight:"600"}],"code-sm":["12px",{lineHeight:"16px",fontWeight:"500"}],"headline-lg-mobile":["26px",{lineHeight:"32px",fontWeight:"600"}],"label-sm":["12px",{lineHeight:"16px",fontWeight:"400"}]}}}</script></head><body class="bg-bg-0 text-text-1 font-body-md text-body-md antialiased min-h-screen"><aside class="fixed left-0 top-0 h-full w-64 bg-bg-1 z-50 flex flex-col shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-14 px-gutter flex items-center gap-space-sm"><div class="w-7 h-7 rounded-lg bg-gradient-to-br from-primary-container to-node-service flex items-center justify-center"><span class="material-symbols-outlined text-bg-0 text-[18px]">hub</span></div><span class="font-headline-sm text-headline-sm text-text-1 tracking-tight">FlowTrace</span></div><div class="px-gutter py-space-xs"><div class="flex items-center gap-space-xs px-space-sm py-space-xs rounded-lg bg-bg-2"><span class="w-2 h-2 rounded-full bg-status-ok animate-pulse"></span><span class="font-label-uppercase text-label-uppercase text-text-2 uppercase">System Healthy</span></div></div><nav class="flex-1 px-gutter py-space-md space-y-1" data-active-classes="bg-primary-container text-on-primary-container font-semibold rounded-lg"><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-all bg-primary-container text-on-primary-container font-semibold rounded-lg" data-path="live-topology" href="#"><span class="material-symbols-outlined text-[20px]">account_tree</span><span class="font-label-md text-label-md">Live Topology</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 transition-all" data-path="service-mesh" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span class="font-label-md text-label-md">Service Mesh</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 transition-all" data-path="trace-explorer" href="#"><span class="material-symbols-outlined text-[20px]">timeline</span><span class="font-label-md text-label-md">Trace Explorer</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 transition-all" data-path="telemetry-alerts" href="#"><span class="material-symbols-outlined text-[20px]">notifications_active</span><span class="font-label-md text-label-md">Telemetry & Alerts</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 transition-all" data-path="cluster-metrics" href="#"><span class="material-symbols-outlined text-[20px]">speed</span><span class="font-label-md text-label-md">Cluster Metrics</span></a></nav><div class="p-gutter"><div class="p-space-md rounded-xl bg-bg-2"><div class="flex items-center justify-between mb-1"><span class="font-chip-metric text-chip-metric text-text-3 uppercase tracking-wider">Active Ingest</span><span class="font-chip-metric text-chip-metric text-status-ok tabular-nums">18.4k rps</span></div><div class="w-full bg-bg-3 rounded-full h-1.5 overflow-hidden"><div class="bg-node-queue h-1.5 rounded-full w-3/4"></div></div></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-14 bg-bg-1/80 backdrop-blur-xl z-40 shadow-[0_1px_8px_rgba(0,0,0,0.04)] flex items-center justify-between px-gutter-desktop"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-bg-2"><span class="w-2 h-2 rounded-full bg-status-ok"></span><span class="font-chip-metric text-chip-metric uppercase tracking-wider text-status-ok font-semibold">LIVE</span></div><div class="h-4 w-[1px] bg-border-structural"></div><div class="flex items-center gap-space-xs text-text-3"><span class="material-symbols-outlined text-[16px]">filter_alt</span><span class="font-label-sm text-label-sm text-text-2">prod-cluster-us-east</span></div></div><div class="flex items-center gap-space-md"><div class="relative flex items-center"><span class="material-symbols-outlined absolute left-space-sm text-text-3 text-[18px]">search</span><input class="h-9 pl-8 pr-space-md bg-bg-3 rounded-lg text-text-1 placeholder-text-3 font-code-sm text-code-sm focus:outline-none focus:ring-1 focus:ring-primary-container w-72 transition-all" placeholder="Filter nodes, services, tags (Cmd+K)..." type="text"/></div><button class="flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-bg-3 text-text-1 hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">share</span><span class="font-label-md text-label-md">Share & Embed</span></button><button class="p-1.5 rounded-lg text-text-3 hover:text-text-1 hover:bg-bg-3 transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">tune</span></button><button class="p-1.5 rounded-lg text-text-3 hover:text-text-1 hover:bg-bg-3 transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">settings</span></button><div class="h-5 w-[1px] bg-border-structural"></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="relative pt-14 w-full px-gutter-desktop"><div class="flex flex-col w-full relative -mx-gutter-desktop -mt-14 min-h-[calc(100vh-3.5rem)] overflow-hidden select-none">
+<!-- Dotted Canvas Base (Background Layer) -->
+<div class="absolute inset-0 bg-bg-0 pointer-events-none" style="background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.25px, transparent 1.25px); background-size: 24px 24px;"></div>
+<!-- Background Topology Visual Graph Layer (Calm Telemetry Live Mesh Dimmed) -->
+<div class="absolute inset-0 pointer-events-none opacity-40 filter blur-[1px]">
+<!-- Vector Graph Connectors -->
+<svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient id="activeFlow" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#22D3EE" stop-opacity="0.85"></stop>
+<stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.85"></stop>
+</lineargradient>
+<filter height="140%" id="glow" width="140%" x="-20%" y="-20%">
+<fegaussianblur result="blur" stddeviation="3"></fegaussianblur>
+<fecomposite in="SourceGraphic" in2="blur" operator="over"></fecomposite>
+</filter>
+</defs>
+<!-- Connections -->
+<path d="M 220 280 C 340 280, 360 210, 480 210" fill="none" stroke="#262C3A" stroke-width="2"></path>
+<path d="M 220 280 C 340 280, 360 370, 480 370" fill="none" filter="url(#glow)" stroke="url(#activeFlow)" stroke-width="3"></path>
+<path d="M 690 210 C 780 210, 810 270, 910 270" fill="none" stroke="#262C3A" stroke-dasharray="6 4" stroke-width="2"></path>
+<path d="M 690 370 C 790 370, 810 290, 910 285" fill="none" stroke="url(#activeFlow)" stroke-width="3"></path>
+<path d="M 1120 280 C 1200 280, 1220 230, 1310 230" fill="none" stroke="#262C3A" stroke-width="2"></path>
+<path d="M 1120 280 C 1200 280, 1220 360, 1310 360" fill="none" stroke="#34D399" stroke-opacity="0.7" stroke-width="2"></path>
+<!-- Flowing Kinetic Telemetry Particles -->
+<circle cx="380" cy="330" fill="#22D3EE" filter="url(#glow)" r="4.5">
+<animate attributename="cx" dur="2.4s" repeatcount="indefinite" values="220;480"></animate>
+<animate attributename="cy" calcmode="spline" dur="2.4s" keysplines="0.45 0 0.55 1" keytimes="0;1" repeatcount="indefinite" values="280;370"></animate>
+<animate attributename="opacity" dur="2.4s" repeatcount="indefinite" values="0;1;1;0"></animate>
+</circle>
+<circle cx="800" cy="340" fill="#8B5CF6" filter="url(#glow)" r="4">
+<animate attributename="cx" dur="1.9s" repeatcount="indefinite" values="690;910"></animate>
+<animate attributename="cy" calcmode="spline" dur="1.9s" keysplines="0.45 0 0.55 1" keytimes="0;1" repeatcount="indefinite" values="370;285"></animate>
+<animate attributename="opacity" dur="1.9s" repeatcount="indefinite" values="0;1;1;0"></animate>
+</circle>
+</svg>
+<!-- Synthetic Graph Nodes Background Layer -->
+<div class="absolute left-16 top-64 w-52 p-3 rounded-xl bg-bg-2 border border-border-structural flex items-center gap-3 shadow-xl">
+<div class="w-10 h-10 rounded-lg bg-node-source/15 flex items-center justify-center text-node-source">
+<span class="material-symbols-outlined text-[20px]">public</span>
+</div>
+<div>
+<div class="text-text-1 font-body-node-label text-body-node-label">edge-ingress-gtw</div>
+<div class="text-text-3 font-code-sm text-code-sm">12,420 rps · 1.4ms</div>
+</div>
+</div>
+<div class="absolute left-[480px] top-44 w-52 p-3 rounded-xl bg-bg-2 border border-border-structural flex items-center gap-3 shadow-xl">
+<div class="w-10 h-10 rounded-lg bg-node-service/15 flex items-center justify-center text-node-service">
+<span class="material-symbols-outlined text-[20px]">dns</span>
+</div>
+<div>
+<div class="text-text-1 font-body-node-label text-body-node-label">auth-session-v2</div>
+<div class="text-text-3 font-code-sm text-code-sm">99.98% · 42ms</div>
+</div>
+</div>
+<div class="absolute left-[480px] top-80 w-52 p-3 rounded-xl bg-bg-2 border border-primary-container shadow-[0_0_24px_rgba(34,211,238,0.25)] flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
+</div>
+<div>
+<div class="text-text-1 font-body-node-label text-body-node-label">checkout-prod</div>
+<div class="text-status-ok font-code-sm text-code-sm">1,840 rps · Healthy</div>
+</div>
+</div>
+<div class="absolute left-[910px] top-60 w-52 p-3 rounded-xl bg-bg-2 border border-border-structural flex items-center gap-3 shadow-xl">
+<div class="w-10 h-10 rounded-lg bg-node-queue/15 flex items-center justify-center text-node-queue">
+<span class="material-symbols-outlined text-[20px]">layers</span>
+</div>
+<div>
+<div class="text-text-1 font-body-node-label text-body-node-label">order-dispatch-q</div>
+<div class="text-text-3 font-code-sm text-code-sm">lag: 12ms · 0 drop</div>
+</div>
+</div>
+</div>
+<!-- Background Floating Canvas Control Bar (Standard FlowTrace canvas UI) -->
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 h-11 px-3 bg-bg-1/90 backdrop-blur-md rounded-xl border border-border-structural flex items-center gap-3 shadow-2xl opacity-60 pointer-events-none">
+<div class="flex items-center gap-1">
+<button class="p-1.5 rounded-lg text-text-2 hover:text-text-1"><span class="material-symbols-outlined text-[18px]">pause</span></button>
+<button class="p-1.5 rounded-lg text-text-2 hover:text-text-1"><span class="material-symbols-outlined text-[18px]">replay</span></button>
+</div>
+<div class="h-4 w-[1px] bg-border-structural"></div>
+<div class="flex items-center gap-1.5">
+<span class="font-code-sm text-code-sm text-text-3">SPEED</span>
+<span class="px-2 py-0.5 rounded bg-bg-3 font-code-sm text-code-sm text-text-1">1.0×</span>
+</div>
+<div class="h-4 w-[1px] bg-border-structural"></div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-status-ok"></span>
+<span class="font-label-uppercase text-label-uppercase text-text-2">STREAM LIVE</span>
+</div>
+</div>
+<!-- MODAL BACKDROP (Deep dim with crisp blur) -->
+<div class="absolute inset-0 bg-bg-0/75 backdrop-blur-md z-40 transition-all flex items-center justify-center p-4">
+<!-- MAIN MODAL DIALOG CONTAINER (~840px desktop width, --r-xl: 20px, Level 4 Elevation) -->
+<div class="relative w-full max-w-[850px] bg-bg-1 border border-border-structural rounded-[20px] shadow-[0_20px_60px_rgba(0,0,0,0.7),0_0_1px_rgba(255,255,255,0.1)] overflow-hidden flex flex-col z-50 animate-in fade-in zoom-in-95 duration-200">
+<!-- Ambient Subtle Top Highlight Glow -->
+<div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-32 bg-gradient-to-r from-primary-container/20 to-node-service/20 blur-3xl pointer-events-none"></div>
+<!-- Modal Header -->
+<div class="relative px-6 pt-5 pb-4 border-b border-border-structural/80 flex items-start justify-between bg-bg-1/90">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-container/20 to-node-service/20 border border-primary-container/30 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[22px]">share</span>
+</div>
+<div>
+<div class="flex items-center gap-2.5">
+<h2 class="font-headline-sm text-headline-sm text-text-1 tracking-tight">Share & Embed</h2>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-bg-3 border border-border-structural text-text-2 font-code-sm text-code-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok animate-pulse"></span>
+                checkout-prod
+              </span>
+</div>
+<p class="font-body-md text-body-md text-text-3 mt-0.5">Publish live telemetry stream topology to external wikis, dashboards, and client embeds.</p>
+</div>
+</div>
+<button aria-label="Close dialog" class="w-8 h-8 rounded-lg bg-bg-2 hover:bg-bg-3 text-text-3 hover:text-text-1 transition-colors flex items-center justify-center border border-border-structural" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Tab Navigation Switcher -->
+<div class="px-6 border-b border-border-structural/60 flex items-center justify-between bg-bg-1">
+<div class="flex items-center gap-6" id="tabBar">
+<button class="relative py-3 font-label-md text-label-md text-text-2 hover:text-text-1 transition-colors flex items-center gap-2" id="tabPublicLinkBtn" onclick="switchModalTab('public')" type="button">
+<span class="material-symbols-outlined text-[18px]">link</span>
+<span>Public Link</span>
+<span class="px-1.5 py-0.5 rounded bg-status-ok/10 text-status-ok font-chip-metric text-chip-metric uppercase tracking-wider">Active</span>
+</button>
+<button class="relative py-3 font-label-md text-label-md text-text-1 font-semibold flex items-center gap-2" id="tabEmbedBtn" onclick="switchModalTab('embed')" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary-container">code</span>
+<span>Interactive Embed</span>
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<!-- Active Tab Kinetic Gradient Line -->
+<div class="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary-container to-node-service" id="tabIndicator"></div>
+</button>
+</div>
+<div class="flex items-center gap-2 text-text-3 font-code-sm text-code-sm">
+<span class="material-symbols-outlined text-[15px] text-status-ok">verified_user</span>
+<span>End-to-End TLS Stream</span>
+</div>
+</div>
+<!-- Modal Body (Scrollable Split Workflow) -->
+<div class="max-h-[calc(85vh-150px)] overflow-y-auto px-6 py-5 bg-bg-1 space-y-5">
+<!-- Top Accordion / Fast Share Banner (Public Link Overview) -->
+<div class="p-3.5 rounded-xl bg-bg-2 border border-border-structural/90 hover:border-border-strong transition-all flex flex-col md:flex-row md:items-center justify-between gap-3">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-status-ok/15 text-status-ok flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">sensors</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-text-1 font-medium">Public Quick Link</span>
+<span class="text-text-3 font-code-sm text-code-sm">· read-only live session</span>
+</div>
+<div class="text-text-2 font-code-sm text-code-sm truncate max-w-sm md:max-w-md">
+                https://flowtrace.live/share/checkout-prod-live-94fe2
+              </div>
+</div>
+</div>
+<div class="flex items-center gap-2 self-end md:self-auto">
+<div class="relative">
+<select class="h-8 pl-2.5 pr-7 rounded-lg bg-bg-3 border border-border-structural text-text-2 font-code-sm text-code-sm focus:outline-none focus:border-primary-container appearance-none cursor-pointer">
+<option selected="">Expires in 7 days</option>
+<option>Expires in 24 hours</option>
+<option>Expires in 30 days</option>
+<option>Never expires</option>
+</select>
+<span class="material-symbols-outlined absolute right-1.5 top-2 text-text-3 text-[16px] pointer-events-none">expand_more</span>
+</div>
+<button class="h-8 px-3 rounded-lg bg-bg-3 hover:bg-surface-container-high border border-border-structural text-text-1 font-label-md text-label-md flex items-center gap-1.5 transition-colors" onclick="copySnippet('https://flowtrace.live/share/checkout-prod-live-94fe2', this)" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+<span class="btn-text">Copy URL</span>
+</button>
+</div>
+</div>
+<!-- 2-COLUMN EMBED CONFIGURATOR + LIVE PREVIEW -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+<!-- Left Column: Configurator (7 Cols) -->
+<div class="lg:col-span-7 space-y-4">
+<!-- 1. Code Snippet Box -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-text-1 font-medium flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary-container text-[16px]">integration_instructions</span>
+<span>HTML Embed Code</span>
+</label>
+<span class="font-chip-metric text-chip-metric text-text-3 uppercase tracking-wider">iFrame snippet</span>
+</div>
+<div class="relative rounded-xl bg-bg-0 border border-border-structural p-3 font-code-block text-code-block group">
+<div class="text-text-3 select-all overflow-x-auto whitespace-pre leading-relaxed pr-16 text-[12px] font-mono scrollbar-none" id="embedSnippetText"><iframe src="https://flowtrace.live/embed/checkout-prod?theme=dark&speed=1x&privacy=1&controls=0" width="100%" height="450" frameborder="0" allow="accelerometer; autoplay" allowfullscreen></iframe></div>
+<button class="absolute right-2.5 top-2.5 px-2.5 py-1.5 rounded-lg bg-bg-3 hover:bg-primary-container hover:text-on-primary-container border border-border-structural text-text-1 font-label-sm text-label-sm flex items-center gap-1 transition-all shadow-sm" onclick="copyIframe(this)" type="button">
+<span class="material-symbols-outlined text-[15px]">code_blocks</span>
+<span class="copy-label">Copy Code</span>
+</button>
+</div>
+</div>
+<!-- 2. Controls & Customization Grid -->
+<div class="p-4 rounded-xl bg-bg-2 border border-border-structural space-y-4">
+<!-- Row: Theme & Playback Speed -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- Theme Picker -->
+<div>
+<div class="font-label-sm text-label-sm text-text-2 mb-1.5 font-medium">Canvas Theme</div>
+<div class="grid grid-cols-3 gap-1 bg-bg-3 p-1 rounded-lg border border-border-structural">
+<button class="py-1 px-2 rounded-md bg-bg-1 text-primary-container font-label-sm text-label-sm font-medium shadow-sm flex items-center justify-center gap-1" type="button">
+<span class="material-symbols-outlined text-[14px]">dark_mode</span>
+<span>Dark</span>
+</button>
+<button class="py-1 px-2 rounded-md text-text-3 hover:text-text-1 font-label-sm text-label-sm flex items-center justify-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[14px]">light_mode</span>
+<span>Light</span>
+</button>
+<button class="py-1 px-2 rounded-md text-text-3 hover:text-text-1 font-label-sm text-label-sm flex items-center justify-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[14px]">settings_brightness</span>
+<span>Auto</span>
+</button>
+</div>
+</div>
+<!-- Speed Selector -->
+<div>
+<div class="font-label-sm text-label-sm text-text-2 mb-1.5 font-medium">Initial Playback Speed</div>
+<div class="grid grid-cols-4 gap-1 bg-bg-3 p-1 rounded-lg border border-border-structural">
+<button class="py-1 rounded text-text-3 hover:text-text-1 font-code-sm text-code-sm transition-colors text-center" type="button">0.5×</button>
+<button class="py-1 rounded bg-bg-1 text-primary font-code-sm text-code-sm font-semibold shadow-sm text-center" type="button">1×</button>
+<button class="py-1 rounded text-text-3 hover:text-text-1 font-code-sm text-code-sm transition-colors text-center" type="button">2×</button>
+<button class="py-1 rounded text-text-3 hover:text-text-1 font-code-sm text-code-sm transition-colors text-center" type="button">4×</button>
+</div>
+</div>
+</div>
+<!-- Fine-grain Feature Toggles -->
+<div class="space-y-2.5 pt-1 border-t border-border-structural/60">
+<div class="font-label-sm text-label-sm text-text-3 uppercase tracking-wider">Embed Behavioral Flags</div>
+<!-- Toggle 1: Hide Chrome -->
+<label class="flex items-center justify-between p-2 rounded-lg bg-bg-3/60 hover:bg-bg-3 transition-colors cursor-pointer">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-text-2 text-[18px]">visibility_off</span>
+<div>
+<div class="font-label-md text-label-md text-text-1">Minimal mode</div>
+<div class="font-label-sm text-label-sm text-text-3">Hide top navigation, watermark toolbar, and inspect panels</div>
+</div>
+</div>
+<input checked="" class="w-4 h-4 rounded bg-bg-1 border-border-structural text-primary-container focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#22D3EE]" type="checkbox"/>
+</label>
+<!-- Toggle 2: Privacy Mode -->
+<label class="flex items-center justify-between p-2 rounded-lg bg-bg-3/60 hover:bg-bg-3 transition-colors cursor-pointer">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px]">security</span>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-label-md text-label-md text-text-1 font-medium">Privacy Masking</span>
+<span class="px-1.5 rounded bg-status-ok/20 text-status-ok font-chip-metric text-chip-metric">Recommended</span>
+</div>
+<div class="font-label-sm text-label-sm text-text-3">Mask user IDs, secret headers, and customer query tokens</div>
+</div>
+</div>
+<input checked="" class="w-4 h-4 rounded bg-bg-1 border-border-structural text-primary-container focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#22D3EE]" type="checkbox"/>
+</label>
+<!-- Toggle 3: Interactive Pan & Zoom -->
+<label class="flex items-center justify-between p-2 rounded-lg bg-bg-3/60 hover:bg-bg-3 transition-colors cursor-pointer">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-text-2 text-[18px]">pan_tool</span>
+<div>
+<div class="font-label-md text-label-md text-text-1">Interactive Canvas</div>
+<div class="font-label-sm text-label-sm text-text-3">Allow viewers to click nodes, inspect spans, pan & zoom</div>
+</div>
+</div>
+<input class="w-4 h-4 rounded bg-bg-1 border-border-structural text-primary-container focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#22D3EE]" type="checkbox"/>
+</label>
+</div>
+</div>
+<!-- 3. Allowed Domain Whitelist (Security/CORS) -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm text-text-2 font-medium flex items-center gap-1.5">
+<span class="material-symbols-outlined text-text-3 text-[16px]">domain_verification</span>
+<span>Allowed Embedding Domains (CORS)</span>
+</label>
+<span class="text-text-3 font-code-sm text-code-sm">3 active rules</span>
+</div>
+<div class="p-2 min-h-[42px] rounded-xl bg-bg-3 border border-border-structural flex flex-wrap items-center gap-1.5 focus-within:border-primary-container transition-colors">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-bg-2 border border-border-structural text-text-1 font-code-sm text-code-sm">
+<span>*.acme-corp.com</span>
+<button class="text-text-3 hover:text-status-error" type="button"><span class="material-symbols-outlined text-[13px]">close</span></button>
+</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-bg-2 border border-border-structural text-text-1 font-code-sm text-code-sm">
+<span>docs.internal.net</span>
+<button class="text-text-3 hover:text-status-error" type="button"><span class="material-symbols-outlined text-[13px]">close</span></button>
+</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-bg-2 border border-border-structural text-text-1 font-code-sm text-code-sm">
+<span>localhost:3000</span>
+<button class="text-text-3 hover:text-status-error" type="button"><span class="material-symbols-outlined text-[13px]">close</span></button>
+</span>
+<input class="bg-transparent text-text-1 placeholder-text-3 font-code-sm text-code-sm outline-none px-1 flex-1 min-w-[140px]" placeholder="Add domain and press Enter..." type="text"/>
+</div>
+<p class="font-label-sm text-label-sm text-text-3">Restricts frame rendering to specified origins only. Leave empty to allow unrestricted access.</p>
+</div>
+<!-- 4. Watermark Notice Banner -->
+<div class="p-3 rounded-xl bg-gradient-to-r from-bg-2 to-bg-3 border border-border-structural flex items-start gap-3">
+<span class="material-symbols-outlined text-status-warn text-[20px] shrink-0 mt-0.5">bolt</span>
+<div class="text-label-sm text-label-sm flex-1">
+<span class="text-text-1 font-medium">Free plan badge active:</span>
+<span class="text-text-2"> A compact "Powered by FlowTrace" micro-badge is pinned to the bottom-right corner.</span>
+<a class="inline-flex items-center gap-1 text-primary-container hover:text-primary font-medium ml-1" href="#">
+                  Upgrade to Pro to remove
+                  <span class="material-symbols-outlined text-[12px]">arrow_outward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Right Column: Live Embed Mini-Preview (5 Cols) -->
+<div class="lg:col-span-5 flex flex-col space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-text-2 text-[16px]">devices</span>
+<span class="font-label-md text-label-md text-text-1 font-medium">Live Embed Preview</span>
+</div>
+<div class="flex items-center gap-1 bg-bg-2 p-0.5 rounded-lg border border-border-structural">
+<button class="px-2 py-0.5 rounded bg-bg-3 text-text-1 font-code-sm text-code-sm font-medium" type="button">16:9</button>
+<button class="px-2 py-0.5 rounded text-text-3 hover:text-text-1 font-code-sm text-code-sm" type="button">Auto</button>
+<button class="p-1 rounded text-text-3 hover:text-text-1" type="button"><span class="material-symbols-outlined text-[14px]">refresh</span></button>
+</div>
+</div>
+<!-- Simulated Viewport Frame (IFrame Container) -->
+<div class="w-full flex-1 min-h-[300px] rounded-2xl bg-bg-0 border border-border-structural relative overflow-hidden flex flex-col shadow-inner">
+<!-- Frame Header Bar (Mini Browser Chrome) -->
+<div class="h-7 px-3 bg-bg-2/80 border-b border-border-structural flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 rounded-full bg-status-error/80"></div>
+<div class="w-2 h-2 rounded-full bg-status-warn/80"></div>
+<div class="w-2 h-2 rounded-full bg-status-ok/80"></div>
+<span class="text-text-3 font-code-sm text-[10px] ml-1">flowtrace-embed.checkout-prod</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok animate-pulse"></span>
+<span class="font-chip-metric text-[10px] text-status-ok uppercase tracking-wider">LIVE</span>
+</div>
+</div>
+<!-- Frame Inner Canvas with Scaled Mini Nodes -->
+<div class="relative flex-1 bg-bg-0 overflow-hidden" style="background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px); background-size: 16px 16px;">
+<!-- Mini Dynamic SVG Links -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none">
+<path d="M 60 70 C 110 70, 110 130, 160 130" fill="none" stroke="#22D3EE" stroke-width="2"></path>
+<path d="M 160 130 C 210 130, 210 80, 260 80" fill="none" stroke="#8B5CF6" stroke-width="2"></path>
+<circle cx="100" cy="95" fill="#22D3EE" r="3">
+<animate attributename="opacity" dur="1.5s" repeatcount="indefinite" values="0.3;1;0.3"></animate>
+</circle>
+<circle cx="210" cy="105" fill="#8B5CF6" r="3">
+<animate attributename="opacity" dur="1.5s" repeatcount="indefinite" values="1;0.3;1"></animate>
+</circle>
+</svg>
+<!-- Mini Node 1: Ingress -->
+<div class="absolute left-3 top-12 p-2 rounded-lg bg-bg-2 border border-border-structural flex items-center gap-1.5 shadow-md scale-95 origin-top-left">
+<div class="w-6 h-6 rounded bg-node-source/20 text-node-source flex items-center justify-center">
+<span class="material-symbols-outlined text-[13px]">router</span>
+</div>
+<div>
+<div class="text-[11px] font-semibold text-text-1">Ingress</div>
+<div class="text-[9px] font-mono text-text-3">12.4k rps</div>
+</div>
+</div>
+<!-- Mini Node 2: Checkout (Active Focus) -->
+<div class="absolute left-24 top-24 p-2 rounded-lg bg-bg-2 border border-primary-container shadow-[0_0_12px_rgba(34,211,238,0.25)] flex items-center gap-1.5 scale-95">
+<div class="w-6 h-6 rounded bg-primary-container/20 text-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[13px]">shopping_cart</span>
+</div>
+<div>
+<div class="text-[11px] font-semibold text-text-1">Checkout</div>
+<div class="text-[9px] font-mono text-status-ok">p99: 14ms</div>
+</div>
+</div>
+<!-- Mini Node 3: Payment Engine -->
+<div class="absolute right-3 top-14 p-2 rounded-lg bg-bg-2 border border-border-structural flex items-center gap-1.5 shadow-md scale-95 origin-top-right">
+<div class="w-6 h-6 rounded bg-node-service/20 text-node-service flex items-center justify-center">
+<span class="material-symbols-outlined text-[13px]">credit_card</span>
+</div>
+<div>
+<div class="text-[11px] font-semibold text-text-1">Payments</div>
+<div class="text-[9px] font-mono text-text-3">99.9% ok</div>
+</div>
+</div>
+<!-- Ambient Stream Pulse Label -->
+<div class="absolute top-2 left-3 flex items-center gap-1.5 pointer-events-none">
+<span class="font-code-sm text-[10px] text-text-3">Stream rate:</span>
+<span class="font-code-sm text-[10px] text-text-1 font-medium">18.4k rps</span>
+</div>
+<!-- Watermark Badge (Notice demonstration) -->
+<div class="absolute bottom-2.5 right-2.5 px-2 py-1 rounded bg-bg-1/90 backdrop-blur-sm border border-border-structural flex items-center gap-1.5 shadow-sm">
+<span class="w-2.5 h-2.5 rounded-sm bg-gradient-to-br from-primary-container to-node-service flex items-center justify-center text-[7px] text-bg-0 font-black">F</span>
+<span class="text-[10px] text-text-3 font-medium">Powered by <span class="text-text-2 font-semibold">FlowTrace</span></span>
+</div>
+</div>
+<!-- Frame Footer Controls Emulation -->
+<div class="h-6 px-3 bg-bg-2/50 border-t border-border-structural flex items-center justify-between text-text-3">
+<span class="text-[10px] font-mono">100% interactive sandbox</span>
+<span class="text-[10px] font-mono text-status-ok">Connected</span>
+</div>
+</div>
+<!-- Quick Action: Test in full window -->
+<div class="flex items-center justify-between px-1">
+<span class="text-text-3 font-label-sm text-label-sm">Requires WebGL / modern browser</span>
+<a class="inline-flex items-center gap-1 text-text-2 hover:text-text-1 font-label-sm text-label-sm transition-colors" href="#">
+<span>Open sandbox preview</span>
+<span class="material-symbols-outlined text-[14px]">open_in_new</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Modal Footer (Level 1 Surface with actions) -->
+<div class="px-6 py-4 bg-bg-2 border-t border-border-structural flex flex-col sm:flex-row items-center justify-between gap-3">
+<!-- Live Status Metric -->
+<div class="flex items-center gap-2 text-text-3 font-code-sm text-code-sm">
+<span class="w-2 h-2 rounded-full bg-status-ok"></span>
+<span class="text-text-2">Shared via authenticated tenant token</span>
+<span class="text-text-3">·</span>
+<span>14 external views today</span>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+<a class="font-label-md text-label-md text-text-3 hover:text-text-1 transition-colors flex items-center gap-1 mr-1" href="#">
+<span>Security docs</span>
+<span class="material-symbols-outlined text-[15px]">help_outline</span>
+</a>
+<button class="px-4 py-2 rounded-xl bg-bg-3 hover:bg-surface-container-high border border-border-structural text-text-1 font-label-md text-label-md transition-colors" type="button">
+            Cancel
+          </button>
+<button class="px-5 py-2 rounded-xl bg-gradient-to-r from-primary-container to-node-service text-bg-0 font-label-md text-label-md font-semibold hover:opacity-95 active:scale-95 transition-all shadow-[0_0_20px_rgba(34,211,238,0.25)] flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-[18px]">check</span>
+<span>Done</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Client-side tab switching and copy feedback micro-interaction script -->
+<script>
+    function copySnippet(text, buttonElement) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text);
+      }
+      const label = buttonElement.querySelector('.btn-text');
+      if (label) {
+        const originalText = label.textContent;
+        label.textContent = 'Copied!';
+        buttonElement.classList.add('bg-status-ok/20', 'text-status-ok');
+        setTimeout(() => {
+          label.textContent = originalText;
+          buttonElement.classList.remove('bg-status-ok/20', 'text-status-ok');
+        }, 1800);
+      }
+    }
+
+    function copyIframe(buttonElement) {
+      const codeText = document.getElementById('embedSnippetText').textContent;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(codeText);
+      }
+      const label = buttonElement.querySelector('.copy-label');
+      if (label) {
+        label.textContent = 'Copied Code!';
+        buttonElement.classList.add('bg-status-ok', 'text-bg-0');
+        setTimeout(() => {
+          label.textContent = 'Copy Code';
+          buttonElement.classList.remove('bg-status-ok', 'text-bg-0');
+        }, 1800);
+      }
+    }
+
+    function switchModalTab(tabKey) {
+      const publicBtn = document.getElementById('tabPublicLinkBtn');
+      const embedBtn = document.getElementById('tabEmbedBtn');
+      const indicator = document.getElementById('tabIndicator');
+
+      if (tabKey === 'public') {
+        publicBtn.classList.remove('text-text-2');
+        publicBtn.classList.add('text-text-1', 'font-semibold');
+        embedBtn.classList.remove('text-text-1', 'font-semibold');
+        embedBtn.classList.add('text-text-2');
+        if (indicator) {
+          publicBtn.appendChild(indicator);
+        }
+      } else {
+        embedBtn.classList.remove('text-text-2');
+        embedBtn.classList.add('text-text-1', 'font-semibold');
+        publicBtn.classList.remove('text-text-1', 'font-semibold');
+        publicBtn.classList.add('text-text-2');
+        if (indicator) {
+          embedBtn.appendChild(indicator);
+        }
+      }
+    }
+  </script>
+</div></main></div></body></html>

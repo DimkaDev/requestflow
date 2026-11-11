@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>FlowTrace — Distributed Architecture &amp; Telemetry Intelligence</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      "colors": {
+        "bg-3": "#1E2330",
+        "on-error": "#690005",
+        "text-3": "#7C869C",
+        "node-queue": "#22D3EE",
+        "surface-container-low": "#1a1b21",
+        "node-datastore": "#34D399",
+        "on-tertiary": "#462b00",
+        "surface-bright": "#37393f",
+        "bg-2": "#171B24",
+        "on-secondary": "#3c0091",
+        "text-1": "#E8ECF4",
+        "surface-tint": "#2fd9f4",
+        "on-primary-fixed-variant": "#004e5a",
+        "status-info": "#60A5FA",
+        "border-strong": "#343C4F",
+        "secondary-fixed": "#e9ddff",
+        "primary": "#8aebff",
+        "surface-container-high": "#282a2f",
+        "inverse-surface": "#e2e2e9",
+        "on-primary-fixed": "#001f25",
+        "on-secondary-fixed": "#23005c",
+        "on-tertiary-fixed": "#2a1800",
+        "bg-1": "#11141B",
+        "node-source": "#60A5FA",
+        "surface-variant": "#33353a",
+        "secondary-fixed-dim": "#d0bcff",
+        "on-background": "#e2e2e9",
+        "text-2": "#A3ACBF",
+        "surface": "#111318",
+        "bg-0": "#0B0D12",
+        "status-discovered": "#F59E0B",
+        "status-error": "#F43F5E",
+        "on-surface": "#e2e2e9",
+        "node-service": "#8B5CF6",
+        "status-ok": "#34D399",
+        "on-primary-container": "#005763",
+        "surface-container-highest": "#33353a",
+        "outline-variant": "#3c494c",
+        "node-external": "#94A3B8",
+        "inverse-primary": "#006877",
+        "surface-container-lowest": "#0c0e13",
+        "background": "#111318",
+        "tertiary": "#ffd6a3",
+        "surface-dim": "#111318",
+        "on-primary": "#00363e",
+        "primary-fixed-dim": "#2fd9f4",
+        "primary-fixed": "#a2eeff",
+        "on-secondary-fixed-variant": "#5516be",
+        "inverse-on-surface": "#2e3036",
+        "tertiary-container": "#ffb13b",
+        "node-end": "#F472B6",
+        "secondary-container": "#571bc1",
+        "tertiary-fixed-dim": "#ffb957",
+        "error-container": "#93000a",
+        "on-surface-variant": "#bbc9cd",
+        "surface-container": "#1e1f25",
+        "on-secondary-container": "#c4abff",
+        "secondary": "#d0bcff",
+        "on-tertiary-container": "#6e4600",
+        "border-structural": "#262C3A",
+        "node-decision": "#F59E0B",
+        "primary-container": "#22d3ee",
+        "on-tertiary-fixed-variant": "#643f00",
+        "on-error-container": "#ffdad6",
+        "outline": "#859397",
+        "status-warn": "#F59E0B",
+        "error": "#ffb4ab",
+        "tertiary-fixed": "#ffddb5"
+      },
+      "borderRadius": {
+        "DEFAULT": "0.25rem",
+        "lg": "0.5rem",
+        "xl": "0.75rem",
+        "full": "9999px"
+      },
+      "spacing": {
+        "margin-desktop": "1.5rem",
+        "gutter-desktop": "1.5rem",
+        "space-md": "0.75rem",
+        "gutter": "1rem",
+        "space-xs": "0.25rem",
+        "space-sm": "0.5rem",
+        "space-lg": "1rem",
+        "space-xl": "1.5rem",
+        "margin": "1rem"
+      },
+      "fontFamily": {
+        "code-sm": ["JetBrains Mono"],
+        "display-mobile": ["Inter"],
+        "label-md": ["Inter"],
+        "label-sm": ["Inter"],
+        "code-block": ["JetBrains Mono"],
+        "headline-sm": ["Inter"],
+        "body-node-label": ["Inter"],
+        "headline-lg": ["Inter"],
+        "headline-lg-mobile": ["Inter"],
+        "headline-md": ["Inter"],
+        "label-uppercase": ["Inter"],
+        "body-md": ["Inter"],
+        "display": ["Inter"],
+        "chip-metric": ["Inter"],
+        "body-lg": ["Inter"]
+      },
+      "fontSize": {
+        "code-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+        "display-mobile": ["36px", { "lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+        "label-md": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+        "code-block": ["13px", { "lineHeight": "20px", "fontWeight": "400" }],
+        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+        "body-node-label": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+        "headline-lg-mobile": ["26px", { "lineHeight": "32px", "fontWeight": "600" }],
+        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+        "label-uppercase": ["12px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500" }],
+        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+        "display": ["48px", { "lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+        "chip-metric": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+      }
+    }
+  }
+}</script></head><body class="bg-bg-0 text-text-1 font-body-md text-body-md min-h-screen flex flex-col selection:bg-primary-container selection:text-bg-0"><header class="fixed top-0 left-0 w-full z-50 bg-bg-1/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-14 max-w-7xl mx-auto px-margin-desktop flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-xl"><a class="flex items-center gap-space-sm group focus:outline-none" data-path="overview" href="#"><div class="w-8 h-8 rounded-lg bg-bg-2 flex items-center justify-center shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] group-hover:bg-bg-3 transition-colors"><span class="material-symbols-outlined text-primary text-[20px]">hub</span></div><span class="font-headline-sm text-headline-sm font-semibold tracking-tight text-text-1">FlowTrace</span></a><nav class="hidden md:flex items-center gap-space-xl" data-active-classes="text-primary font-medium"><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="product" href="#">Product</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="templates" href="#">Templates</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="docs" href="#">Docs</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="pricing" href="#">Pricing</a></nav></div><div class="flex items-center gap-space-md"><a class="hidden sm:inline-flex items-center font-label-md text-label-md text-on-surface-variant hover:text-on-surface px-space-md py-space-xs transition-colors" data-path="login" href="#">Log in</a><a class="inline-flex items-center justify-center h-9 px-space-lg rounded-[10px] bg-gradient-to-r from-primary-container to-node-service text-bg-0 font-label-md text-label-md font-semibold hover:brightness-110 active:scale-[0.98] transition-all shadow-[0_0_24px_rgba(34,211,238,0.25)]" data-path="signup" href="#">Start free</a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 ml-space-xs"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-14 bg-bg-0 flex-1"><div class="flex flex-col w-full text-text-1 selection:bg-primary-container selection:text-bg-0">
+<!-- =========================================================================
+       HERO SECTION: Live Graph Engine & Real-time Canvas
+       ========================================================================= -->
+<section class="relative w-full pt-12 pb-24 md:pb-32 px-margin-desktop overflow-hidden">
+<!-- Ambient kinetic background gradients -->
+<div class="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[550px] bg-gradient-to-tr from-node-queue/15 via-node-service/15 to-transparent blur-[140px] rounded-full"></div>
+<div class="pointer-events-none absolute top-1/3 -left-48 w-[400px] h-[400px] bg-node-queue/10 blur-[120px] rounded-full"></div>
+<div class="max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
+<!-- Announcement Pill -->
+<div class="inline-flex items-center gap-space-sm px-space-md py-1.5 rounded-full bg-bg-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] hover:bg-bg-3 transition-colors mb-space-xl cursor-default">
+<span class="text-node-queue font-code-sm text-code-sm">⚡</span>
+<span class="font-label-md text-label-md text-text-2">OpenTelemetry &amp; UDP native</span>
+<span class="w-1 h-1 rounded-full bg-border-strong"></span>
+<span class="font-label-md text-label-md text-text-1 font-medium">Zero-overhead live stream</span>
+</div>
+<!-- Main Headline -->
+<h1 class="font-display text-display max-w-4xl tracking-tight text-text-1 mb-space-lg text-balance">
+        Watch every request travel through your system. <span class="bg-gradient-to-r from-primary-container via-node-queue to-node-service bg-clip-text text-transparent">Live.</span>
+</h1>
+<!-- Subheadline -->
+<p class="font-body-lg text-body-lg text-text-2 max-w-2xl text-balance mb-space-xl leading-relaxed">
+        FlowTrace turns distributed spans, queue hops, and microservice calls into an illuminated, real-time topology diagram. Debug cascading latency in seconds, not hours.
+      </p>
+<!-- Action Button Row & Copyable Curl Command -->
+<div class="flex flex-wrap items-center justify-center gap-space-md mb-16 w-full">
+<!-- Primary CTA -->
+<a class="inline-flex items-center justify-center h-12 px-space-xl rounded-xl bg-gradient-to-r from-primary-container to-node-service text-bg-0 font-body-node-label text-body-node-label font-bold hover:brightness-110 active:scale-[0.98] transition-all shadow-[0_0_32px_rgba(34,211,238,0.35)]" data-path="signup" href="#">
+          Start free <span class="material-symbols-outlined ml-1.5 text-[20px]">arrow_forward</span>
+</a>
+<!-- Secondary Demo CTA -->
+<a class="inline-flex items-center justify-center h-12 px-space-xl rounded-xl bg-bg-2 hover:bg-bg-3 text-text-1 font-body-node-label text-body-node-label font-medium transition-colors shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]" href="#interactive-demo">
+<span class="material-symbols-outlined mr-2 text-node-queue text-[20px]">play_circle</span>
+          See live demo
+        </a>
+<!-- Copyable Terminal Command -->
+<div class="flex items-center bg-bg-1 rounded-xl px-space-md h-12 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] group">
+<span class="font-code-sm text-code-sm text-node-queue select-none mr-2">$</span>
+<code class="font-code-sm text-code-sm text-text-1 tracking-tight select-all" id="curl-cmd">curl -sSL https://flowtrace.live/install | sh</code>
+<button class="ml-space-md p-1.5 rounded-lg text-text-3 hover:text-text-1 hover:bg-bg-2 transition-colors" id="copy-btn" onclick="navigator.clipboard.writeText('curl -sSL https://flowtrace.live/install | sh'); const s=this.querySelector('.material-symbols-outlined'); s.textContent='check'; s.classList.add('text-status-ok'); setTimeout(()=&gt;{s.textContent='content_copy'; s.classList.remove('text-status-ok');}, 2000);" title="Copy to clipboard">
+<span class="material-symbols-outlined text-[17px]">content_copy</span>
+</button>
+</div>
+</div>
+<!-- 16:9 Live Diagram Demo Frame -->
+<div class="w-full relative rounded-2xl bg-bg-1 shadow-[0_0_45px_rgba(34,211,238,0.18),0_24px_50px_rgba(0,0,0,0.8)] overflow-hidden" id="interactive-demo">
+<!-- Live Topology Canvas Header -->
+<div class="h-12 bg-bg-2/90 backdrop-blur-md px-space-lg flex items-center justify-between text-text-2 font-code-sm text-code-sm select-none">
+<div class="flex items-center gap-space-lg">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-status-error/80"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-status-warn/80"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-status-ok/80"></span>
+</div>
+<div class="h-4 w-px bg-border-structural"></div>
+<span class="text-text-1 flex items-center gap-1.5 font-medium">
+<span class="material-symbols-outlined text-node-queue text-[16px]">dns</span>
+              CLUSTER: <span class="text-text-3">us-east-prod-04</span>
+</span>
+</div>
+<div class="flex items-center gap-space-xl">
+<span class="flex items-center gap-2 text-text-1">
+<span class="w-2 h-2 rounded-full bg-status-ok animate-pulse"></span>
+<span>64,280 req/s</span>
+</span>
+<span class="hidden sm:inline-block text-text-3">|</span>
+<span class="hidden sm:inline-flex items-center gap-1.5">
+<span class="text-text-3">p99:</span>
+<span class="text-status-ok font-semibold">18.2ms</span>
+</span>
+<div class="h-4 w-px bg-border-structural hidden md:block"></div>
+<div class="hidden md:flex items-center gap-1.5 text-node-queue">
+<span class="material-symbols-outlined text-[16px]">sensors</span>
+<span>Live engine active</span>
+</div>
+</div>
+</div>
+<!-- 2D Canvas Coordinate Surface with SVG Bézier Paths & Node Cards -->
+<div class="relative w-full aspect-[16/9] min-h-[440px] max-h-[640px] bg-bg-0 overflow-hidden flex items-center justify-center p-6">
+<!-- Infinite dot grid texture -->
+<div class="absolute inset-0 opacity-25 [background-image:radial-gradient(#343C4F_1px,transparent_1px)] [background-size:24px_24px]"></div>
+<!-- Dynamic Vector Connectors (Cubic Bézier Edges) -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" preserveaspectratio="none" viewbox="0 0 1000 500">
+<defs>
+<lineargradient id="edgeGlow" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#22D3EE"></stop>
+<stop offset="100%" stop-color="#8B5CF6"></stop>
+</lineargradient>
+<lineargradient id="retryGlow" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#F59E0B"></stop>
+<stop offset="100%" stop-color="#F43F5E"></stop>
+</lineargradient>
+<filter height="140%" id="blurFilter" width="140%" x="-20%" y="-20%">
+<fegaussianblur result="blur" stddeviation="3"></fegaussianblur>
+<femerge>
+<femergenode in="blur"></femergenode>
+<femergenode in="SourceGraphic"></femergenode>
+</femerge>
+</filter>
+</defs>
+<!-- Edge: Ingress to Auth Limiter -->
+<path d="M 160 250 C 220 250, 240 250, 300 250" fill="none" stroke="#262C3A" stroke-width="2"></path>
+<path d="M 160 250 C 220 250, 240 250, 300 250" fill="none" stroke="url(#edgeGlow)" stroke-dasharray="8 6" stroke-width="2.5">
+<animate attributename="stroke-dashoffset" dur="1.2s" from="40" repeatcount="indefinite" to="0"></animate>
+</path>
+<!-- Edge: Auth Limiter to Checkout API -->
+<path d="M 440 250 C 490 250, 500 250, 550 250" fill="none" stroke="#262C3A" stroke-width="2"></path>
+<path d="M 440 250 C 490 250, 500 250, 550 250" fill="none" stroke="url(#edgeGlow)" stroke-dasharray="10 8" stroke-width="2.5">
+<animate attributename="stroke-dashoffset" dur="1.4s" from="60" repeatcount="indefinite" to="0"></animate>
+</path>
+<!-- Edge: Checkout API to Redis Cache (Top Branch) -->
+<path d="M 690 230 C 740 230, 740 130, 800 130" fill="none" stroke="#262C3A" stroke-width="2"></path>
+<path d="M 690 230 C 740 230, 740 130, 800 130" fill="none" stroke="url(#edgeGlow)" stroke-dasharray="6 4" stroke-width="2">
+<animate attributename="stroke-dashoffset" dur="1s" from="30" repeatcount="indefinite" to="0"></animate>
+</path>
+<!-- Edge: Checkout API to Postgres DB (Middle Branch) -->
+<path d="M 690 250 C 740 250, 750 250, 800 250" fill="none" stroke="#262C3A" stroke-width="2"></path>
+<path d="M 690 250 C 740 250, 750 250, 800 250" fill="none" stroke="url(#edgeGlow)" stroke-dasharray="8 5" stroke-width="2.5">
+<animate attributename="stroke-dashoffset" dur="1.5s" from="40" repeatcount="indefinite" to="0"></animate>
+</path>
+<!-- Edge: Checkout API to Stripe Gateway (Retry / Warn branch) -->
+<path d="M 690 270 C 740 270, 740 370, 800 370" fill="none" stroke="#262C3A" stroke-width="2"></path>
+<path d="M 690 270 C 740 270, 740 370, 800 370" fill="none" stroke="url(#retryGlow)" stroke-dasharray="6 4" stroke-width="2.5">
+<animate attributename="stroke-dashoffset" dur="0.9s" from="40" repeatcount="indefinite" to="0"></animate>
+</path>
+<!-- Animated Traveling Packet Token -->
+<circle fill="#22D3EE" filter="url(#blurFilter)" r="4">
+<animatemotion dur="1.2s" path="M 160 250 C 220 250, 240 250, 300 250" repeatcount="indefinite"></animatemotion>
+</circle>
+<circle fill="#8B5CF6" filter="url(#blurFilter)" r="4">
+<animatemotion dur="1.4s" path="M 440 250 C 490 250, 500 250, 550 250" repeatcount="indefinite"></animatemotion>
+</circle>
+<circle fill="#F59E0B" filter="url(#blurFilter)" r="3.5">
+<animatemotion dur="0.9s" path="M 690 270 C 740 270, 740 370, 800 370" repeatcount="indefinite"></animatemotion>
+</circle>
+</svg>
+<!-- Node Placement Matrix -->
+<div class="relative w-full h-full max-w-[960px] flex items-center justify-between pointer-events-auto">
+<!-- Node 1: Edge Ingress -->
+<div class="w-[180px] sm:w-[208px] h-[76px] rounded-xl bg-bg-2 p-3 flex items-center gap-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_8px_24px_rgba(0,0,0,0.4)] hover:shadow-[0_0_20px_rgba(34,211,238,0.25)] transition-all cursor-pointer">
+<div class="w-10 h-10 rounded-lg bg-node-source/15 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-node-source text-[22px]">alt_route</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-node-label text-body-node-label font-semibold text-text-1 truncate">Edge Ingress</span>
+<span class="font-code-sm text-code-sm text-text-3 truncate">envoy-gw-01</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+<span class="font-chip-metric text-chip-metric text-text-2">0.8ms · ok</span>
+</div>
+</div>
+</div>
+<!-- Node 2: Decision Node: Auth & Rate Limiter -->
+<div class="w-[180px] sm:w-[208px] h-[76px] rounded-xl bg-bg-2 p-3 flex items-center gap-3 relative overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_8px_24px_rgba(0,0,0,0.4)] hover:shadow-[0_0_20px_rgba(245,158,11,0.25)] transition-all cursor-pointer">
+<!-- Persistent Decision Amber Bar -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-node-decision"></div>
+<div class="w-10 h-10 rounded-lg bg-node-decision/15 flex items-center justify-center shrink-0 ml-1">
+<span class="material-symbols-outlined text-node-decision text-[22px]">shield_person</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1">
+<span class="font-body-node-label text-body-node-label font-semibold text-text-1 truncate">Auth Guard</span>
+<span class="material-symbols-outlined text-node-decision text-[14px]" title="Decision Fork">change_history</span>
+</div>
+<span class="font-code-sm text-code-sm text-text-3 truncate">jwt-limiter-v2</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+<span class="font-chip-metric text-chip-metric text-text-2">2.4ms · pass</span>
+</div>
+</div>
+</div>
+<!-- Node 3: Checkout API Service -->
+<div class="w-[180px] sm:w-[208px] h-[76px] rounded-xl bg-bg-2 p-3 flex items-center gap-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_0_0_1px_rgba(34,211,238,0.4),0_0_24px_rgba(139,92,246,0.2)] transition-all cursor-pointer">
+<div class="w-10 h-10 rounded-lg bg-node-service/15 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-node-service text-[22px]">developer_board</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-node-label text-body-node-label font-semibold text-text-1 truncate">Checkout API</span>
+<span class="font-code-sm text-code-sm text-text-3 truncate">svc-order-node</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+<span class="font-chip-metric text-chip-metric text-text-2">11.6ms · p95</span>
+</div>
+</div>
+</div>
+<!-- Node Column 4: Clustered Destinations -->
+<div class="flex flex-col gap-3 justify-between h-[280px]">
+<!-- Redis Cache -->
+<div class="w-[160px] sm:w-[190px] h-[68px] rounded-xl bg-bg-2 p-2.5 flex items-center gap-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] hover:bg-bg-3 transition-colors cursor-pointer">
+<div class="w-9 h-9 rounded-lg bg-node-queue/15 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-node-queue text-[20px]">layers</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-semibold text-text-1 truncate">Redis Cache</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+<span class="font-chip-metric text-chip-metric text-text-2">0.4ms · 99.4% hit</span>
+</div>
+</div>
+</div>
+<!-- Postgres Primary -->
+<div class="w-[160px] sm:w-[190px] h-[68px] rounded-xl bg-bg-2 p-2.5 flex items-center gap-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] hover:bg-bg-3 transition-colors cursor-pointer">
+<div class="w-9 h-9 rounded-lg bg-node-datastore/15 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-node-datastore text-[20px]">database</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-semibold text-text-1 truncate">Postgres Cluster</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+<span class="font-chip-metric text-chip-metric text-text-2">4.1ms · 42 conns</span>
+</div>
+</div>
+</div>
+<!-- Payment Gateway (Retry/Warn Node) -->
+<div class="w-[160px] sm:w-[190px] h-[68px] rounded-xl bg-bg-2 p-2.5 flex items-center gap-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] hover:bg-bg-3 transition-colors cursor-pointer">
+<div class="w-9 h-9 rounded-lg bg-status-warn/15 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-status-warn text-[20px]">credit_card</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-semibold text-text-1 truncate">Stripe Gateway</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-warn"></span>
+<span class="font-chip-metric text-chip-metric text-status-warn font-medium">184ms · 1 retry</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating Pill Controls Bar at Canvas Bottom -->
+<div class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-bg-1/90 backdrop-blur-md px-4 py-2 rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.6)] flex items-center gap-4 text-text-2 font-label-md text-label-md select-none">
+<div class="flex items-center gap-1.5 text-text-1 font-medium">
+<span class="w-2 h-2 rounded-full bg-status-ok animate-ping"></span>
+<span class="text-xs uppercase tracking-wider font-semibold">Live</span>
+</div>
+<div class="w-px h-3.5 bg-border-structural"></div>
+<div class="flex items-center gap-2">
+<button class="px-2 py-0.5 rounded bg-bg-3 text-text-1 font-code-sm text-code-sm">1×</button>
+<button class="px-1.5 py-0.5 rounded hover:bg-bg-3 text-text-3 hover:text-text-1 font-code-sm text-code-sm transition-colors">2×</button>
+<button class="px-1.5 py-0.5 rounded hover:bg-bg-3 text-text-3 hover:text-text-1 font-code-sm text-code-sm transition-colors">5×</button>
+</div>
+<div class="w-px h-3.5 bg-border-structural"></div>
+<button class="hover:text-text-1 flex items-center gap-1 text-xs transition-colors">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span class="hidden sm:inline">Labels</span>
+</button>
+<button class="hover:text-text-1 flex items-center gap-1 text-xs transition-colors">
+<span class="material-symbols-outlined text-[16px]">fit_screen</span>
+<span class="hidden sm:inline">Fit</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Trust Logos Row -->
+<div class="w-full mt-20 pt-10 border-t border-border-structural/60 flex flex-col items-center">
+<p class="font-label-uppercase text-label-uppercase uppercase text-text-3 tracking-widest mb-8 text-center">
+          Trusted by distributed systems teams at forward-thinking companies
+        </p>
+<div class="w-full max-w-5xl flex flex-wrap items-center justify-center gap-10 md:gap-16 opacity-60 hover:opacity-85 transition-opacity">
+<!-- Monochromatic Developer Badges -->
+<div class="flex items-center gap-2 font-headline-sm text-headline-sm font-bold tracking-tight text-text-2">
+<span class="material-symbols-outlined text-text-3">payments</span> Stripe
+          </div>
+<div class="flex items-center gap-2 font-headline-sm text-headline-sm font-bold tracking-tight text-text-2">
+<span class="material-symbols-outlined text-text-3">change_history</span> Vercel
+          </div>
+<div class="flex items-center gap-2 font-headline-sm text-headline-sm font-bold tracking-tight text-text-2">
+<span class="material-symbols-outlined text-text-3">bolt</span> Supabase
+          </div>
+<div class="flex items-center gap-2 font-headline-sm text-headline-sm font-bold tracking-tight text-text-2">
+<span class="material-symbols-outlined text-text-3">cloud</span> Cloudflare
+          </div>
+<div class="flex items-center gap-2 font-headline-sm text-headline-sm font-bold tracking-tight text-text-2">
+<span class="material-symbols-outlined text-text-3">adjust</span> Linear
+          </div>
+<div class="flex items-center gap-2 font-headline-sm text-headline-sm font-bold tracking-tight text-text-2">
+<span class="material-symbols-outlined text-text-3">pets</span> Datadog
+          </div>
+</div>
+</div>
+</div>
+</section>
+<!-- =========================================================================
+       SECTION: "HOW IT WORKS" (3 Numbered Steps with rich visual cards)
+       ========================================================================= -->
+<section class="w-full py-24 bg-bg-1/50 border-y border-border-structural relative">
+<div class="max-w-7xl mx-auto px-margin-desktop">
+<!-- Section Header -->
+<div class="max-w-2xl mb-16">
+<span class="font-label-uppercase text-label-uppercase text-node-queue uppercase tracking-wider mb-2 block">Architecture Setup</span>
+<h2 class="font-headline-lg text-headline-lg font-bold text-text-1 tracking-tight mb-space-sm">
+          Three lines of code. Zero overhead.
+        </h2>
+<p class="font-body-lg text-body-lg text-text-2">
+          Connect in minutes via HTTP, asynchronous UDP, or your existing OpenTelemetry collector daemon.
+        </p>
+</div>
+<!-- 3 Columns of Precision Step Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-xl">
+<!-- Step 01 -->
+<div class="rounded-2xl bg-bg-1 p-space-xl flex flex-col justify-between shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] relative group hover:bg-bg-2 transition-colors">
+<div>
+<div class="flex items-center justify-between mb-space-lg">
+<span class="px-2.5 py-1 rounded-md bg-node-queue/10 text-node-queue font-code-sm text-code-sm font-bold">01</span>
+<span class="material-symbols-outlined text-text-3 group-hover:text-node-queue transition-colors">code</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-text-1 mb-space-sm">Add a checkpoint</h3>
+<p class="font-body-md text-body-md text-text-2 mb-space-lg">
+              Wrap critical application boundaries with our microsecond tracing hooks or standard W3C baggage propagation.
+            </p>
+</div>
+<!-- Mini Code Card Illustration -->
+<div class="rounded-xl bg-bg-0 p-3.5 shadow-inner font-code-block text-code-block text-text-2">
+<div class="flex items-center justify-between text-text-3 text-[11px] mb-2 pb-1 border-b border-border-structural">
+<span>checkout_worker.ts</span>
+<span>TypeScript</span>
+</div>
+<span class="text-node-service">import</span> { tracer } <span class="text-node-service">from</span> <span class="text-status-ok">'@flowtrace/node'</span>;<br/>
+<span class="text-node-service">const</span> span = tracer.<span class="text-node-queue font-semibold">span</span>(<span class="text-status-ok">"checkout.validate"</span>);<br/>
+<span class="text-text-3">// business execution...</span><br/>
+            span.<span class="text-node-queue font-semibold">end</span>();
+          </div>
+</div>
+<!-- Step 02 -->
+<div class="rounded-2xl bg-bg-1 p-space-xl flex flex-col justify-between shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] relative group hover:bg-bg-2 transition-colors">
+<div>
+<div class="flex items-center justify-between mb-space-lg">
+<span class="px-2.5 py-1 rounded-md bg-node-service/10 text-node-service font-code-sm text-code-sm font-bold">02</span>
+<span class="material-symbols-outlined text-text-3 group-hover:text-node-service transition-colors">stream</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-text-1 mb-space-sm">Send an event</h3>
+<p class="font-body-md text-body-md text-text-2 mb-space-lg">
+              Telemetry emits via high-throughput fire-and-forget UDP packets at port 8125, guaranteeing 0% main-thread blocking.
+            </p>
+</div>
+<!-- Packet Emission Illustration -->
+<div class="rounded-xl bg-bg-0 p-3.5 shadow-inner font-code-block text-code-block text-text-2 relative overflow-hidden">
+<div class="flex items-center justify-between text-text-3 text-[11px] mb-2 pb-1 border-b border-border-structural">
+<span>udp://127.0.0.1:8125</span>
+<span class="text-status-ok flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span> 0.08ms</span>
+</div>
+<div class="text-xs space-y-1 font-mono">
+<div class="text-text-3">{</div>
+<div class="pl-3 text-text-1"><span class="text-node-queue">"trace_id"</span>: <span class="text-status-ok">"tx_99b0c2e"</span>,</div>
+<div class="pl-3 text-text-1"><span class="text-node-queue">"node"</span>: <span class="text-status-ok">"stripe_checkout"</span>,</div>
+<div class="pl-3 text-text-1"><span class="text-node-queue">"duration_ms"</span>: <span class="text-node-decision">14.2</span></div>
+<div class="text-text-3">}</div>
+</div>
+</div>
+</div>
+<!-- Step 03 -->
+<div class="rounded-2xl bg-bg-1 p-space-xl flex flex-col justify-between shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] relative group hover:bg-bg-2 transition-colors">
+<div>
+<div class="flex items-center justify-between mb-space-lg">
+<span class="px-2.5 py-1 rounded-md bg-status-ok/10 text-status-ok font-code-sm text-code-sm font-bold">03</span>
+<span class="material-symbols-outlined text-text-3 group-hover:text-status-ok transition-colors">insights</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-text-1 mb-space-sm">Watch it move</h3>
+<p class="font-body-md text-body-md text-text-2 mb-space-lg">
+              Topological links form automatically. Spikes, backpressure, and orphaned dependencies light up instantly on your live wallboard.
+            </p>
+</div>
+<!-- Live Node Pulse Visual -->
+<div class="rounded-xl bg-bg-0 p-3.5 shadow-inner flex flex-col justify-center">
+<div class="flex items-center justify-between text-text-3 text-[11px] mb-3 pb-1 border-b border-border-structural">
+<span>Topology Ingestion</span>
+<span class="text-node-queue font-semibold">Active Sync</span>
+</div>
+<div class="flex items-center justify-between gap-2">
+<div class="flex-1 bg-bg-2 p-2 rounded-lg text-center">
+<span class="text-[10px] text-text-3 uppercase block">Ingest Rate</span>
+<span class="font-code-sm text-code-sm font-bold text-status-ok">240k/sec</span>
+</div>
+<span class="material-symbols-outlined text-text-3 text-[16px]">trending_flat</span>
+<div class="flex-1 bg-bg-2 p-2 rounded-lg text-center">
+<span class="text-[10px] text-text-3 uppercase block">Topology Map</span>
+<span class="font-code-sm text-code-sm font-bold text-node-service">42 nodes</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- =========================================================================
+       SECTION: "ARCHITECTURAL USE-CASES" (Interactive Tabbed Showcase)
+       ========================================================================= -->
+<section class="w-full py-24 px-margin-desktop relative">
+<div class="max-w-7xl mx-auto">
+<!-- Section Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+<div>
+<span class="font-label-uppercase text-label-uppercase text-node-queue uppercase tracking-wider mb-2 block">Use Cases</span>
+<h2 class="font-headline-lg text-headline-lg font-bold text-text-1 tracking-tight">
+            Designed for every distributed architecture
+          </h2>
+<p class="font-body-lg text-body-lg text-text-2 mt-2">
+            Explore live topological flows tailored to your engineering stack.
+          </p>
+</div>
+<!-- Interactive Tab Switcher -->
+<div class="inline-flex p-1 rounded-xl bg-bg-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] select-none overflow-x-auto">
+<button class="tab-btn active px-4 py-2 rounded-lg font-label-md text-label-md transition-all text-text-1 bg-bg-2 shadow-sm font-semibold" id="tab-btn-shop" onclick="switchTab('online-shop')">
+            Online shop
+          </button>
+<button class="tab-btn px-4 py-2 rounded-lg font-label-md text-label-md transition-all text-text-3 hover:text-text-1" id="tab-btn-micro" onclick="switchTab('microservices')">
+            Microservices
+          </button>
+<button class="tab-btn px-4 py-2 rounded-lg font-label-md text-label-md transition-all text-text-3 hover:text-text-1" id="tab-btn-ai" onclick="switchTab('ai-agent')">
+            AI agent pipeline
+          </button>
+<button class="tab-btn px-4 py-2 rounded-lg font-label-md text-label-md transition-all text-text-3 hover:text-text-1" id="tab-btn-demos" onclick="switchTab('demos')">
+            Docs &amp; demos
+          </button>
+</div>
+</div>
+<!-- Tab Content Showcase Container -->
+<div class="rounded-2xl bg-bg-1 p-6 md:p-10 shadow-[0_12px_40px_rgba(0,0,0,0.4)]">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+<!-- Left Column: Narrative Card -->
+<div class="lg:col-span-5 flex flex-col justify-center">
+<div class="inline-flex items-center gap-2 text-node-queue font-code-sm text-code-sm mb-3">
+<span class="material-symbols-outlined text-[18px]">shopping_cart</span>
+<span id="tab-category">E-Commerce &amp; High Concurrency</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-text-1 font-semibold mb-4" id="tab-title">
+              Eliminate cart abandonment caused by hidden gateway timeouts
+            </h3>
+<p class="font-body-md text-body-md text-text-2 mb-6 leading-relaxed" id="tab-desc">
+              When 50,000 customers check out at once, a single slow third-party tax calculation service can queue up orders until connections deplete. FlowTrace highlights the exact blocking hop instantly.
+            </p>
+<!-- Key Bullet Points -->
+<div class="space-y-3 mb-8">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-status-ok text-[20px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-1">Pinpoint fan-out bottlenecks across payment &amp; inventory pods</span>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-status-ok text-[20px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-1">Live p99 histograms tagged directly to individual vector edges</span>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-status-ok text-[20px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-1">Automatic alert triggers on circuit breaker tripping</span>
+</div>
+</div>
+<!-- Metric Highlights -->
+<div class="grid grid-cols-3 gap-4 pt-6 border-t border-border-structural">
+<div>
+<span class="font-headline-sm text-headline-sm font-bold text-text-1 block">94%</span>
+<span class="font-label-sm text-label-sm text-text-3">Faster MTTR</span>
+</div>
+<div>
+<span class="font-headline-sm text-headline-sm font-bold text-node-queue block">&lt; 0.2ms</span>
+<span class="font-label-sm text-label-sm text-text-3">SDK Latency</span>
+</div>
+<div>
+<span class="font-headline-sm text-headline-sm font-bold text-status-ok block">Zero</span>
+<span class="font-label-sm text-label-sm text-text-3">Sampling Loss</span>
+</div>
+</div>
+</div>
+<!-- Right Column: Interactive Topology Preview Mockup -->
+<div class="lg:col-span-7 rounded-xl bg-bg-0 p-5 shadow-inner overflow-hidden relative min-h-[380px] flex flex-col justify-between">
+<!-- Simulated Mini Canvas Controls -->
+<div class="flex items-center justify-between pb-3 border-b border-border-structural/60 text-xs font-code-sm text-code-sm">
+<span class="text-text-3 flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-status-ok"></span>
+<span>Active Topology: <span class="text-text-1 font-semibold" id="topology-name">prod-checkout-chain</span></span>
+</span>
+<span class="text-text-3">Nodes: <strong class="text-node-queue">8 active</strong></span>
+</div>
+<!-- Dynamic Flow Node Graphic Representation -->
+<div class="relative py-8 flex flex-col items-center justify-center gap-6 my-auto">
+<!-- Top Row: Client to API -->
+<div class="flex items-center gap-4 w-full justify-around">
+<div class="px-4 py-2.5 rounded-lg bg-bg-2 border border-border-structural flex items-center gap-2 text-xs">
+<span class="material-symbols-outlined text-node-source text-[18px]">devices</span>
+<div>
+<div class="font-semibold text-text-1">Mobile Web</div>
+<div class="text-[10px] text-text-3">12.4k req/s</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-node-queue animate-pulse text-[18px]">trending_flat</span>
+<div class="px-4 py-2.5 rounded-lg bg-bg-2 border border-border-structural flex items-center gap-2 text-xs">
+<span class="material-symbols-outlined text-node-service text-[18px]">dns</span>
+<div>
+<div class="font-semibold text-text-1">API Gateway</div>
+<div class="text-[10px] text-status-ok">p50: 1.2ms</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-node-queue animate-pulse text-[18px]">trending_flat</span>
+<div class="px-4 py-2.5 rounded-lg bg-bg-2 border border-border-structural flex items-center gap-2 text-xs ring-1 ring-node-queue/40">
+<span class="material-symbols-outlined text-node-queue text-[18px]">shopping_bag</span>
+<div>
+<div class="font-semibold text-text-1">Order Pod</div>
+<div class="text-[10px] text-status-ok">Healthy</div>
+</div>
+</div>
+</div>
+<!-- Connecting Vector Vertical -->
+<div class="h-6 w-px bg-dashed border-l border-node-queue/50 my-[-6px]"></div>
+<!-- Bottom Row: Fan out to downstream -->
+<div class="flex items-center gap-3 w-full justify-around">
+<div class="px-3 py-2 rounded-lg bg-bg-2 border border-border-structural flex items-center gap-2 text-xs">
+<span class="material-symbols-outlined text-node-datastore text-[16px]">database</span>
+<div>
+<div class="font-semibold text-text-1">Inventory DB</div>
+<div class="text-[10px] text-status-ok">1.4ms</div>
+</div>
+</div>
+<div class="px-3 py-2 rounded-lg bg-bg-2 border border-status-warn/40 flex items-center gap-2 text-xs bg-status-warn/5">
+<span class="material-symbols-outlined text-status-warn text-[16px]">warning</span>
+<div>
+<div class="font-semibold text-text-1">Tax Provider</div>
+<div class="text-[10px] text-status-warn">980ms latency</div>
+</div>
+</div>
+<div class="px-3 py-2 rounded-lg bg-bg-2 border border-border-structural flex items-center gap-2 text-xs">
+<span class="material-symbols-outlined text-node-queue text-[16px]">mail</span>
+<div>
+<div class="font-semibold text-text-1">Kafka Queue</div>
+<div class="text-[10px] text-status-ok">0 lag</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Stats bar inside preview -->
+<div class="pt-3 border-t border-border-structural/60 flex items-center justify-between text-xs font-code-sm text-code-sm">
+<span class="text-text-3">Spans sampled: 4,129,082</span>
+<span class="text-node-queue hover:underline cursor-pointer flex items-center gap-1">Open Fullscreen <span class="material-symbols-outlined text-[14px]">open_in_new</span></span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- =========================================================================
+       SECTION: "EMBED IT ANYWHERE" (Code Snippet + Documentation Mockup)
+       ========================================================================= -->
+<section class="w-full py-24 bg-bg-1/40 border-t border-border-structural relative overflow-hidden">
+<div class="max-w-7xl mx-auto px-margin-desktop">
+<!-- Section Header -->
+<div class="max-w-3xl mb-16">
+<span class="font-label-uppercase text-label-uppercase text-node-queue uppercase tracking-wider mb-2 block">Universal Integration</span>
+<h2 class="font-headline-lg text-headline-lg font-bold text-text-1 tracking-tight mb-space-sm">
+          Share living system diagrams anywhere
+        </h2>
+<p class="font-body-lg text-body-lg text-text-2">
+          Embed real-time telemetry directly into Notion docs, developer portals, incident runbooks, and public status pages.
+        </p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Left Side: Configurator & Code Snippet -->
+<div class="lg:col-span-5 flex flex-col gap-6">
+<div class="rounded-2xl bg-bg-1 p-6 shadow-md">
+<h4 class="font-body-node-label text-body-node-label font-semibold text-text-1 mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-node-queue text-[20px]">tune</span>
+              Embed Configuration
+            </h4>
+<!-- Toggles & Options -->
+<div class="space-y-4 mb-6">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-text-2">Theme Mode</span>
+<div class="inline-flex rounded-lg bg-bg-2 p-1 text-xs">
+<button class="px-2.5 py-1 rounded bg-bg-3 text-text-1 font-semibold">Dark</button>
+<button class="px-2.5 py-1 rounded text-text-3 hover:text-text-1 transition-colors">Light</button>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-text-2">Animation Speed</span>
+<div class="inline-flex rounded-lg bg-bg-2 p-1 text-xs font-mono">
+<button class="px-2 py-1 rounded text-text-3 hover:text-text-1">0.5×</button>
+<button class="px-2 py-1 rounded bg-bg-3 text-text-1 font-semibold">1×</button>
+<button class="px-2 py-1 rounded text-text-3 hover:text-text-1">2×</button>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-text-2">Show Navigation Controls</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-bg-3 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-node-queue"></div>
+</label>
+</div>
+</div>
+<!-- Code block -->
+<div class="relative">
+<div class="flex items-center justify-between text-xs text-text-3 mb-2 font-mono">
+<span>HTML Embed Snippet</span>
+<button class="text-node-queue hover:underline flex items-center gap-1" onclick="navigator.clipboard.writeText('&lt;iframe src=&quot;https://flowtrace.live/embed/checkout-prod?theme=dark&amp;speed=1x&quot; width=&quot;100%&quot; height=&quot;480&quot; frameborder=&quot;0&quot;&gt;&lt;/iframe&gt;'); const s=this.querySelector('span'); s.textContent='Copied!'; setTimeout(()=&gt;s.textContent='Copy', 2000);">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+<span>Copy</span>
+</button>
+</div>
+<pre class="p-3.5 rounded-xl bg-bg-0 text-text-2 font-code-block text-code-block overflow-x-auto shadow-inner"><code class="text-text-1">&lt;<span class="text-node-service">iframe</span>
+  <span class="text-node-queue">src</span>=<span class="text-status-ok">"https://flowtrace.live/embed/checkout-prod?theme=dark&amp;speed=1x"</span>
+  <span class="text-node-queue">width</span>=<span class="text-status-ok">"100%"</span>
+  <span class="text-node-queue">height</span>=<span class="text-status-ok">"480"</span>
+  <span class="text-node-queue">frameborder</span>=<span class="text-status-ok">"0"</span>&gt;
+&lt;/<span class="text-node-service">iframe</span>&gt;</code></pre>
+</div>
+</div>
+</div>
+<!-- Right Side: Live Embed in Internal Docs Mockup -->
+<div class="lg:col-span-7 rounded-2xl bg-bg-2 p-6 md:p-8 shadow-xl">
+<div class="flex items-center gap-2 mb-4 pb-3 border-b border-border-structural">
+<span class="material-symbols-outlined text-text-3 text-[18px]">article</span>
+<span class="font-label-md text-label-md text-text-3">Internal Runbook: Incident-402-Resolution.md</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-text-1 font-bold mb-2">
+            Checkout Service Architecture &amp; Latency SLA
+          </h3>
+<p class="font-body-md text-body-md text-text-3 mb-6">
+            Below is the live topological trace for our payment authorization pipeline. All edge latencies update at sub-second intervals.
+          </p>
+<!-- Mock embedded iframe container -->
+<div class="rounded-xl bg-bg-0 p-4 border border-node-queue/30 relative shadow-2xl">
+<div class="absolute top-2 right-3 flex items-center gap-1.5 text-[10px] font-code-sm text-code-sm text-text-3 bg-bg-1 px-2 py-0.5 rounded">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok animate-pulse"></span>
+<span>FlowTrace Embedded View</span>
+</div>
+<div class="h-44 flex items-center justify-around">
+<div class="text-center">
+<div class="w-12 h-12 mx-auto rounded-lg bg-bg-2 flex items-center justify-center text-node-source mb-1">
+<span class="material-symbols-outlined">dns</span>
+</div>
+<span class="font-code-sm text-code-sm text-text-2">Gateway</span>
+</div>
+<div class="flex-1 flex flex-col items-center">
+<span class="text-[10px] text-node-queue font-mono">1.2ms →</span>
+<div class="w-full h-0.5 bg-gradient-to-r from-node-queue to-node-service"></div>
+</div>
+<div class="text-center">
+<div class="w-12 h-12 mx-auto rounded-lg bg-bg-2 flex items-center justify-center text-node-service mb-1">
+<span class="material-symbols-outlined">api</span>
+</div>
+<span class="font-code-sm text-code-sm text-text-2">Auth Service</span>
+</div>
+<div class="flex-1 flex flex-col items-center">
+<span class="text-[10px] text-node-service font-mono">3.4ms →</span>
+<div class="w-full h-0.5 bg-gradient-to-r from-node-service to-node-datastore"></div>
+</div>
+<div class="text-center">
+<div class="w-12 h-12 mx-auto rounded-lg bg-bg-2 flex items-center justify-center text-node-datastore mb-1">
+<span class="material-symbols-outlined">database</span>
+</div>
+<span class="font-code-sm text-code-sm text-text-2">Postgres</span>
+</div>
+</div>
+<div class="text-[11px] text-text-3 flex justify-between pt-2 border-t border-border-structural/40">
+<span>Sync latency: 42ms</span>
+<span class="text-status-ok">SLA: 99.98% Healthy</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- =========================================================================
+       SECTION: "PRICING TEASER" (3 Cards with Pro Highlight)
+       ========================================================================= -->
+<section class="w-full py-24 px-margin-desktop relative">
+<div class="max-w-7xl mx-auto">
+<!-- Section Header -->
+<div class="text-center max-w-2xl mx-auto mb-16">
+<span class="font-label-uppercase text-label-uppercase text-node-queue uppercase tracking-wider mb-2 block">Transparent Plans</span>
+<h2 class="font-headline-lg text-headline-lg font-bold text-text-1 tracking-tight mb-space-sm">
+          Simple, transparent pricing for every scale
+        </h2>
+<p class="font-body-lg text-body-lg text-text-2">
+          Start free with full features. Upgrade when your telemetry traffic scales.
+        </p>
+</div>
+<!-- Pricing Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+<!-- Card 1: Free -->
+<div class="rounded-2xl bg-bg-1 p-8 flex flex-col justify-between shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] hover:bg-bg-2/70 transition-all">
+<div>
+<div class="mb-4">
+<span class="font-headline-sm text-headline-sm font-bold text-text-1 block">Free</span>
+<span class="font-body-md text-body-md text-text-3">For indie hackers and hobby projects</span>
+</div>
+<div class="flex items-baseline gap-1 my-6">
+<span class="font-display text-display font-bold text-text-1">€0</span>
+<span class="font-label-md text-label-md text-text-3">/ month</span>
+</div>
+<ul class="space-y-3.5 mb-8 text-sm text-text-2">
+<li class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px]">check</span>
+<span><strong>100,000</strong> events / mo</span>
+</li>
+<li class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px]">check</span>
+<span>1 active workspace</span>
+</li>
+<li class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px]">check</span>
+<span>24-hour trace retention</span>
+</li>
+<li class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px]">check</span>
+<span>Community Discord support</span>
+</li>
+</ul>
+</div>
+<a class="w-full inline-flex items-center justify-center h-11 rounded-xl bg-bg-2 hover:bg-bg-3 text-text-1 font-body-node-label text-body-node-label font-medium transition-colors shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]" data-path="signup" href="#">
+            Start for free
+          </a>
+</div>
+<!-- Card 2: Pro (Highlighted with glowing ambient border) -->
+<div class="rounded-2xl bg-bg-2 p-8 flex flex-col justify-between relative shadow-[0_0_35px_rgba(34,211,238,0.25),0_12px_40px_rgba(0,0,0,0.6)] ring-1 ring-node-queue/50">
+<!-- Popular Badge -->
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-gradient-to-r from-primary-container to-node-service text-bg-0 font-label-uppercase text-[11px] font-bold uppercase tracking-wider shadow-md">
+            Most Popular
+          </div>
+<div>
+<div class="mb-4">
+<span class="font-headline-sm text-headline-sm font-bold text-text-1 block">Pro</span>
+<span class="font-body-md text-body-md text-text-2">For growing engineering teams</span>
+</div>
+<div class="flex items-baseline gap-1 my-6">
+<span class="font-display text-display font-bold text-text-1">€19</span>
+<span class="font-label-md text-label-md text-text-3">/ month</span>
+</div>
+<ul class="space-y-3.5 mb-8 text-sm text-text-1">
+<li class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-node-queue text-[18px]">check</span>
+<span><strong>2,000,000</strong> events / mo</span>
+</li>
+<li class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-node-queue text-[18px]">check</span>
+<span>5 active workspaces</span>
+</li>
+<li class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-node-queue text-[18px]">check</span>
+<span>7-day trace retention &amp; replay studio</span>
+</li>
+<li class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-node-queue text-[18px]">check</span>
+<span>Custom alerts &amp; Slack webhooks</span>
+</li>
+<li class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-node-queue text-[18px]">check</span>
+<span>Remove FlowTrace watermark</span>
+</li>
+</ul>
+</div>
+<a class="w-full inline-flex items-center justify-center h-12 rounded-xl bg-gradient-to-r from-primary-container to-node-service text-bg-0 font-body-node-label text-body-node-label font-bold hover:brightness-110 active:scale-[0.98] transition-all shadow-[0_0_24px_rgba(34,211,238,0.3)]" data-path="signup" href="#">
+            Upgrade to Pro →
+          </a>
+</div>
+<!-- Card 3: Team -->
+<div class="rounded-2xl bg-bg-1 p-8 flex flex-col justify-between shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] hover:bg-bg-2/70 transition-all">
+<div>
+<div class="mb-4">
+<span class="font-headline-sm text-headline-sm font-bold text-text-1 block">Team</span>
+<span class="font-body-md text-body-md text-text-3">For high-throughput distributed systems</span>
+</div>
+<div class="flex items-baseline gap-1 my-6">
+<span class="font-display text-display font-bold text-text-1">€79</span>
+<span class="font-label-md text-label-md text-text-3">/ month</span>
+</div>
+<ul class="space-y-3.5 mb-8 text-sm text-text-2">
+<li class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px]">check</span>
+<span><strong>10,000,000</strong> events / mo</span>
+</li>
+<li class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px]">check</span>
+<span>20 active workspaces</span>
+</li>
+<li class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px]">check</span>
+<span>30-day trace retention</span>
+</li>
+<li class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px]">check</span>
+<span>Unlimited topology nodes</span>
+</li>
+<li class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px]">check</span>
+<span>SSO (Okta / SAML) &amp; PagerDuty sync</span>
+</li>
+</ul>
+</div>
+<a class="w-full inline-flex items-center justify-center h-11 rounded-xl bg-bg-2 hover:bg-bg-3 text-text-1 font-body-node-label text-body-node-label font-medium transition-colors shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]" data-path="signup" href="#">
+            Get Team
+          </a>
+</div>
+</div>
+</div>
+</section>
+<!-- =========================================================================
+       SECTION: "FAQ ACCORDION" (5 Clean expandable items)
+       ========================================================================= -->
+<section class="w-full py-24 bg-bg-1/30 border-t border-border-structural relative">
+<div class="max-w-4xl mx-auto px-margin-desktop">
+<!-- Section Header -->
+<div class="text-center mb-16">
+<span class="font-label-uppercase text-label-uppercase text-node-queue uppercase tracking-wider mb-2 block">Support &amp; Details</span>
+<h2 class="font-headline-lg text-headline-lg font-bold text-text-1 tracking-tight">
+          Frequently Asked Questions
+        </h2>
+</div>
+<!-- 5 Accordion Items -->
+<div class="space-y-4">
+<!-- FAQ 1 -->
+<div class="rounded-xl bg-bg-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] overflow-hidden transition-all">
+<button class="w-full p-5 text-left flex items-center justify-between text-text-1 font-headline-sm text-body-node-label font-semibold hover:text-node-queue transition-colors" onclick="toggleFaq(this)">
+<span>How much overhead does FlowTrace add to our services?</span>
+<span class="material-symbols-outlined text-text-3 transform transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content hidden px-5 pb-5 text-text-2 font-body-md text-body-md leading-relaxed border-t border-border-structural/40 pt-4">
+            Under 0.2ms per call. FlowTrace uses asynchronous non-blocking UDP emission or standard OpenTelemetry batching daemon forwarders. Your critical path execution never waits on metric ingestion.
+          </div>
+</div>
+<!-- FAQ 2 -->
+<div class="rounded-xl bg-bg-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] overflow-hidden transition-all">
+<button class="w-full p-5 text-left flex items-center justify-between text-text-1 font-headline-sm text-body-node-label font-semibold hover:text-node-queue transition-colors" onclick="toggleFaq(this)">
+<span>Do we need to install an agent on our servers?</span>
+<span class="material-symbols-outlined text-text-3 transform transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content hidden px-5 pb-5 text-text-2 font-body-md text-body-md leading-relaxed border-t border-border-structural/40 pt-4">
+            No agent is required. You can push directly via lightweight HTTP or UDP endpoints, or route your telemetry through an existing OpenTelemetry Collector daemon using our standard OTLP/gRPC exporter.
+          </div>
+</div>
+<!-- FAQ 3 -->
+<div class="rounded-xl bg-bg-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] overflow-hidden transition-all">
+<button class="w-full p-5 text-left flex items-center justify-between text-text-1 font-headline-sm text-body-node-label font-semibold hover:text-node-queue transition-colors" onclick="toggleFaq(this)">
+<span>Can we self-host FlowTrace on our own VPC or Kubernetes cluster?</span>
+<span class="material-symbols-outlined text-text-3 transform transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content hidden px-5 pb-5 text-text-2 font-body-md text-body-md leading-relaxed border-t border-border-structural/40 pt-4">
+            Yes. Our Enterprise edition offers complete on-premise Docker and Helm deployments with zero outbound connections. Data never leaves your security perimeter.
+          </div>
+</div>
+<!-- FAQ 4 -->
+<div class="rounded-xl bg-bg-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] overflow-hidden transition-all">
+<button class="w-full p-5 text-left flex items-center justify-between text-text-1 font-headline-sm text-body-node-label font-semibold hover:text-node-queue transition-colors" onclick="toggleFaq(this)">
+<span>What happens if our monthly event quota is reached?</span>
+<span class="material-symbols-outlined text-text-3 transform transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content hidden px-5 pb-5 text-text-2 font-body-md text-body-md leading-relaxed border-t border-border-structural/40 pt-4">
+            Incoming events pause safely without affecting or degrading your application health. You receive an automated warning at 80% and 95% quota, and can instantly upgrade or unpause anytime from your billing settings.
+          </div>
+</div>
+<!-- FAQ 5 -->
+<div class="rounded-xl bg-bg-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] overflow-hidden transition-all">
+<button class="w-full p-5 text-left flex items-center justify-between text-text-1 font-headline-sm text-body-node-label font-semibold hover:text-node-queue transition-colors" onclick="toggleFaq(this)">
+<span>How does the embed feature handle sensitive customer data?</span>
+<span class="material-symbols-outlined text-text-3 transform transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content hidden px-5 pb-5 text-text-2 font-body-md text-body-md leading-relaxed border-t border-border-structural/40 pt-4">
+            FlowTrace automatically strips authorization headers, cookie parameters, and personal identifiable information (PII) by default. The embedded view only visualizes node keys, connection latency, and aggregate throughput rates.
+          </div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Interactive Client-side Logic (Tabs, FAQ Accordion) -->
+<script>
+  // Tab Switcher Logic for Architectural Use Cases
+  const tabData = {
+    'online-shop': {
+      category: 'E-Commerce & High Concurrency',
+      title: 'Eliminate cart abandonment caused by hidden gateway timeouts',
+      desc: 'When 50,000 customers check out at once, a single slow third-party tax calculation service can queue up orders until connections deplete. FlowTrace highlights the exact blocking hop instantly.',
+      topologyName: 'prod-checkout-chain'
+    },
+    'microservices': {
+      category: 'Complex Kubernetes Clusters',
+      title: 'Trace circular dependency cascades across hundreds of pods',
+      desc: 'Prevent cascading failures across decoupled services. Understand transitive bottlenecks and visualize deadlocked gRPC streams across regions in real time.',
+      topologyName: 'k8s-mesh-ingress'
+    },
+    'ai-agent': {
+      category: 'LLM Orchestration & RAG',
+      title: 'Debug vector retrieval latency and multi-agent loops',
+      desc: 'Visualize recursive agent tool calls, embedding retrievals, and token streaming hops with token usage metrics attached directly to each pipeline node.',
+      topologyName: 'langchain-agent-swarm'
+    },
+    'demos': {
+      category: 'Developer Portals & Education',
+      title: 'Explain system architecture visually to new engineers',
+      desc: 'Static architecture diagrams in Wiki pages go stale on day one. FlowTrace embeds stay dynamic and accurate without requiring manual diagram updates.',
+      topologyName: 'public-sandbox-demo'
+    }
+  };
+
+  function switchTab(tabKey) {
+    // Update active button state
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.remove('bg-bg-2', 'text-text-1', 'font-semibold', 'shadow-sm');
+      btn.classList.add('text-text-3');
+    });
+
+    const activeBtn = event.currentTarget;
+    activeBtn.classList.remove('text-text-3');
+    activeBtn.classList.add('bg-bg-2', 'text-text-1', 'font-semibold', 'shadow-sm');
+
+    // Update dynamic text
+    const data = tabData[tabKey];
+    if (data) {
+      document.getElementById('tab-category').textContent = data.category;
+      document.getElementById('tab-title').textContent = data.title;
+      document.getElementById('tab-desc').textContent = data.desc;
+      document.getElementById('topology-name').textContent = data.topologyName;
+    }
+  }
+
+  // FAQ Accordion Handler
+  function toggleFaq(button) {
+    const content = button.nextElementSibling;
+    const chevron = button.querySelector('.material-symbols-outlined');
+    const isHidden = content.classList.contains('hidden');
+
+    // Close all open FAQs
+    document.querySelectorAll('.faq-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.material-symbols-outlined').forEach(ch => {
+      if (ch.textContent === 'expand_more') ch.classList.remove('rotate-180');
+    });
+
+    if (isHidden) {
+      content.classList.remove('hidden');
+      chevron.classList.add('rotate-180');
+    }
+  }
+</script></main><footer class="w-full bg-bg-1 shadow-[0_1px_8px_rgba(0,0,0,0.04)] mt-auto"><div class="max-w-7xl mx-auto px-margin-desktop py-space-xl"><div class="grid grid-cols-2 md:grid-cols-5 gap-space-xl mb-space-xl"><div class="col-span-2"><div class="flex items-center gap-space-sm mb-space-md"><div class="w-7 h-7 rounded-lg bg-bg-2 flex items-center justify-center"><span class="material-symbols-outlined text-primary text-[18px]">hub</span></div><span class="font-headline-sm text-headline-sm font-semibold tracking-tight text-text-1">FlowTrace</span></div><p class="font-body-md text-body-md text-text-3 max-w-sm mb-space-lg">High-density telemetry graph orchestration and operational observability for distributed engineering teams.</p><div class="inline-flex items-center gap-space-sm px-space-md py-space-xs rounded-full bg-bg-2"><span class="w-2 h-2 rounded-full bg-status-ok animate-pulse"></span><span class="font-chip-metric text-chip-metric text-text-2 tracking-wide uppercase">All Systems Operational</span></div></div><div><div class="font-label-uppercase text-label-uppercase text-text-3 uppercase mb-space-md">Architecture</div><ul class="space-y-space-sm font-body-md text-body-md"><li class="nav-item"><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="product" href="#">Graph Engine</a></li><li class="nav-item"><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="templates" href="#">Topology Blueprints</a></li><li class="nav-item"><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="pricing" href="#">Compute Pricing</a></li><li class="nav-item"><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="status" href="#">Live Status</a></li></ul></div><div><div class="font-label-uppercase text-label-uppercase text-text-3 uppercase mb-space-md">Resources</div><ul class="space-y-space-sm font-body-md text-body-md"><li class="nav-item"><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="docs" href="#">Documentation</a></li><li class="nav-item"><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="docs" href="#">API References</a></li><li class="nav-item"><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="security" href="#">Security &amp; Trust</a></li><li class="nav-item"><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="templates" href="#">Community Flows</a></li></ul></div><div><div class="font-label-uppercase text-label-uppercase text-text-3 uppercase mb-space-md">Legal &amp; Social</div><ul class="space-y-space-sm font-body-md text-body-md"><li class="nav-item"><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="privacy" href="#">Privacy Policy</a></li><li class="nav-item"><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="terms" href="#">Terms of Service</a></li><li class="nav-item"><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="security" href="#">Compliance SOC2</a></li><li class="nav-item"><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="overview" href="#">GitHub Registry</a></li></ul></div></div><div class="pt-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-md"><div class="font-label-sm text-label-sm text-text-3">© 2025 FlowTrace Inc. Precision operational telemetry.</div><div class="flex items-center gap-space-lg"><a class="text-text-3 hover:text-text-1 transition-colors" data-path="overview" href="#"><span class="material-symbols-outlined text-[18px]">terminal</span></a><a class="text-text-3 hover:text-text-1 transition-colors" data-path="overview" href="#"><span class="material-symbols-outlined text-[18px]">code</span></a><a class="text-text-3 hover:text-text-1 transition-colors" data-path="overview" href="#"><span class="material-symbols-outlined text-[18px]">rss_feed</span></a><a class="text-text-3 hover:text-text-1 transition-colors" data-path="overview" href="#"><span class="material-symbols-outlined text-[18px]">share</span></a></div></div></div></footer></body></html>

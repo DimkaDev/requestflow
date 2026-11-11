@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary-container": "#005763", "surface-container-highest": "#33353a", "secondary-fixed-dim": "#d0bcff", "surface-container": "#1e1f25", "surface-container-high": "#282a2f", "on-error-container": "#ffdad6", "surface-variant": "#33353a", "node-service": "#8B5CF6", "inverse-surface": "#e2e2e9", "on-secondary-fixed": "#23005c", "primary": "#8aebff", "outline-variant": "#3c494c", "surface-dim": "#111318", "inverse-on-surface": "#2e3036", "on-tertiary-container": "#6e4600", "node-queue": "#22D3EE", "on-tertiary-fixed-variant": "#643f00", "on-primary-fixed": "#001f25", "on-primary-fixed-variant": "#004e5a", "on-secondary-fixed-variant": "#5516be", "outline": "#859397", "border-strong": "#343C4F", "node-source": "#60A5FA", "bg-3": "#1E2330", "border-structural": "#262C3A", "secondary-fixed": "#e9ddff", "status-info": "#60A5FA", "secondary": "#d0bcff", "status-ok": "#34D399", "on-background": "#e2e2e9", "tertiary-container": "#ffb13b", "error": "#ffb4ab", "node-datastore": "#34D399", "on-tertiary": "#462b00", "status-warn": "#F59E0B", "error-container": "#93000a", "primary-fixed": "#a2eeff", "node-decision": "#F59E0B", "status-discovered": "#F59E0B", "text-3": "#7C869C", "on-surface-variant": "#bbc9cd", "on-primary": "#00363e", "on-tertiary-fixed": "#2a1800", "bg-0": "#0B0D12", "background": "#111318", "on-secondary": "#3c0091", "text-1": "#E8ECF4", "tertiary-fixed": "#ffddb5", "surface-container-lowest": "#0c0e13", "node-external": "#94A3B8", "on-secondary-container": "#c4abff", "on-surface": "#e2e2e9", "bg-2": "#171B24", "tertiary-fixed-dim": "#ffb957", "node-end": "#F472B6", "tertiary": "#ffd6a3", "status-error": "#F43F5E", "primary-container": "#22d3ee", "primary-fixed-dim": "#2fd9f4", "surface-bright": "#37393f", "on-error": "#690005", "secondary-container": "#571bc1", "surface-container-low": "#1a1b21", "surface-tint": "#2fd9f4", "surface": "#111318", "inverse-primary": "#006877", "bg-1": "#11141B", "text-2": "#A3ACBF" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-xl": "1.5rem", "margin-desktop": "1.5rem", "space-sm": "0.5rem", "gutter": "1rem", "space-lg": "1rem", "margin": "1rem", "space-md": "0.75rem", "gutter-desktop": "1.5rem", "space-xs": "0.25rem" }, "fontFamily": { "headline-sm": ["Inter"], "body-node-label": ["Inter"], "display-mobile": ["Inter"], "code-sm": ["JetBrains Mono"], "label-uppercase": ["Inter"], "body-md": ["Inter"], "body-lg": ["Inter"], "headline-md": ["Inter"], "headline-lg": ["Inter"], "display": ["Inter"], "headline-lg-mobile": ["Inter"], "code-block": ["JetBrains Mono"], "chip-metric": ["Inter"], "label-md": ["Inter"], "label-sm": ["Inter"] }, "fontSize": { "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}], "body-node-label": ["14px", {"lineHeight": "20px", "fontWeight": "600"}], "display-mobile": ["36px", {"lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "600"}], "code-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}], "label-uppercase": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500"}], "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}], "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}], "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}], "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}], "display": ["48px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "600"}], "headline-lg-mobile": ["26px", {"lineHeight": "32px", "fontWeight": "600"}], "code-block": ["13px", {"lineHeight": "20px", "fontWeight": "400"}], "chip-metric": ["11px", {"lineHeight": "14px", "fontWeight": "500"}], "label-md": ["13px", {"lineHeight": "18px", "fontWeight": "500"}], "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}] } } } };</script></head><body class="bg-bg-0 text-text-1 font-body-md text-body-md antialiased selection:bg-primary/20 selection:text-primary"><header class="fixed top-0 left-0 right-0 h-14 bg-bg-1/90 backdrop-blur-xl border-b border-border-structural z-50"><div class="h-14 w-full px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><div class="w-7 h-7 rounded-lg bg-gradient-to-br from-primary-container to-node-service flex items-center justify-center shadow-[0_0_16px_rgba(34,211,238,0.35)]"><span class="material-symbols-outlined text-bg-0 text-[18px]">hub</span></div><span class="font-headline-sm text-headline-sm text-text-1 tracking-tight">FlowTrace</span></div><div class="h-4 w-px bg-border-structural"></div><div class="flex items-center gap-space-xs font-code-sm text-code-sm text-text-2 bg-bg-2 px-space-sm py-1 rounded border border-border-structural"><span class="text-primary">checkout-prod</span><span class="text-text-3">/</span><span class="text-text-3">Settings</span><span class="text-text-3">/</span><span class="text-text-1">API Keys</span><span class="material-symbols-outlined text-text-3 text-[16px]">unfold_more</span></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-bg-2 border border-border-structural"><span class="w-2 h-2 rounded-full bg-status-ok animate-pulse"></span><span class="font-chip-metric text-chip-metric text-text-2">Mesh Active</span></div><nav class="flex items-center gap-space-md"><a class="font-label-md text-label-md text-text-2 hover:text-text-1 transition-colors" data-path="documentation" href="#">Docs</a></nav><div class="h-4 w-px bg-border-structural"></div><div class="flex items-center gap-space-sm"><button aria-label="Toggle color mode" class="p-1.5 rounded-lg text-text-2 hover:text-text-1 hover:bg-bg-3 transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">dark_mode</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></div></header><aside class="fixed left-0 top-14 bottom-0 w-64 bg-bg-1 border-r border-border-structural z-40 flex flex-col justify-between p-space-md"><div class="space-y-space-lg"><a class="flex items-center gap-space-xs font-label-md text-label-md text-text-3 hover:text-text-1 px-space-sm py-space-xs rounded transition-colors group" data-path="live-topology" href="#"><span class="material-symbols-outlined text-[16px] transition-transform group-hover:-translate-x-0.5">arrow_back</span><span>Back to Live Topology</span></a><div class="space-y-space-xs"><div class="px-space-sm font-label-uppercase text-label-uppercase text-text-3">PROJECT SETTINGS</div><nav class="space-y-1" data-active-classes="bg-primary-container text-on-primary-container font-semibold shadow-[0_0_12px_rgba(34,211,238,0.2)]"><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-text-2 hover:bg-bg-3 hover:text-text-1 transition-colors" data-path="general" href="#"><span class="material-symbols-outlined text-[18px]">tune</span><span>General</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-text-2 hover:bg-bg-3 hover:text-text-1 transition-colors" data-path="connect" href="#"><span class="material-symbols-outlined text-[18px]">cable</span><span>Connect</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg transition-colors bg-primary-container text-on-primary-container font-semibold shadow-[0_0_12px_rgba(34,211,238,0.2)]" data-path="api-keys" href="#"><span class="material-symbols-outlined text-[18px]">key</span><span>API Keys</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-text-2 hover:bg-bg-3 hover:text-text-1 transition-colors" data-path="team-access" href="#"><span class="material-symbols-outlined text-[18px]">group</span><span>Team & Access</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-text-2 hover:bg-bg-3 hover:text-text-1 transition-colors" data-path="alerts" href="#"><span class="material-symbols-outlined text-[18px]">notifications_active</span><span>Alerts</span></a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-text-2 hover:bg-bg-3 hover:text-text-1 transition-colors" data-path="usage-billing" href="#"><span class="material-symbols-outlined text-[18px]">credit_card</span><span>Usage & Billing</span></a></nav></div></div><div class="p-space-sm bg-bg-2 rounded-lg border border-border-structural flex items-center justify-between"><div class="flex flex-col"><span class="font-label-uppercase text-label-uppercase text-text-3">CLUSTER ENGINE</span><span class="font-code-sm text-code-sm text-text-1">v2.14.0-mesh</span></div><span class="material-symbols-outlined text-status-ok text-[16px]">check_circle</span></div></aside><div class="pl-64"><main class="relative pt-14 min-h-screen bg-bg-0 text-text-1 w-full px-space-lg"><div class="flex flex-col w-full pb-space-xl">
+<!-- Top Ambient Glow & Metric Ribbons -->
+<div class="relative w-full mb-space-lg">
+<div class="absolute -top-10 left-1/3 w-96 h-32 bg-node-service/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -top-12 right-1/4 w-80 h-28 bg-primary-container/10 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Header & Action Row -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md pt-space-xs">
+<div>
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-text-3 mb-1">
+<span>Settings</span>
+<span class="text-border-strong">/</span>
+<span class="text-text-2 font-medium">API Keys & Tokens</span>
+</div>
+<div class="flex items-center gap-3">
+<h1 class="font-headline-lg text-headline-lg text-text-1 tracking-tight">API Keys</h1>
+<span class="px-2.5 py-0.5 rounded-full bg-bg-2 border border-border-structural font-code-sm text-code-sm text-primary">4 Active</span>
+</div>
+<p class="font-body-md text-body-md text-text-2 mt-1 max-w-2xl">
+          Manage authentication tokens and ingestion keys for the FlowTrace collector and telemetry query APIs.
+        </p>
+</div>
+<!-- Action Group -->
+<div class="flex items-center gap-space-sm flex-wrap">
+<!-- Search Input -->
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-text-3 text-[18px]">search</span>
+<input class="h-9 pl-9 pr-3 w-56 rounded-lg bg-bg-3 border border-border-structural text-text-1 placeholder:text-text-3 font-body-md text-body-md focus:outline-none focus:border-primary-container transition-colors shadow-sm" placeholder="Filter by name or prefix..." type="text" value=""/>
+</div>
+<!-- Scope Filter -->
+<div class="relative">
+<button class="h-9 px-3 rounded-lg bg-bg-3 border border-border-structural hover:border-border-strong text-text-2 hover:text-text-1 font-label-md text-label-md flex items-center gap-2 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-text-3">tune</span>
+<span>All Scopes</span>
+<span class="material-symbols-outlined text-[16px] text-text-3">expand_more</span>
+</button>
+</div>
+<!-- Primary CTA with cyan-to-violet gradient -->
+<button class="h-9 px-4 rounded-[10px] bg-gradient-to-r from-primary-container to-node-service text-bg-0 font-body-node-label text-body-node-label flex items-center gap-1.5 shadow-[0_0_16px_rgba(34,211,238,0.25)] hover:shadow-[0_0_24px_rgba(139,92,246,0.35)] hover:brightness-105 active:scale-[0.98] transition-all" id="btn-open-create-modal" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Create Key</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Telemetry Quota Bar (Compact visual telemetry component) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-space-md mb-space-lg">
+<div class="bg-bg-2 border border-border-structural rounded-xl p-3.5 flex items-center justify-between">
+<div>
+<div class="font-label-uppercase text-label-uppercase text-text-3">24H CALL VELOCITY</div>
+<div class="font-headline-sm text-headline-sm text-text-1 mt-0.5">8.42M <span class="font-chip-metric text-chip-metric text-status-ok font-normal">+4.2%</span></div>
+</div>
+<div class="w-16 h-8 flex items-end gap-1">
+<div class="w-2.5 bg-primary-container/30 h-3 rounded-t-sm"></div>
+<div class="w-2.5 bg-primary-container/40 h-5 rounded-t-sm"></div>
+<div class="w-2.5 bg-primary-container/60 h-4 rounded-t-sm"></div>
+<div class="w-2.5 bg-primary-container/80 h-7 rounded-t-sm"></div>
+<div class="w-2.5 bg-primary-container h-8 rounded-t-sm shadow-[0_0_8px_rgba(34,211,238,0.5)]"></div>
+</div>
+</div>
+<div class="bg-bg-2 border border-border-structural rounded-xl p-3.5 flex items-center justify-between">
+<div>
+<div class="font-label-uppercase text-label-uppercase text-text-3">INGESTION PEAK</div>
+<div class="font-headline-sm text-headline-sm text-text-1 mt-0.5">14,290 <span class="font-code-sm text-code-sm text-text-3">req/s</span></div>
+</div>
+<div class="w-8 h-8 rounded-lg bg-bg-3 border border-border-structural flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container text-[18px]">bolt</span>
+</div>
+</div>
+<div class="bg-bg-2 border border-border-structural rounded-xl p-3.5 flex items-center justify-between">
+<div>
+<div class="font-label-uppercase text-label-uppercase text-text-3">ROTATION HYGIENE</div>
+<div class="font-headline-sm text-headline-sm text-status-warn mt-0.5">1 Expiring <span class="font-label-sm text-label-sm text-text-3">(4d)</span></div>
+</div>
+<div class="w-8 h-8 rounded-lg bg-bg-3 border border-border-structural flex items-center justify-center">
+<span class="material-symbols-outlined text-status-warn text-[18px]">schedule</span>
+</div>
+</div>
+<div class="bg-bg-2 border border-border-structural rounded-xl p-3.5 flex items-center justify-between">
+<div>
+<div class="font-label-uppercase text-label-uppercase text-text-3">SECURITY PROFILE</div>
+<div class="font-headline-sm text-headline-sm text-text-1 mt-0.5">mTLS + SHA256</div>
+</div>
+<div class="w-8 h-8 rounded-lg bg-bg-3 border border-border-structural flex items-center justify-center">
+<span class="material-symbols-outlined text-status-ok text-[18px]">verified_user</span>
+</div>
+</div>
+</div>
+<!-- Main API Keys Table Card -->
+<div class="w-full bg-bg-2 border border-border-structural rounded-[14px] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_8px_24px_rgba(0,0,0,0.35)] overflow-visible">
+<div class="overflow-x-auto min-h-[360px]">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-border-structural bg-bg-1/60 text-text-3 font-label-uppercase text-label-uppercase select-none">
+<th class="py-3.5 px-4 font-medium">NAME & WORKSPACE</th>
+<th class="py-3.5 px-4 font-medium">KEY PREFIX</th>
+<th class="py-3.5 px-4 font-medium">SCOPES</th>
+<th class="py-3.5 px-4 font-medium">LAST USED</th>
+<th class="py-3.5 px-4 font-medium">RATE LIMIT</th>
+<th class="py-3.5 px-4 font-medium">STATUS</th>
+<th class="py-3.5 px-4 text-right font-medium pr-6">ACTIONS</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-structural text-text-1 font-body-md text-body-md">
+<!-- Row 1: Active Key with Open Popover -->
+<tr class="hover:bg-bg-3/40 transition-colors group">
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-node-service/15 border border-node-service/30 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-node-service text-[18px]">dns</span>
+</div>
+<div>
+<div class="font-body-node-label text-body-node-label text-text-1 group-hover:text-primary transition-colors flex items-center gap-1.5">
+<span>Production Ingestion Node</span>
+<span class="material-symbols-outlined text-[14px] text-text-3" title="Production mesh connected">lock</span>
+</div>
+<div class="font-label-sm text-label-sm text-text-3 flex items-center gap-1.5 mt-0.5">
+<span>mesh:us-east-cluster</span>
+<span class="w-1 h-1 rounded-full bg-border-strong"></span>
+<span>Created Sep 12</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-bg-0 border border-border-structural font-code-sm text-code-sm text-text-2 group-hover:border-border-strong transition-colors">
+<span class="text-primary-container">ft_live_</span><span>a1b2</span><span class="text-text-3">••••••••</span>
+<button class="text-text-3 hover:text-text-1 p-0.5 rounded transition-colors" title="Copy prefix" type="button">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+</button>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2 py-0.5 rounded-full bg-primary-container/10 border border-primary-container/30 text-primary-container font-chip-metric text-chip-metric">ingest</span>
+<span class="px-2 py-0.5 rounded-full bg-node-service/10 border border-node-service/30 text-node-service font-chip-metric text-chip-metric">read</span>
+</div>
+</td>
+<td class="py-4 px-4 font-label-md text-label-md text-text-2">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-status-ok animate-pulse"></span>
+<span>2s ago</span>
+</div>
+</td>
+<td class="py-4 px-4 font-code-sm text-code-sm text-text-2">
+              10,000 req/s
+            </td>
+<td class="py-4 px-4">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-status-ok/10 border border-status-ok/25 text-status-ok font-chip-metric text-chip-metric">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+<span>Active</span>
+</div>
+</td>
+<!-- Action cell with ACTIVE open popover demonstration -->
+<td class="py-4 px-4 text-right pr-6 relative">
+<div class="inline-block relative">
+<button aria-label="Row options" class="w-8 h-8 rounded-lg bg-bg-3 border border-primary-container/50 text-text-1 flex items-center justify-center shadow-[0_0_8px_rgba(34,211,238,0.2)] transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+<!-- Floating popover menu strictly styled to Level 3 Elevation tokens -->
+<div class="absolute right-0 top-10 w-48 bg-bg-1/95 border border-border-structural rounded-xl backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.6)] py-1.5 z-30 text-left">
+<div class="px-3 py-1 font-label-uppercase text-[10px] tracking-wider text-text-3 border-b border-border-structural/60 mb-1">
+                    KEY ACTIONS
+                  </div>
+<button class="w-full flex items-center gap-2.5 px-3 py-1.5 font-label-md text-label-md text-text-2 hover:text-text-1 hover:bg-bg-3 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-text-3">sync</span>
+<span>Rotate Key</span>
+</button>
+<button class="w-full flex items-center gap-2.5 px-3 py-1.5 font-label-md text-label-md text-text-2 hover:text-text-1 hover:bg-bg-3 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-text-3">key_vertical</span>
+<span>Edit Scopes</span>
+</button>
+<button class="w-full flex items-center gap-2.5 px-3 py-1.5 font-label-md text-label-md text-text-2 hover:text-text-1 hover:bg-bg-3 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-text-3">history</span>
+<span>Audit Logs</span>
+</button>
+<div class="my-1 border-t border-border-structural"></div>
+<button class="w-full flex items-center gap-2.5 px-3 py-1.5 font-label-md text-label-md text-status-error hover:bg-error-container/20 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-status-error">delete_forever</span>
+<span>Revoke Key</span>
+</button>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 2: Datadog Export Worker -->
+<tr class="hover:bg-bg-3/40 transition-colors group">
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary-container/15 border border-primary-container/30 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary-container text-[18px]">cloud_sync</span>
+</div>
+<div>
+<div class="font-body-node-label text-body-node-label text-text-1 group-hover:text-primary transition-colors">
+                    Datadog Export Worker
+                  </div>
+<div class="font-label-sm text-label-sm text-text-3 flex items-center gap-1.5 mt-0.5">
+<span>pipeline:datadog-sink</span>
+<span class="w-1 h-1 rounded-full bg-border-strong"></span>
+<span>Created Aug 29</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-bg-0 border border-border-structural font-code-sm text-code-sm text-text-2 group-hover:border-border-strong transition-colors">
+<span class="text-primary-container">ft_live_</span><span>8f99</span><span class="text-text-3">••••••••</span>
+<button class="text-text-3 hover:text-text-1 p-0.5 rounded transition-colors" title="Copy prefix" type="button">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+</button>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2 py-0.5 rounded-full bg-node-service/10 border border-node-service/30 text-node-service font-chip-metric text-chip-metric">read</span>
+</div>
+</td>
+<td class="py-4 px-4 font-label-md text-label-md text-text-2">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-status-ok"></span>
+<span>14m ago</span>
+</div>
+</td>
+<td class="py-4 px-4 font-code-sm text-code-sm text-text-2">
+              2,500 req/s
+            </td>
+<td class="py-4 px-4">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-status-ok/10 border border-status-ok/25 text-status-ok font-chip-metric text-chip-metric">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+<span>Active</span>
+</div>
+</td>
+<td class="py-4 px-4 text-right pr-6">
+<button class="w-8 h-8 rounded-lg text-text-3 hover:text-text-1 hover:bg-bg-3 flex items-center justify-center transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Staging Edge Collector (Expiring / Rotated) -->
+<tr class="hover:bg-bg-3/40 transition-colors group">
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-status-warn/15 border border-status-warn/30 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-status-warn text-[18px]">alt_route</span>
+</div>
+<div>
+<div class="font-body-node-label text-body-node-label text-text-1 group-hover:text-primary transition-colors">
+                    Staging Edge Collector
+                  </div>
+<div class="font-label-sm text-label-sm text-text-3 flex items-center gap-1.5 mt-0.5">
+<span>env:staging-eu</span>
+<span class="w-1 h-1 rounded-full bg-border-strong"></span>
+<span>Created Jul 14</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-bg-0 border border-border-structural font-code-sm text-code-sm text-text-2 group-hover:border-border-strong transition-colors">
+<span class="text-status-warn">ft_stage_</span><span>4d11</span><span class="text-text-3">••••••••</span>
+<button class="text-text-3 hover:text-text-1 p-0.5 rounded transition-colors" title="Copy prefix" type="button">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+</button>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2 py-0.5 rounded-full bg-primary-container/10 border border-primary-container/30 text-primary-container font-chip-metric text-chip-metric">ingest</span>
+<span class="px-2 py-0.5 rounded-full bg-status-warn/10 border border-status-warn/30 text-status-warn font-chip-metric text-chip-metric">admin</span>
+</div>
+</td>
+<td class="py-4 px-4 font-label-md text-label-md text-text-2">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-status-warn"></span>
+<span>3d ago</span>
+</div>
+</td>
+<td class="py-4 px-4 font-code-sm text-code-sm text-text-2">
+              5,000 req/s
+            </td>
+<td class="py-4 px-4">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-status-warn/10 border border-status-warn/25 text-status-warn font-chip-metric text-chip-metric">
+<span class="material-symbols-outlined text-[13px]">alarm</span>
+<span>Expiring in 4d</span>
+</div>
+</td>
+<td class="py-4 px-4 text-right pr-6">
+<button class="w-8 h-8 rounded-lg text-text-3 hover:text-text-1 hover:bg-bg-3 flex items-center justify-center transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: Local Dev CLI -->
+<tr class="hover:bg-bg-3/40 transition-colors group">
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-bg-3 border border-border-structural flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-text-2 text-[18px]">terminal</span>
+</div>
+<div>
+<div class="font-body-node-label text-body-node-label text-text-1 group-hover:text-primary transition-colors">
+                    Local Dev CLI
+                  </div>
+<div class="font-label-sm text-label-sm text-text-3 flex items-center gap-1.5 mt-0.5">
+<span>workstation:developer-local</span>
+<span class="w-1 h-1 rounded-full bg-border-strong"></span>
+<span>Created Oct 01</span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-bg-0 border border-border-structural font-code-sm text-code-sm text-text-2 group-hover:border-border-strong transition-colors">
+<span class="text-text-3">ft_test_</span><span>c3d4</span><span class="text-text-3">••••••••</span>
+<button class="text-text-3 hover:text-text-1 p-0.5 rounded transition-colors" title="Copy prefix" type="button">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+</button>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2 py-0.5 rounded-full bg-node-service/10 border border-node-service/30 text-node-service font-chip-metric text-chip-metric">read</span>
+</div>
+</td>
+<td class="py-4 px-4 font-label-md text-label-md text-text-3">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-text-3"></span>
+<span>Never</span>
+</div>
+</td>
+<td class="py-4 px-4 font-code-sm text-code-sm text-text-2">
+              Unlimited
+            </td>
+<td class="py-4 px-4">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-bg-3 border border-border-structural text-text-3 font-chip-metric text-chip-metric">
+<span class="w-1.5 h-1.5 rounded-full bg-text-3"></span>
+<span>Inactive</span>
+</div>
+</td>
+<td class="py-4 px-4 text-right pr-6">
+<button class="w-8 h-8 rounded-lg text-text-3 hover:text-text-1 hover:bg-bg-3 flex items-center justify-center transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination / Footer Meta -->
+<div class="border-t border-border-structural px-4 py-3 bg-bg-1/40 flex flex-col sm:flex-row items-center justify-between gap-2 text-text-3 font-label-sm text-label-sm">
+<div class="flex items-center gap-2">
+<span>Showing 4 of 4 registered keys</span>
+<span class="text-border-strong">•</span>
+<a class="text-primary hover:underline flex items-center gap-0.5" href="#">
+<span>Key rotation best practices</span>
+<span class="material-symbols-outlined text-[14px]">north_east</span>
+</a>
+</div>
+<div class="flex items-center gap-1.5 font-code-sm text-code-sm">
+<span class="px-2 py-0.5 rounded bg-bg-0 border border-border-structural text-text-2">TLS 1.3 Strict</span>
+<span class="px-2 py-0.5 rounded bg-bg-0 border border-border-structural text-text-2">HMAC-SHA256</span>
+</div>
+</div>
+</div>
+<!-- Quick Setup Documentation Snippet Card -->
+<div class="mt-space-lg bg-bg-1 border border-border-structural rounded-xl p-space-md flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-bg-3 border border-border-structural flex items-center justify-center text-primary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">integration_instructions</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-text-1">Ingesting with FlowTrace SDK</h2>
+<p class="font-body-md text-body-md text-text-2">Initialize the OTel exporter with your ingestion token. Keep secret keys isolated from client-side bundles.</p>
+</div>
+</div>
+<div class="w-full lg:w-auto bg-bg-0 border border-border-structural rounded-lg px-3 py-2 flex items-center justify-between gap-4 font-code-sm text-code-sm text-text-2">
+<span class="text-primary-container truncate font-code-block">FLOWTRACE_KEY=ft_live_•••• node --require @flowtrace/otel app.js</span>
+<button class="text-text-3 hover:text-text-1 flex items-center gap-1 shrink-0 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+<span class="font-label-sm text-label-sm">Copy</span>
+</button>
+</div>
+</div>
+<!-- ======================================================== -->
+<!-- MODAL DIALOG: "New API Key Created" State (Level 4 Elevation) -->
+<!-- ======================================================== -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-0/80 backdrop-blur-md transition-opacity" id="created-key-modal">
+<div class="relative w-full max-w-[540px] bg-bg-1 border border-border-strong rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_0_1px_rgba(38,44,58,0.5)] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+<!-- Top Accent Stripe (Cyan-to-Violet Brand Gradient) -->
+<div class="h-1 w-full bg-gradient-to-r from-primary-container via-primary to-node-service"></div>
+<!-- Modal Header -->
+<div class="p-space-lg pb-0 flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-status-ok/15 border border-status-ok/30 flex items-center justify-center text-status-ok">
+<span class="material-symbols-outlined text-[22px]">shield</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-text-1">New API Key Created</h2>
+<p class="font-label-sm text-label-sm text-text-3">Provisioned on production cluster gateway</p>
+</div>
+</div>
+<button aria-label="Close dialog" class="w-8 h-8 rounded-lg text-text-3 hover:text-text-1 hover:bg-bg-3 flex items-center justify-center transition-colors" id="btn-close-modal" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Modal Body -->
+<div class="p-space-lg space-y-space-md">
+<!-- Success Confirmation Banner -->
+<div class="bg-status-ok/10 border border-status-ok/25 rounded-lg px-3.5 py-2.5 flex items-center gap-2.5 text-status-ok">
+<span class="material-symbols-outlined text-[18px] shrink-0">check_circle</span>
+<span class="font-body-md text-body-md text-text-1">Key generated successfully. Store it in a secure location.</span>
+</div>
+<!-- Form Summary Fields -->
+<div class="bg-bg-2 border border-border-structural rounded-xl p-3.5 space-y-2.5">
+<div class="flex items-center justify-between text-body-md">
+<span class="text-text-3 font-label-md text-label-md">Key Name</span>
+<span class="text-text-1 font-body-node-label text-body-node-label">production-collector-v2</span>
+</div>
+<div class="h-px bg-border-structural/60"></div>
+<div class="flex items-center justify-between text-body-md">
+<span class="text-text-3 font-label-md text-label-md">Assigned Scopes</span>
+<div class="flex items-center gap-1.5">
+<span class="px-2 py-0.5 rounded-full bg-primary-container/10 border border-primary-container/30 text-primary-container font-chip-metric text-chip-metric">ingest</span>
+<span class="px-2 py-0.5 rounded-full bg-node-service/10 border border-node-service/30 text-node-service font-chip-metric text-chip-metric">read</span>
+</div>
+</div>
+<div class="h-px bg-border-structural/60"></div>
+<div class="flex items-center justify-between text-body-md">
+<span class="text-text-3 font-label-md text-label-md">Rate Limit</span>
+<span class="font-code-sm text-code-sm text-text-1">10,000 req/s</span>
+</div>
+</div>
+<!-- Code / Key Reveal Block -->
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-uppercase text-label-uppercase text-text-3">SECRET KEY TOKEN</span>
+<span class="font-label-sm text-label-sm text-status-ok flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok animate-ping"></span>
+              Live & Ready
+            </span>
+</div>
+<div class="relative bg-bg-0 border border-border-structural rounded-xl p-3 shadow-inner group">
+<div class="font-code-block text-[13px] text-primary break-all pr-24 select-all font-mono leading-relaxed" id="secret-key-display">
+              ft_live_a1b2c3d4e5f67890abcdef1234567890_live_sec
+            </div>
+<button class="absolute right-2 top-2 h-8 px-2.5 rounded-lg bg-bg-3 border border-border-structural hover:border-border-strong text-text-1 font-label-sm text-label-sm flex items-center gap-1.5 transition-colors shadow-sm" id="btn-copy-key" type="button">
+<span class="material-symbols-outlined text-[16px] text-primary-container" id="copy-icon">content_copy</span>
+<span id="copy-text">Copy Key</span>
+</button>
+</div>
+</div>
+<!-- Amber Security Note -->
+<div class="bg-status-warn/10 border border-status-warn/30 rounded-xl p-3.5 flex items-start gap-3">
+<span class="material-symbols-outlined text-status-warn text-[20px] shrink-0 mt-0.5">warning</span>
+<div class="font-body-md text-body-md text-text-2 leading-snug">
+<strong class="text-status-warn font-semibold">You won't see this key again.</strong> FlowTrace does not store the unhashed secret key. If lost, you will need to rotate or generate a new one.
+          </div>
+</div>
+<!-- cURL Integration Snippet -->
+<div>
+<span class="font-label-uppercase text-label-uppercase text-text-3 block mb-1">QUICK CURL VERIFICATION</span>
+<div class="bg-bg-0 border border-border-structural rounded-lg p-2.5 font-code-sm text-code-sm text-text-3 flex items-center justify-between gap-2">
+<span class="truncate font-mono text-text-2">curl -H "Authorization: Bearer ft_live_a1b..." https://api.flowtrace.io/v1/health</span>
+<button class="text-text-3 hover:text-text-1 p-1" title="Copy snippet" type="button">
+<span class="material-symbols-outlined text-[15px]">file_copy</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Modal Footer Buttons -->
+<div class="p-space-lg bg-bg-2 border-t border-border-structural flex items-center justify-end gap-space-sm">
+<button class="h-9 px-3.5 rounded-[10px] bg-bg-3 border border-border-structural hover:border-border-strong text-text-1 font-label-md text-label-md flex items-center gap-2 transition-colors" id="btn-download-env" type="button">
+<span class="material-symbols-outlined text-[16px] text-text-3">download</span>
+<span>Download .env</span>
+</button>
+<button class="h-9 px-4 rounded-[10px] bg-gradient-to-r from-primary-container to-node-service text-bg-0 font-body-node-label text-body-node-label hover:brightness-105 active:scale-[0.98] transition-all shadow-[0_0_12px_rgba(34,211,238,0.2)]" id="btn-done-modal" type="button">
+          Done / I have saved this key
+        </button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Simple interactive micro-interactions for modal close/open & copy action
+  const modal = document.getElementById('created-key-modal');
+  const btnClose = document.getElementById('btn-close-modal');
+  const btnDone = document.getElementById('btn-done-modal');
+  const btnOpen = document.getElementById('btn-open-create-modal');
+  const btnCopy = document.getElementById('btn-copy-key');
+  const copyText = document.getElementById('copy-text');
+  const copyIcon = document.getElementById('copy-icon');
+
+  function closeModal() {
+    if (modal) {
+      modal.classList.add('hidden');
+    }
+  }
+
+  function openModal() {
+    if (modal) {
+      modal.classList.remove('hidden');
+    }
+  }
+
+  if (btnClose) btnClose.addEventListener('click', closeModal);
+  if (btnDone) btnDone.addEventListener('click', closeModal);
+  if (btnOpen) btnOpen.addEventListener('click', openModal);
+
+  if (btnCopy) {
+    btnCopy.addEventListener('click', () => {
+      const keyText = document.getElementById('secret-key-display')?.innerText.trim();
+      if (keyText) {
+        navigator.clipboard?.writeText(keyText).catch(() => {});
+        copyText.innerText = 'Copied!';
+        copyIcon.innerText = 'check';
+        setTimeout(() => {
+          copyText.innerText = 'Copy Key';
+          copyIcon.innerText = 'content_copy';
+        }, 2200);
+      }
+    });
+  }
+
+  // Dismiss modal if clicking outer overlay directly
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+  }
+</script></main></div></body></html>

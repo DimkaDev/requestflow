@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="tv_showroom" name="shell-type"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+    }
+    ::-webkit-scrollbar { display: none; }
+    
+    @keyframes floatParticle {
+      0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+      50% { transform: translateY(-12px) rotate(8deg) scale(1.15); }
+    }
+    @keyframes coinBurstRing {
+      0% { transform: scale(0.85); opacity: 0.8; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+    @keyframes subtleDrift {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(1px, -1px); }
+      50% { transform: translate(-0.5px, 1px); }
+      75% { transform: translate(0.5px, 0.5px); }
+      100% { transform: translate(0, 0); }
+    }
+    .tv-drift-active {
+      animation: subtleDrift 300s infinite ease-in-out;
+    }
+    @keyframes marqueeScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      display: inline-flex;
+      animation: marqueeScroll 28s linear infinite;
+    }
+    .animate-marquee:hover {
+      animation-play-state: paused;
+    }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary-fixed": "#ffdbca",
+            "on-tertiary": "#ffffff",
+            "success": "#059669",
+            "outline": "#EADFD3",
+            "surface-container-highest": "#E0D2C2",
+            "surface-variant": "#ece0d8",
+            "on-surface-variant": "#6E6359",
+            "on-secondary-container": "#600037",
+            "on-surface": "#2B2520",
+            "inverse-on-surface": "#fbeee6",
+            "primary-container": "#FFEDD5",
+            "error": "#E11D48",
+            "surface-container-lowest": "#ffffff",
+            "primary-fixed-dim": "#ffb690",
+            "surface-bright": "#fff8f5",
+            "on-tertiary-fixed-variant": "#5516be",
+            "inverse-primary": "#ffb690",
+            "on-error-container": "#93000a",
+            "secondary": "#b4136d",
+            "text-tertiary": "#8C8073",
+            "surface-dim": "#e4d8d0",
+            "on-error": "#ffffff",
+            "surface": "#FBF7F2",
+            "inverse-surface": "#362f2a",
+            "primary": "#9d4300",
+            "warning": "#D97706",
+            "tertiary-fixed-dim": "#d0bcff",
+            "surface-container": "#F0E7DD",
+            "outline-variant": "#e0c0b1",
+            "surface-tint": "#9d4300",
+            "background": "#fff8f5",
+            "tertiary-fixed": "#e9ddff",
+            "surface-container-low": "#fef1e9",
+            "on-secondary": "#ffffff",
+            "surface-container-high": "#E8DDD0",
+            "tertiary-container": "#a985ff",
+            "on-background": "#201b16",
+            "secondary-fixed-dim": "#ffb0cd",
+            "on-primary-container": "#9A3412",
+            "on-tertiary-container": "#3e0096",
+            "error-container": "#FFE4E6",
+            "on-primary-fixed-variant": "#783200",
+            "on-primary-fixed": "#341100",
+            "secondary-fixed": "#ffd9e4",
+            "tertiary": "#6d3bd7",
+            "on-secondary-fixed-variant": "#8c0053",
+            "on-primary": "#ffffff",
+            "on-secondary-fixed": "#3e0022",
+            "secondary-container": "#fd56a7",
+            "on-tertiary-fixed": "#23005c"
+          },
+          fontFamily: {
+            "body": ["Inter", "sans-serif"],
+            "code": ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-surface font-body text-on-surface w-screen h-screen overflow-hidden flex flex-col justify-between tv-drift-active select-none">
+<!-- ======================================================== -->
+<!-- FLOATING TOP AMBIENT STATUS PILL (Big Screen TV Mode Header) -->
+<!-- ======================================================== -->
+<aside class="fixed top-5 left-6 z-50 flex items-center gap-2.5 px-4 py-2 rounded-full bg-surface-container-lowest/90 backdrop-blur-md border border-outline shadow-md">
+<span class="relative flex h-3 w-3 items-center justify-center">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
+</span>
+<span class="font-bold tracking-widest text-[11px] uppercase text-on-surface">FLOWTRACE SHOWROOM</span>
+<span class="text-outline-variant">•</span>
+<span class="font-semibold text-[11px] text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">storefront</span> Lumina Atelier
+    </span>
+<span class="text-outline-variant">•</span>
+<span class="font-code text-[10px] text-text-tertiary uppercase">Big Screen 4K</span>
+</aside>
+<!-- Floating Clock & Ambient Status at top right -->
+<aside class="fixed top-5 right-6 z-50 flex items-center gap-3 px-4 py-2 rounded-full bg-surface-container-lowest/90 backdrop-blur-md border border-outline shadow-md">
+<div class="flex items-center gap-1.5 text-xs text-on-surface-variant font-medium">
+<span class="w-2 h-2 rounded-full bg-success"></span>
+<span>Broadcast Stream 60 FPS</span>
+</div>
+<div class="h-3 w-px bg-outline"></div>
+<span class="font-code text-xs font-semibold text-on-surface" id="tv-clock">16:42:08 UTC</span>
+</aside>
+<!-- ======================================================== -->
+<!-- 1. TOP DRAMATIC METRICS STRIP (2X SCALE FOR TV SHOWROOM) -->
+<!-- ======================================================== -->
+<header class="w-full pt-16 px-8 pb-3 flex-shrink-0 z-30">
+<div class="max-w-[1720px] mx-auto grid grid-cols-5 gap-5">
+<!-- Metric 1: Visitors Now -->
+<div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-outline/80 relative overflow-hidden group">
+<div class="flex items-center justify-between">
+<span class="text-xs uppercase tracking-wider font-bold text-on-surface-variant">Visitors Now</span>
+<div class="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary-container text-on-primary-container">
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+<span class="font-bold text-[11px]">148 Live</span>
+</div>
+</div>
+<div class="mt-2.5 flex items-baseline gap-2.5">
+<span class="text-5xl font-extrabold text-on-surface tracking-tight" id="showroom-visitors">148</span>
+<span class="text-sm text-success flex items-center font-bold">
+<span class="material-symbols-outlined text-[18px]">north_east</span> +12%
+          </span>
+</div>
+<div class="mt-2.5 flex items-center gap-1.5 text-text-tertiary text-xs font-medium">
+<span class="material-symbols-outlined text-[16px] text-primary">visibility</span>
+<span>Concurrent boutique shoppers</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-secondary opacity-70"></div>
+</div>
+<!-- Metric 2: Active Carts -->
+<div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-outline/80 relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="text-xs uppercase tracking-wider font-bold text-on-surface-variant">Active Carts</span>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-bold text-[11px]">High Pace</span>
+</div>
+<div class="mt-2.5 flex items-baseline gap-2.5">
+<span class="text-5xl font-extrabold text-on-surface tracking-tight" id="showroom-carts">34</span>
+<span class="text-sm text-success font-bold flex items-center">
+<span class="material-symbols-outlined text-[18px]">arrow_upward</span> +18%
+          </span>
+</div>
+<div class="mt-2.5 flex items-center gap-1.5 text-text-tertiary text-xs font-medium">
+<span class="material-symbols-outlined text-[16px] text-warning">shopping_basket</span>
+<span>Basket velocity +4.2 / min</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-warning opacity-70"></div>
+</div>
+<!-- Metric 3: Sales Today -->
+<div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-outline/80 relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="text-xs uppercase tracking-wider font-bold text-on-surface-variant">Sales Today</span>
+<span class="text-xs font-bold text-primary">Target: 220</span>
+</div>
+<div class="mt-2.5 flex items-baseline gap-2.5">
+<span class="text-5xl font-extrabold text-on-surface tracking-tight" id="showroom-sales">215</span>
+<span class="text-xs text-on-surface-variant font-semibold">97.7% pace</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2 mt-3 overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-secondary rounded-full" style="width: 97.7%;"></div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-secondary opacity-60"></div>
+</div>
+<!-- Metric 4: Revenue Today (Glowing Copper-Warm Accent) -->
+<div class="bg-gradient-to-br from-[#9d4300] via-[#c25400] to-[#b4136d] rounded-2xl p-5 text-white shadow-xl relative overflow-hidden ring-2 ring-primary/20">
+<div class="relative z-10">
+<div class="flex items-center justify-between text-white/90">
+<span class="text-xs uppercase tracking-wider font-bold">Revenue Today</span>
+<span class="material-symbols-outlined text-[20px] text-amber-200">verified</span>
+</div>
+<div class="mt-1.5 flex items-baseline">
+<span class="text-4xl xl:text-5xl font-extrabold tracking-tight text-white drop-shadow-md">€16,840.20</span>
+</div>
+<div class="mt-2.5 flex items-center justify-between text-white/95 text-xs font-semibold">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">trending_up</span> AOV: €78.32</span>
+<span class="bg-white/25 backdrop-blur-sm px-2.5 py-0.5 rounded-full font-bold">+28.6%</span>
+</div>
+</div>
+<!-- Warm glowing spotlight ambient -->
+<div class="absolute -right-8 -bottom-8 w-36 h-36 bg-amber-400/30 rounded-full blur-2xl pointer-events-none"></div>
+<div class="absolute -left-4 -top-4 w-28 h-28 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+</div>
+<!-- Metric 5: Conversion Rate -->
+<div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-outline/80 relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="text-xs uppercase tracking-wider font-bold text-on-surface-variant">Conversion Rate</span>
+<div class="px-2.5 py-0.5 rounded-full bg-success/15 text-success text-[11px] font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-success animate-pulse"></span> Excellent
+          </div>
+</div>
+<div class="mt-2.5 flex items-center justify-between">
+<span class="text-5xl font-extrabold text-on-surface tracking-tight">5.1%</span>
+<div class="relative w-12 h-12">
+<svg class="w-12 h-12 transform -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="78, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<span class="absolute inset-0 flex items-center justify-center text-xs font-bold text-primary">↑</span>
+</div>
+</div>
+<div class="mt-2.5 text-text-tertiary text-xs font-medium truncate">
+<span>Benchmark: 3.2% (Top 5% Boutique E-comm)</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-success opacity-70"></div>
+</div>
+</div>
+</header>
+<!-- ======================================================== -->
+<!-- 2. MAIN REALTIME JOURNEY GRAPH CANVAS (FULLSCREEN CENTER) -->
+<!-- ======================================================== -->
+<main class="flex-1 w-full px-8 py-2 relative flex items-center justify-center overflow-hidden">
+<div class="relative w-full max-w-[1720px] h-[540px] xl:h-[580px] bg-surface rounded-3xl border border-outline shadow-md overflow-hidden select-none" style="background-image: radial-gradient(rgba(157, 67, 0, 0.09) 1.4px, transparent 1.4px); background-size: 26px 26px;">
+<!-- TWO SOFT ZONES BACKGROUNDS -->
+<div class="absolute inset-0 grid grid-cols-12 gap-8 p-6 pointer-events-none">
+<!-- STORE ZONE: Ingress & Discovery -->
+<div class="col-span-6 rounded-2xl relative p-6 transition-all" style="background-color: rgba(240, 231, 221, 0.65); border: 1.5px dashed rgba(224, 192, 177, 0.7);">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-3 h-3 rounded-full bg-primary shadow-xs"></div>
+<span class="text-xs font-extrabold uppercase tracking-widest text-on-primary-container">
+                STORE ZONE · INGRESS &amp; DISCOVERY
+              </span>
+</div>
+<span class="font-code text-xs text-text-tertiary bg-white/70 px-3 py-1 rounded-full font-medium shadow-xs">
+              zone_load: 87% · 850 peak
+            </span>
+</div>
+<div class="absolute bottom-4 left-6 text-on-surface-variant font-medium text-xs flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary">store</span>
+<span>Organic Social + Direct Atelier Traffic</span>
+</div>
+</div>
+<!-- CHECKOUT ZONE: Intent & Conversion -->
+<div class="col-span-6 rounded-2xl relative p-6 transition-all" style="background-color: rgba(255, 237, 213, 0.55); border: 1.5px dashed rgba(249, 115, 22, 0.4);">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-3 h-3 rounded-full bg-secondary shadow-xs"></div>
+<span class="text-xs font-extrabold uppercase tracking-widest text-secondary">
+                CHECKOUT ZONE · INTENT &amp; CONVERSION
+              </span>
+</div>
+<span class="font-code text-xs text-text-tertiary bg-white/70 px-3 py-1 rounded-full font-medium shadow-xs">
+              pci_dss_orchestration: active
+            </span>
+</div>
+<div class="absolute bottom-4 left-6 text-on-surface-variant font-medium text-xs flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary">shield_lock</span>
+<span>Direct Stripe Vault Settlement · Instant Webhook Dispatch</span>
+</div>
+</div>
+</div>
+<!-- SVG VECTOR CONNECTOR BACKPLANE -->
+<!-- Coords scaled for 1680 x 560 coordinate space -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none z-10" fill="none" preserveaspectratio="xMidYMid meet" viewbox="0 0 1680 560">
+<defs>
+<!-- Signature Flow Warm Gradient -->
+<lineargradient id="tvWarmGrad" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#F97316"></stop>
+<stop offset="45%" stop-color="#E11D48"></stop>
+<stop offset="100%" stop-color="#B4136D"></stop>
+</lineargradient>
+<!-- Golden Glow for Paid Node Explosion -->
+<radialgradient cx="50%" cy="50%" id="goldBurstGlow" r="50%">
+<stop offset="0%" stop-color="#F59E0B" stop-opacity="0.35"></stop>
+<stop offset="60%" stop-color="#FDE68A" stop-opacity="0.15"></stop>
+<stop offset="100%" stop-color="#FBBF24" stop-opacity="0"></stop>
+</radialgradient>
+<!-- Drop Shadow for Badges -->
+<filter height="140%" id="tvShadow" width="140%" x="-20%" y="-20%">
+<fedropshadow dx="0" dy="2" flood-color="#2B2520" flood-opacity="0.12" stddeviation="4"></fedropshadow>
+</filter>
+</defs>
+<!-- Base Track Line (Thick Muted Track) -->
+<!-- Visit(120, 200) -> Browse(350, 200) -> Product(580, 200) -> Cart(810, 200) -> Checkout(1040, 200) -> Payment(1270, 200) -> Paid(1500, 200) -->
+<path d="M 120 200 C 235 200, 235 200, 350 200" stroke="#EADFD3" stroke-linecap="round" stroke-width="6"></path>
+<path d="M 350 200 C 465 200, 465 200, 580 200" stroke="#EADFD3" stroke-linecap="round" stroke-width="6"></path>
+<path d="M 580 200 C 695 200, 695 200, 810 200" stroke="#EADFD3" stroke-linecap="round" stroke-width="6"></path>
+<path d="M 810 200 C 925 200, 925 200, 1040 200" stroke="#EADFD3" stroke-linecap="round" stroke-width="6"></path>
+<path d="M 1040 200 C 1155 200, 1155 200, 1270 200" stroke="#EADFD3" stroke-linecap="round" stroke-width="6"></path>
+<path d="M 1270 200 C 1385 200, 1385 200, 1500 200" stroke="#EADFD3" stroke-linecap="round" stroke-width="6"></path>
+<!-- Active Streaming Pulse Splines (Animated Dash) -->
+<path class="animate-[dash_1.4s_linear_infinite]" d="M 120 200 C 235 200, 235 200, 350 200" stroke="url(#tvWarmGrad)" stroke-dasharray="10 10" stroke-width="4.5"></path>
+<path class="animate-[dash_1.4s_linear_infinite]" d="M 350 200 C 465 200, 465 200, 580 200" stroke="url(#tvWarmGrad)" stroke-dasharray="10 10" stroke-width="4.5"></path>
+<path class="animate-[dash_1.4s_linear_infinite]" d="M 580 200 C 695 200, 695 200, 810 200" stroke="url(#tvWarmGrad)" stroke-dasharray="10 10" stroke-width="4.5"></path>
+<path class="animate-[dash_1.4s_linear_infinite]" d="M 810 200 C 925 200, 925 200, 1040 200" stroke="url(#tvWarmGrad)" stroke-dasharray="10 10" stroke-width="4.5"></path>
+<path class="animate-[dash_1.4s_linear_infinite]" d="M 1040 200 C 1155 200, 1155 200, 1270 200" stroke="url(#tvWarmGrad)" stroke-dasharray="10 10" stroke-width="4.5"></path>
+<path class="animate-[dash_1.4s_linear_infinite]" d="M 1270 200 C 1385 200, 1385 200, 1500 200" stroke="url(#tvWarmGrad)" stroke-dasharray="10 10" stroke-width="4.5"></path>
+<!-- BRANCH 1: Abandoned Sink (Downward from Cart x=810, y=200 to x=910, y=410) -->
+<path d="M 810 200 C 810 330, 910 320, 910 410" fill="none" opacity="0.75" stroke="#D97706" stroke-dasharray="7 7" stroke-width="3"></path>
+<!-- BRANCH 2: Payment Failed Sink (Downward from Payment x=1270, y=200 to x=1270, y=410) -->
+<path d="M 1270 200 C 1270 290, 1270 330, 1270 410" fill="none" opacity="0.75" stroke="#E11D48" stroke-dasharray="7 7" stroke-width="3"></path>
+<!-- INTERIOR PATH CONVERSION BADGES -->
+<!-- Chip 1: Visit -> Browse -->
+<g filter="url(#tvShadow)" transform="translate(235, 184)">
+<rect fill="#FFFFFF" height="26" rx="13" stroke="#EADFD3" stroke-width="1" width="84" x="-42" y="-13"></rect>
+<text fill="#2B2520" font-family="Inter" font-size="12" font-weight="700" text-anchor="middle" x="0" y="4">94% pass</text>
+</g>
+<!-- Chip 2: Browse -> Product -->
+<g filter="url(#tvShadow)" transform="translate(465, 184)">
+<rect fill="#FFFFFF" height="26" rx="13" stroke="#EADFD3" stroke-width="1" width="80" x="-40" y="-13"></rect>
+<text fill="#2B2520" font-family="Inter" font-size="12" font-weight="700" text-anchor="middle" x="0" y="4">68% view</text>
+</g>
+<!-- Chip 3: Product -> Cart -->
+<g filter="url(#tvShadow)" transform="translate(695, 184)">
+<rect fill="#FFFFFF" height="26" rx="13" stroke="#EADFD3" stroke-width="1" width="90" x="-45" y="-13"></rect>
+<text fill="#9d4300" font-family="Inter" font-size="12" font-weight="700" text-anchor="middle" x="0" y="4">65% to cart</text>
+</g>
+<!-- Chip 4: Cart -> Checkout -->
+<g filter="url(#tvShadow)" transform="translate(925, 184)">
+<rect fill="#FFFFFF" height="26" rx="13" stroke="#EADFD3" stroke-width="1" width="96" x="-48" y="-13"></rect>
+<text fill="#b4136d" font-family="Inter" font-size="12" font-weight="700" text-anchor="middle" x="0" y="4">72% checkout</text>
+</g>
+<!-- Chip 5: Checkout -> Payment -->
+<g filter="url(#tvShadow)" transform="translate(1155, 184)">
+<rect fill="#FFFFFF" height="26" rx="13" stroke="#EADFD3" stroke-width="1" width="88" x="-44" y="-13"></rect>
+<text fill="#2B2520" font-family="Inter" font-size="12" font-weight="700" text-anchor="middle" x="0" y="4">84% pay step</text>
+</g>
+<!-- Chip 6: Payment -> Paid -->
+<g filter="url(#tvShadow)" transform="translate(1385, 184)">
+<rect fill="#FFFFFF" height="26" rx="13" stroke="#EADFD3" stroke-width="1" width="96" x="-48" y="-13"></rect>
+<text fill="#059669" font-family="Inter" font-size="12" font-weight="800" text-anchor="middle" x="0" y="4">98.2% settled</text>
+</g>
+<!-- Drop Branch Chips -->
+<g filter="url(#tvShadow)" transform="translate(830, 320)">
+<rect fill="#FFFBEB" height="24" rx="12" stroke="#FDE68A" stroke-width="1" width="92" x="-46" y="-12"></rect>
+<text fill="#B45309" font-family="Inter" font-size="11" font-weight="700" text-anchor="middle" x="0" y="4">28% dropped</text>
+</g>
+<g filter="url(#tvShadow)" transform="translate(1270, 320)">
+<rect fill="#FFF1F2" height="24" rx="12" stroke="#FECDD3" stroke-width="1" width="92" x="-46" y="-12"></rect>
+<text fill="#E11D48" font-family="Inter" font-size="11" font-weight="700" text-anchor="middle" x="0" y="4">1.8% declined</text>
+</g>
+<!-- Paid Node Radiant Burst Ring Behind Terminal -->
+<circle cx="1500" cy="200" fill="url(#goldBurstGlow)" r="90"></circle>
+<circle class="animate-spin" cx="1500" cy="200" r="70" stroke="#F59E0B" stroke-dasharray="6 6" stroke-width="2" style="animation-duration: 20s; transform-origin: 1500px 200px;"></circle>
+</svg>
+<!-- ======================================================== -->
+<!-- HTML INTERACTIVE NODE CARDS (OVER CANVAS COORDINATES)   -->
+<!-- ======================================================== -->
+<!-- NODE 1: Visit -->
+<div class="absolute left-[3.2%] top-[24%] w-[138px] xl:w-[150px] bg-surface-container-lowest rounded-2xl p-4 shadow-lg border border-outline z-20">
+<div class="flex items-center justify-between mb-2">
+<span class="w-9 h-9 rounded-xl bg-primary-container text-primary flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-[20px]">travel_explore</span>
+</span>
+<span class="text-2xl font-black text-on-surface">148</span>
+</div>
+<div class="text-sm font-extrabold text-on-surface">Visit</div>
+<div class="font-code text-[11px] text-text-tertiary">store_ingress</div>
+<div class="mt-2.5 pt-2 flex items-center justify-between text-[11px] font-semibold text-on-surface-variant border-t border-outline">
+<span>78ms</span>
+<span class="text-success">100% OK</span>
+</div>
+</div>
+<!-- NODE 2: Browse -->
+<div class="absolute left-[18.2%] top-[24%] w-[138px] xl:w-[150px] bg-surface-container-lowest rounded-2xl p-4 shadow-lg border border-outline z-20">
+<div class="flex items-center justify-between mb-2">
+<span class="w-9 h-9 rounded-xl bg-surface-container text-on-surface-variant flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</span>
+<span class="text-2xl font-black text-on-surface">104</span>
+</div>
+<div class="text-sm font-extrabold text-on-surface">Browse</div>
+<div class="font-code text-[11px] text-text-tertiary">cat_filter_svc</div>
+<div class="mt-2.5 pt-2 flex items-center justify-between text-[11px] font-semibold text-on-surface-variant border-t border-outline">
+<span>95ms</span>
+<span class="text-primary font-bold">Catalog</span>
+</div>
+</div>
+<!-- NODE 3: Product Detail -->
+<div class="absolute left-[33%] top-[24%] w-[138px] xl:w-[150px] bg-surface-container-lowest rounded-2xl p-4 shadow-lg border border-outline z-20">
+<div class="flex items-center justify-between mb-2">
+<span class="w-9 h-9 rounded-xl bg-surface-container text-on-surface-variant flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+</span>
+<span class="text-2xl font-black text-on-surface">71</span>
+</div>
+<div class="text-sm font-extrabold text-on-surface">Product</div>
+<div class="font-code text-[11px] text-text-tertiary">pdp_warm_v2</div>
+<div class="mt-2.5 pt-2 flex items-center justify-between text-[11px] font-semibold text-on-surface-variant border-t border-outline">
+<span>62ms</span>
+<span class="text-secondary font-bold">4K Studio</span>
+</div>
+</div>
+<!-- NODE 4: Cart -->
+<div class="absolute left-[48%] top-[24%] w-[138px] xl:w-[150px] bg-surface-container-lowest rounded-2xl p-4 shadow-lg border border-outline z-20">
+<div class="flex items-center justify-between mb-2">
+<span class="w-9 h-9 rounded-xl bg-warning/15 text-warning flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
+</span>
+<span class="text-2xl font-black text-on-surface">34</span>
+</div>
+<div class="text-sm font-extrabold text-on-surface">Cart</div>
+<div class="font-code text-[11px] text-text-tertiary">cart_cluster</div>
+<div class="mt-2.5 pt-2 flex items-center justify-between text-[11px] font-semibold text-on-surface-variant border-t border-outline">
+<span>Redis 7.2</span>
+<span class="text-warning font-bold">Sync</span>
+</div>
+</div>
+<!-- NODE 5: Checkout -->
+<div class="absolute left-[62.8%] top-[24%] w-[138px] xl:w-[150px] bg-surface-container-lowest rounded-2xl p-4 shadow-lg border border-outline z-20">
+<div class="flex items-center justify-between mb-2">
+<span class="w-9 h-9 rounded-xl bg-secondary-container/25 text-secondary flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-[20px]">local_shipping</span>
+</span>
+<span class="text-2xl font-black text-on-surface">24</span>
+</div>
+<div class="text-sm font-extrabold text-on-surface">Checkout</div>
+<div class="font-code text-[11px] text-text-tertiary">init_flow_pci</div>
+<div class="mt-2.5 pt-2 flex items-center justify-between text-[11px] font-semibold text-on-surface-variant border-t border-outline">
+<span>Step 1/3</span>
+<span class="text-secondary font-bold">Shipping</span>
+</div>
+</div>
+<!-- NODE 6: Payment -->
+<div class="absolute left-[77.5%] top-[24%] w-[138px] xl:w-[150px] bg-surface-container-lowest rounded-2xl p-4 shadow-lg border border-outline z-20">
+<div class="flex items-center justify-between mb-2">
+<span class="w-9 h-9 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-[20px]">credit_card</span>
+</span>
+<span class="text-2xl font-black text-on-surface">15</span>
+</div>
+<div class="text-sm font-extrabold text-on-surface">Payment</div>
+<div class="font-code text-[11px] text-text-tertiary">stripe_intent</div>
+<div class="mt-2.5 pt-2 flex items-center justify-between text-[11px] font-semibold text-on-surface-variant border-t border-outline">
+<span>ApplePay</span>
+<span class="text-primary font-bold">3DS 2.0</span>
+</div>
+</div>
+<!-- NODE 7: PAID & SETTLED (HERO TERMINAL NODE WITH ANIMATED COIN-BURST EXPLOSION) -->
+<div class="absolute left-[90.2%] top-[20%] w-[150px] xl:w-[164px] bg-surface-container-lowest rounded-3xl p-5 shadow-2xl border-2 border-success z-30 relative overflow-visible ring-4 ring-success/15 group">
+<!-- ============================================== -->
+<!-- DRAMATIC ANIMATED COIN BURST & SPARKLES EFFECT -->
+<!-- ============================================== -->
+<div class="absolute -top-10 -right-10 w-28 h-28 pointer-events-none z-40">
+<!-- Expanding Ripple Ring -->
+<div class="absolute inset-0 rounded-full border-2 border-warning/60 animate-ping"></div>
+<!-- Sparkles & Coins with Float Animation -->
+<span class="absolute -top-2 right-6 text-2xl" style="animation: floatParticle 2.2s infinite ease-in-out;">🪙</span>
+<span class="absolute top-2 -right-2 text-2xl" style="animation: floatParticle 1.8s infinite ease-in-out; animation-delay: 0.4s;">✨</span>
+<span class="absolute top-10 right-2 text-xl" style="animation: floatParticle 2.5s infinite ease-in-out; animation-delay: 0.8s;">⭐</span>
+<span class="absolute -top-3 left-4 text-xl" style="animation: floatParticle 2.0s infinite ease-in-out; animation-delay: 1.2s;">💰</span>
+<span class="absolute bottom-2 -right-4 text-lg" style="animation: floatParticle 1.6s infinite ease-in-out; animation-delay: 0.2s;">🪙</span>
+</div>
+<div class="flex items-center justify-between mb-1.5">
+<span class="w-10 h-10 rounded-2xl bg-success/15 text-success flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</span>
+<span class="text-3xl font-black text-success tracking-tight" id="showroom-paid-count">215</span>
+</div>
+<div class="text-base font-black text-on-surface">Paid &amp; Settled</div>
+<div class="font-code text-[11px] text-text-tertiary">order_settled_ok</div>
+<div class="mt-3 px-3 py-1.5 rounded-xl bg-success/15 border border-success/30 flex items-center justify-between">
+<span class="text-[11px] font-bold text-success uppercase tracking-wider">Total</span>
+<span class="text-xs font-extrabold text-success font-code">€16.8k</span>
+</div>
+</div>
+<!-- BRANCH SINK NODE A: Abandoned -->
+<div class="absolute left-[54%] top-[72%] w-[140px] xl:w-[150px] bg-surface-container rounded-2xl p-3.5 shadow-sm border border-dashed border-warning/80 z-20">
+<div class="flex items-center justify-between mb-1">
+<span class="w-8 h-8 rounded-lg bg-warning/20 text-warning flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">remove_shopping_cart</span>
+</span>
+<span class="text-xl font-black text-warning">11</span>
+</div>
+<div class="text-xs font-bold text-on-surface">Cart Abandoned</div>
+<div class="font-code text-[10px] text-text-tertiary">nudge_workflow_q</div>
+<div class="mt-1 text-[10px] font-semibold text-warning">Automated nudge queued</div>
+</div>
+<!-- BRANCH SINK NODE B: Payment Failed -->
+<div class="absolute left-[77.5%] top-[72%] w-[140px] xl:w-[150px] bg-surface-container rounded-2xl p-3.5 shadow-sm border border-dashed border-error/80 z-20">
+<div class="flex items-center justify-between mb-1">
+<span class="w-8 h-8 rounded-lg bg-error-container text-error flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">credit_card_off</span>
+</span>
+<span class="text-xl font-black text-error">2</span>
+</div>
+<div class="text-xs font-bold text-on-surface">Payment Failed</div>
+<div class="font-code text-[10px] text-text-tertiary">card_declined_sink</div>
+<div class="mt-1 text-[10px] font-semibold text-error">SMS retry link sent</div>
+</div>
+<!-- ======================================================== -->
+<!-- CUSTOMER AVATARS CARRYING ITEM PILLS (TRAVELING TOKENS) -->
+<!-- ======================================================== -->
+<!-- TOKEN 1: Fox (Berlin) -> Near Cart / Checkout -->
+<div class="absolute left-[40.5%] top-[27.5%] z-30 flex flex-col items-center group cursor-pointer hover:scale-110 transition-transform">
+<div class="relative">
+<div class="w-11 h-11 rounded-full bg-primary-container p-0.5 shadow-lg flex items-center justify-center border-2 border-primary">
+<span class="text-2xl" title="Fox Customer">🦊</span>
+</div>
+<span class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-white text-[11px] font-bold flex items-center justify-center shadow-xs">2</span>
+<!-- Item Pill Glyphs -->
+<div class="absolute -bottom-1 -right-3 flex items-center gap-0.5 bg-surface-container-lowest px-1.5 py-0.5 rounded-full border border-outline shadow-sm">
+<span class="text-xs" title="Soy Candle">🕯️</span>
+<span class="text-xs" title="Ceramic Mug">☕</span>
+</div>
+</div>
+<div class="mt-1.5 px-2 py-0.5 rounded-full bg-on-surface text-surface-bright text-[11px] font-bold tracking-tight shadow-md">
+          €48.00
+        </div>
+</div>
+<!-- TOKEN 2: Panda (Tokyo) -> Browse to Product -->
+<div class="absolute left-[26%] top-[27.5%] z-30 flex flex-col items-center group cursor-pointer hover:scale-110 transition-transform">
+<div class="relative">
+<div class="w-11 h-11 rounded-full bg-surface-container-highest p-0.5 shadow-lg flex items-center justify-center border-2 border-on-surface-variant">
+<span class="text-2xl" title="Panda Customer">🐼</span>
+</div>
+<span class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-on-surface-variant text-white text-[11px] font-bold flex items-center justify-center shadow-xs">1</span>
+<!-- Item Pill Glyph -->
+<div class="absolute -bottom-1 -right-2 bg-surface-container-lowest px-1.5 py-0.5 rounded-full border border-outline shadow-sm">
+<span class="text-xs" title="Linen Bag">👜</span>
+</div>
+</div>
+<div class="mt-1.5 px-2 py-0.5 rounded-full bg-on-surface text-surface-bright text-[11px] font-bold tracking-tight shadow-md">
+          €34.00
+        </div>
+</div>
+<!-- TOKEN 3: Cat (Amsterdam) -> Payment Approaching Paid & Settled -->
+<div class="absolute left-[84.5%] top-[27.5%] z-30 flex flex-col items-center group cursor-pointer hover:scale-110 transition-transform">
+<div class="relative">
+<div class="w-11 h-11 rounded-full bg-secondary-fixed p-0.5 shadow-lg flex items-center justify-center border-2 border-secondary ring-2 ring-secondary/30">
+<span class="text-2xl" title="Cat Customer">🐱</span>
+</div>
+<span class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-secondary text-white text-[11px] font-bold flex items-center justify-center shadow-xs">2</span>
+<!-- Item Pill Glyphs -->
+<div class="absolute -bottom-1 -right-3 flex items-center gap-0.5 bg-surface-container-lowest px-1.5 py-0.5 rounded-full border border-outline shadow-sm">
+<span class="text-xs" title="Wool Blanket">🧣</span>
+<span class="text-xs" title="Soy Candle">🕯️</span>
+</div>
+</div>
+<div class="mt-1.5 px-2.5 py-0.5 rounded-full bg-success text-white text-[11px] font-black tracking-tight shadow-lg">
+          €84.00
+        </div>
+</div>
+<!-- TOKEN 4: Shiba (London) -> Checkout Zone Step 1 -->
+<div class="absolute left-[70.5%] top-[27.5%] z-30 flex flex-col items-center group cursor-pointer hover:scale-110 transition-transform">
+<div class="relative">
+<div class="w-11 h-11 rounded-full bg-amber-100 p-0.5 shadow-lg flex items-center justify-center border-2 border-amber-600">
+<span class="text-2xl" title="Shiba Customer">🐕</span>
+</div>
+<span class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-amber-600 text-white text-[11px] font-bold flex items-center justify-center shadow-xs">3</span>
+<!-- Item Pill Glyphs -->
+<div class="absolute -bottom-1 -right-3 flex items-center gap-0.5 bg-surface-container-lowest px-1.5 py-0.5 rounded-full border border-outline shadow-sm">
+<span class="text-xs" title="Ceramic Mug">☕</span>
+<span class="text-xs" title="Linen Bag">👜</span>
+</div>
+</div>
+<div class="mt-1.5 px-2 py-0.5 rounded-full bg-on-surface text-surface-bright text-[11px] font-bold tracking-tight shadow-md">
+          €62.50
+        </div>
+</div>
+<!-- TOKEN 5: Rabbit (Hesitating on Abandon Branch) -->
+<div class="absolute left-[54.5%] top-[56%] z-30 flex flex-col items-center opacity-70 group cursor-pointer hover:opacity-100 transition-opacity">
+<div class="relative">
+<div class="w-9 h-9 rounded-full bg-surface-container-high p-0.5 shadow-sm flex items-center justify-center border border-dashed border-warning">
+<span class="text-xl" title="Visitor Hesitating">🐰</span>
+</div>
+<span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-warning text-white text-[9px] font-bold flex items-center justify-center">1</span>
+</div>
+<div class="mt-1 px-1.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-[10px] font-semibold border border-outline">
+          €22.00
+        </div>
+</div>
+</div>
+</main>
+<!-- ======================================================== -->
+<!-- 3. PROMINENT BOTTOM LIVE SALE MARQUEE TICKER & TV BAR     -->
+<!-- ======================================================== -->
+<footer class="w-full bg-surface-container-lowest/95 backdrop-blur-md border-t border-outline flex-shrink-0 z-40 py-2.5 px-8">
+<div class="max-w-[1720px] mx-auto flex items-center justify-between gap-6">
+<!-- LEFT: Live Marquee Sale Ticker across bottom -->
+<div class="flex-1 flex items-center gap-3 overflow-hidden bg-surface-container/60 rounded-xl px-4 py-2 border border-outline/70">
+<div class="flex items-center gap-1.5 text-primary font-bold text-xs uppercase tracking-wider flex-shrink-0">
+<span class="material-symbols-outlined text-[18px] text-primary animate-pulse">bolt</span>
+<span>LIVE SALES STREAM:</span>
+</div>
+<div class="overflow-hidden relative w-full whitespace-nowrap">
+<div class="animate-marquee font-medium text-xs text-on-surface">
+<span class="inline-flex items-center gap-1.5 mr-8">
+              ⚡ <strong class="font-bold text-on-surface">JUST NOW:</strong> Cat from Amsterdam checked out <span class="font-bold text-success">€84.00</span> (2× Wool Blanket 🧣 + Candle 🕯️)
+            </span>
+<span class="inline-flex items-center gap-1.5 mr-8">
+<span class="text-outline-variant">•</span> ⚡ <strong class="font-bold text-on-surface">1m ago:</strong> Fox from Berlin purchased <span class="font-bold text-primary">€48.00</span> (Soy Candle 🕯️ + Ceramic Mug ☕)
+            </span>
+<span class="inline-flex items-center gap-1.5 mr-8">
+<span class="text-outline-variant">•</span> ⚡ <strong class="font-bold text-on-surface">3m ago:</strong> Shiba from London ordered <span class="font-bold text-primary">€62.50</span> (Linen Tote 👜 + 2× Mug ☕)
+            </span>
+<span class="inline-flex items-center gap-1.5 mr-8">
+<span class="text-outline-variant">•</span> ⚡ <strong class="font-bold text-on-surface">5m ago:</strong> Panda from Tokyo purchased <span class="font-bold text-primary">€34.00</span> (Atelier Linen Bag 👜)
+            </span>
+<!-- Duplicate for seamless infinite marquee loop -->
+<span class="inline-flex items-center gap-1.5 mr-8">
+<span class="text-outline-variant">•</span> ⚡ <strong class="font-bold text-on-surface">JUST NOW:</strong> Cat from Amsterdam checked out <span class="font-bold text-success">€84.00</span> (2× Wool Blanket 🧣 + Candle 🕯️)
+            </span>
+<span class="inline-flex items-center gap-1.5 mr-8">
+<span class="text-outline-variant">•</span> ⚡ <strong class="font-bold text-on-surface">1m ago:</strong> Fox from Berlin purchased <span class="font-bold text-primary">€48.00</span> (Soy Candle 🕯️ + Ceramic Mug ☕)
+            </span>
+<span class="inline-flex items-center gap-1.5 mr-8">
+<span class="text-outline-variant">•</span> ⚡ <strong class="font-bold text-on-surface">3m ago:</strong> Shiba from London ordered <span class="font-bold text-primary">€62.50</span> (Linen Tote 👜 + 2× Mug ☕)
+            </span>
+</div>
+</div>
+</div>
+<!-- RIGHT: Discreet TV Mode Controls & Burn-In Protection Notice -->
+<div class="flex items-center gap-3.5 flex-shrink-0">
+<!-- TV Burn-in Protection Notice Indicator -->
+<div class="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container border border-outline text-text-tertiary text-[11px] font-medium" title="Canvas periodically micro-drifts 1px every minute to protect OLED &amp; Commercial TV panels">
+<span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+<span>TV Burn-in Protection Active (1px/min drift)</span>
+</div>
+<!-- Speed Dial 1x / 2x / 4x -->
+<div class="flex items-center bg-surface-container p-1 rounded-xl border border-outline">
+<button class="px-2.5 py-1 rounded text-xs bg-surface-container-lowest shadow-xs text-primary font-bold" onclick="setTvSpeed(this, '1x')">1x</button>
+<button class="px-2.5 py-1 rounded text-xs text-on-surface-variant hover:text-on-surface font-semibold" onclick="setTvSpeed(this, '2x')">2x</button>
+<button class="px-2.5 py-1 rounded text-xs text-on-surface-variant hover:text-on-surface font-semibold" onclick="setTvSpeed(this, '4x')">4x</button>
+</div>
+<!-- Sound Chime Toggle -->
+<button class="p-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline text-on-surface-variant transition-colors" id="tvSoundBtn" onclick="toggleTvAudio()" title="Boutique Sale Chime On">
+<span class="material-symbols-outlined text-[18px]">volume_up</span>
+</button>
+<!-- Exit TV Showroom Mode Button -->
+<button class="px-3.5 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline text-on-surface font-semibold text-xs flex items-center gap-1.5 transition-colors" onclick="exitTvMode()" title="Exit Fullscreen TV Mode">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">fullscreen_exit</span>
+<span>Exit TV Mode</span>
+</button>
+</div>
+</div>
+</footer>
+<!-- ======================================================== -->
+<!-- JAVASCRIPT: TV SHOWROOM CLOCK & RUNTIME INTERACTIONS     -->
+<!-- ======================================================== -->
+<script>
+    // Live TV UTC Clock
+    function updateClock() {
+      const now = new Date();
+      const timeStr = now.toTimeString().split(' ')[0] + ' UTC';
+      const el = document.getElementById('tv-clock');
+      if (el) el.innerText = timeStr;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Speed Dial Selection
+    function setTvSpeed(btn, speed) {
+      const parent = btn.parentElement;
+      Array.from(parent.children).forEach(child => {
+        child.className = 'px-2.5 py-1 rounded text-xs text-on-surface-variant hover:text-on-surface font-semibold';
+      });
+      btn.className = 'px-2.5 py-1 rounded text-xs bg-surface-container-lowest shadow-xs text-primary font-bold';
+    }
+
+    // Audio Chime Toggle
+    let soundEnabled = true;
+    function toggleTvAudio() {
+      soundEnabled = !soundEnabled;
+      const btn = document.getElementById('tvSoundBtn');
+      if (soundEnabled) {
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">volume_up</span>';
+        btn.classList.remove('text-text-tertiary');
+      } else {
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">volume_off</span>';
+        btn.classList.add('text-text-tertiary');
+      }
+    }
+
+    // Exit TV Showroom
+    function exitTvMode() {
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(err => console.log(err));
+      } else {
+        window.history.back();
+      }
+    }
+
+    // Subtle Live Number Jitter to maintain authentic heartbeat
+    setInterval(() => {
+      const visitorEl = document.getElementById('showroom-visitors');
+      if (visitorEl) {
+        const val = parseInt(visitorEl.innerText, 10);
+        const delta = Math.floor(Math.random() * 3) - 1; // -1, 0, 1
+        visitorEl.innerText = Math.max(140, Math.min(165, val + delta));
+      }
+    }, 4500);
+  </script>
+</body></html>

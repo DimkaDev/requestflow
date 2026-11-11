@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@300..700&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"status-info":"#60A5FA","tertiary-container":"#ffb13b","secondary-fixed":"#e9ddff","surface":"#111318","on-surface":"#e2e2e9","tertiary-fixed":"#ffddb5","surface-variant":"#33353a","on-secondary-fixed":"#23005c","on-error-container":"#ffdad6","node-source":"#60A5FA","on-tertiary-fixed-variant":"#643f00","node-end":"#F472B6","border-strong":"#343C4F","primary-fixed-dim":"#2fd9f4","background":"#111318","on-secondary-container":"#c4abff","tertiary-fixed-dim":"#ffb957","secondary":"#d0bcff","secondary-fixed-dim":"#d0bcff","status-error":"#F43F5E","surface-dim":"#111318","status-discovered":"#F59E0B","border-structural":"#262C3A","on-tertiary":"#462b00","inverse-on-surface":"#2e3036","node-datastore":"#34D399","bg-1":"#11141B","secondary-container":"#571bc1","on-secondary":"#3c0091","surface-bright":"#37393f","on-error":"#690005","on-primary-fixed-variant":"#004e5a","on-primary-container":"#005763","surface-tint":"#2fd9f4","node-decision":"#F59E0B","status-ok":"#34D399","status-warn":"#F59E0B","on-secondary-fixed-variant":"#5516be","inverse-surface":"#e2e2e9","primary":"#8aebff","on-tertiary-container":"#6e4600","surface-container-lowest":"#0c0e13","text-1":"#E8ECF4","node-service":"#8B5CF6","surface-container":"#1e1f25","error-container":"#93000a","node-external":"#94A3B8","surface-container-highest":"#33353a","surface-container-low":"#1a1b21","surface-container-high":"#282a2f","on-primary":"#00363e","text-2":"#A3ACBF","on-tertiary-fixed":"#2a1800","bg-2":"#171B24","inverse-primary":"#006877","bg-3":"#1E2330","text-3":"#7C869C","primary-fixed":"#a2eeff","on-background":"#e2e2e9","tertiary":"#ffd6a3","primary-container":"#22d3ee","outline-variant":"#3c494c","outline":"#859397","error":"#ffb4ab","on-primary-fixed":"#001f25","bg-0":"#0B0D12","on-surface-variant":"#bbc9cd","node-queue":"#22D3EE"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-sm":"0.5rem","space-xl":"1.5rem","space-md":"0.75rem","gutter-desktop":"1.5rem","space-xs":"0.25rem","gutter":"1rem","margin-desktop":"1.5rem","space-lg":"1rem","margin":"1rem"},"fontFamily":{"code-block":["JetBrains Mono"],"body-node-label":["Inter"],"display":["Inter"],"headline-lg":["Inter"],"code-sm":["JetBrains Mono"],"body-lg":["Inter"],"chip-metric":["Inter"],"label-md":["Inter"],"headline-md":["Inter"],"headline-sm":["Inter"],"label-sm":["Inter"],"headline-lg-mobile":["Inter"],"body-md":["Inter"],"display-mobile":["Inter"],"label-uppercase":["Inter"]},"fontSize":{"code-block":["13px",{"lineHeight":"20px","fontWeight":"400"}],"body-node-label":["14px",{"lineHeight":"20px","fontWeight":"600"}],"display":["48px",{"lineHeight":"52px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"600"}],"code-sm":["12px",{"lineHeight":"16px","fontWeight":"500"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"chip-metric":["11px",{"lineHeight":"14px","fontWeight":"500"}],"label-md":["13px",{"lineHeight":"18px","fontWeight":"500"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"label-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"headline-lg-mobile":["26px",{"lineHeight":"32px","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"display-mobile":["36px",{"lineHeight":"42px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-uppercase":["12px",{"lineHeight":"16px","letterSpacing":"0.08em","fontWeight":"500"}]}}}};</script></head><body class="bg-bg-0 text-text-1 font-body-md antialiased overflow-hidden"><header class="fixed top-0 left-0 right-0 z-50 h-14 bg-bg-1/95 backdrop-blur-md border-b border-border-structural"><div class="w-full h-14 px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-md shrink-0"><div class="flex items-center gap-space-sm"><div class="relative flex items-center justify-center w-8 h-8 rounded-lg bg-bg-2 border border-border-structural shadow-[0_0_12px_rgba(34,211,238,0.2)]"><svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M4 18c4-4 4-8 8-8s4 4 8 0"></path></svg><div class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-node-queue shadow-[0_0_8px_#22D3EE]"></div></div><span class="font-headline-sm text-headline-sm text-text-1 tracking-tight">FlowTrace</span><span class="font-code-sm text-code-sm px-space-xs py-0.5 rounded bg-bg-3 text-node-queue border border-node-queue/30">v1.2 · Kinetic Grid</span></div><div class="h-4 w-px bg-border-structural"></div><button class="flex items-center gap-space-xs px-space-sm py-1 rounded-lg bg-bg-2 border border-border-structural text-text-2 hover:text-text-1 hover:border-border-strong transition-all font-label-md text-label-md"><span>Production Multi-Region</span><span class="material-symbols-outlined text-text-3 text-[16px]">expand_more</span></button><div class="flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-bg-2 border border-border-structural"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-ok opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-status-ok"></span></span><span class="font-chip-metric text-chip-metric text-status-ok uppercase tracking-wider font-semibold">12,410 rps</span></div><nav class="hidden lg:flex items-center gap-space-xs ml-space-sm"><a aria-current="page" class="px-space-sm py-1 transition-colors bg-bg-3 text-text-1 font-semibold rounded-lg flex items-center gap-1.5" data-path="live-topology" href="#"><span class="w-1.5 h-1.5 rounded-full bg-node-queue"></span>Live Topology</a><a class="px-space-sm py-1 rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 transition-colors font-label-md text-label-md" data-path="traces" href="#">Traces</a><a class="px-space-sm py-1 rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 transition-colors font-label-md text-label-md" data-path="service-mesh" href="#">Service Mesh</a><a class="px-space-sm py-1 rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 transition-colors font-label-md text-label-md" data-path="metrics" href="#">Metrics</a></nav></div><div class="flex items-center gap-space-sm"><div class="relative hidden sm:flex items-center"><span class="material-symbols-outlined absolute left-space-sm text-text-3 text-[18px] pointer-events-none">search</span><input class="w-60 lg:w-72 h-8 pl-8 pr-12 rounded-lg bg-bg-3 border border-border-structural text-text-1 placeholder:text-text-3 font-body-md text-body-md focus:outline-none focus:border-node-queue transition-colors" placeholder="filter nodes or trace..." type="text"/><kbd class="absolute right-space-sm px-1.5 py-0.5 rounded bg-bg-2 border border-border-structural text-text-3 font-code-sm text-[10px]">⌘K</kbd></div><button class="flex items-center justify-center w-8 h-8 rounded-lg bg-bg-2 border border-border-structural text-text-2 hover:text-text-1 hover:border-border-strong transition-all" title="Audio Sonification Toggle"><span class="material-symbols-outlined text-[18px] text-node-queue">volume_up</span></button><button class="hidden md:flex items-center gap-space-xs px-space-sm h-8 rounded-lg bg-bg-3 border border-border-structural text-text-1 hover:border-border-strong hover:bg-bg-2 transition-all font-label-md text-label-md"><span class="material-symbols-outlined text-[16px] text-text-2">ios_share</span><span>Export Topology</span></button><button class="flex items-center justify-center w-8 h-8 rounded-lg bg-bg-2 border border-border-structural text-text-2 hover:text-text-1 hover:border-border-strong transition-all"><span class="material-symbols-outlined text-[18px]">settings</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 ring-2 ring-primary/20"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-14 bg-bg-0 min-h-screen"><div class="flex flex-col w-full relative select-none overflow-hidden" style="height: calc(100vh - 3.5rem);">
+<div class="flex w-full h-full relative overflow-hidden bg-bg-0">
+<!-- Left Palette / Quick Scope Sub-rail -->
+<div class="hidden xl:flex flex-col w-14 shrink-0 bg-bg-1 border-r border-border-structural items-center py-space-md justify-between z-20">
+<div class="flex flex-col gap-space-sm items-center">
+<button class="w-9 h-9 rounded-lg bg-bg-3 text-text-1 flex items-center justify-center border border-border-strong hover:bg-bg-2 transition-colors shadow-xs" title="Hand Tool / Kinetic Pan">
+<span class="material-symbols-outlined text-[20px] text-node-queue">pan_tool</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-bg-2 text-text-2 flex items-center justify-center hover:text-text-1 hover:bg-bg-3 transition-colors" title="Select / Marquee Inspect">
+<span class="material-symbols-outlined text-[20px]">near_me</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-bg-2 text-text-2 flex items-center justify-center hover:text-text-1 hover:bg-bg-3 transition-colors" title="Add Virtual Tap / Chaos Injection">
+<span class="material-symbols-outlined text-[20px]">add_box</span>
+</button>
+<div class="w-6 h-px bg-border-structural my-space-xs"></div>
+<button class="w-9 h-9 rounded-lg bg-bg-2 text-text-2 flex items-center justify-center hover:text-text-1 hover:bg-bg-3 transition-colors relative" title="Conduit Flow Density">
+<span class="material-symbols-outlined text-[20px]">air</span>
+<span class="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-node-service"></span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-bg-2 text-text-2 flex items-center justify-center hover:text-text-1 hover:bg-bg-3 transition-colors" title="Filter Layers">
+<span class="material-symbols-outlined text-[20px]">layers</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-bg-2 text-text-2 flex items-center justify-center hover:text-text-1 hover:bg-bg-3 transition-colors" title="Dependency Depth">
+<span class="material-symbols-outlined text-[20px]">account_tree</span>
+</button>
+</div>
+<div class="flex flex-col gap-space-sm items-center">
+<button class="w-9 h-9 rounded-lg bg-bg-2 text-status-warn flex items-center justify-center hover:bg-bg-3 transition-colors relative" title="1 Active Alert">
+<span class="material-symbols-outlined text-[20px]">warning</span>
+<span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-status-error animate-ping"></span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-bg-2 text-status-ok flex items-center justify-center hover:bg-bg-3 transition-colors relative" title="Graph Diagnostics">
+<span class="material-symbols-outlined text-[20px]">troubleshoot</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-bg-2 text-text-3 flex items-center justify-center hover:text-text-1 hover:bg-bg-3 transition-colors" title="Command Center Shortcuts (?)">
+<span class="material-symbols-outlined text-[18px]">help</span>
+</button>
+</div>
+</div>
+<!-- Center Full-Screen Canvas Viewport -->
+<div class="relative flex-1 h-full overflow-hidden" id="canvas-container">
+<!-- Canvas Dotted Background Grid (24px interval dots) with radial depth glow -->
+<div class="absolute inset-0 pointer-events-none" style="background-color: #0B0D12; background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px); background-size: 24px 24px;"></div>
+<div class="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(circle_at_50%_40%,rgba(34,211,238,0.06),transparent_60%)]"></div>
+<!-- Prominent Top Telemetry Command Status Bar -->
+<div class="absolute top-3 left-4 right-4 flex flex-wrap items-center justify-between gap-3 z-30 pointer-events-auto">
+<div class="flex items-center gap-2">
+<!-- Cluster & Mode Badge -->
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-bg-1/95 border border-border-structural backdrop-blur-xl shadow-lg">
+<span class="font-code-sm text-code-sm text-text-3 font-semibold">MESH:</span>
+<span class="font-label-md text-label-md text-text-1 font-semibold flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-status-ok"></span>
+us-east-prod-mesh
+</span>
+<span class="text-border-strong">/</span>
+<span class="font-code-sm text-code-sm text-node-queue">gRPC-Wire + eBPF</span>
+</div>
+<!-- Telemetry Key Metrics (RPS, Latencies, SLO Budget) -->
+<div class="hidden lg:flex items-center gap-4 px-3.5 py-1.5 rounded-xl bg-bg-1/95 border border-border-structural backdrop-blur-xl shadow-lg font-code-sm text-code-sm">
+<div class="flex items-center gap-1.5">
+<span class="text-text-3 font-body-md text-xs">Total Ingress:</span>
+<span class="text-text-1 font-semibold">12,418 req/s</span>
+</div>
+<span class="text-border-strong">|</span>
+<div class="flex items-center gap-1.5">
+<span class="text-text-3 font-body-md text-xs">p95:</span>
+<span class="text-node-queue font-medium">14.2ms</span>
+<span class="text-text-3 font-body-md text-xs ml-1">p99:</span>
+<span class="text-status-warn font-semibold">28.9ms</span>
+</div>
+<span class="text-border-strong">|</span>
+<div class="flex items-center gap-1.5">
+<span class="text-text-3 font-body-md text-xs">SLO Budget:</span>
+<span class="text-status-ok font-semibold">99.98%</span>
+<span class="text-[10px] text-text-3">(7.2h remain)</span>
+</div>
+<span class="text-border-strong">|</span>
+<div class="flex items-center gap-1.5">
+<span class="text-text-3 font-body-md text-xs">Nodes:</span>
+<span class="text-text-1 font-semibold">8 Active</span>
+</div>
+</div>
+</div>
+<!-- Quick Topology Layer Filters -->
+<div class="flex items-center gap-1.5 p-1 rounded-xl bg-bg-1/95 border border-border-structural backdrop-blur-xl shadow-lg">
+<span class="font-label-sm text-[11px] text-text-3 uppercase tracking-wider px-2 font-medium">Filter:</span>
+<button class="px-2.5 py-1 rounded-lg bg-bg-3 text-text-1 text-label-sm font-semibold border border-border-strong shadow-xs">All Tiers</button>
+<button class="px-2.5 py-1 rounded-lg text-text-2 hover:text-text-1 hover:bg-bg-2 text-label-sm transition-colors flex items-center gap-1">
+<span>Degraded</span>
+<span class="px-1 py-0.2 rounded-full bg-status-error/20 text-status-error text-[10px] font-bold">1</span>
+</button>
+<button class="px-2.5 py-1 rounded-lg text-text-2 hover:text-text-1 hover:bg-bg-2 text-label-sm transition-colors">Edge &amp; Gateway</button>
+<button class="px-2.5 py-1 rounded-lg text-text-2 hover:text-text-1 hover:bg-bg-2 text-label-sm transition-colors">Data Tier</button>
+<div class="w-px h-4 bg-border-structural mx-1"></div>
+<button class="w-7 h-7 rounded-lg bg-bg-2 text-text-2 hover:text-text-1 flex items-center justify-center transition-colors" title="Toggle HUD Overlay">
+<span class="material-symbols-outlined text-[16px]">view_sidebar</span>
+</button>
+</div>
+</div>
+<!-- SVG Expanded Graph Connections & Kinetic Pulse Particles -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient id="conduit-cyan" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#22D3EE"></stop>
+<stop offset="100%" stop-color="#8B5CF6"></stop>
+</lineargradient>
+<lineargradient id="conduit-violet" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#8B5CF6"></stop>
+<stop offset="100%" stop-color="#34D399"></stop>
+</lineargradient>
+<radialgradient cx="50%" cy="50%" id="burst-cyan" r="50%">
+<stop offset="0%" stop-color="#8aebff" stop-opacity="1"></stop>
+<stop offset="60%" stop-color="#22D3EE" stop-opacity="0.8"></stop>
+<stop offset="100%" stop-color="#22D3EE" stop-opacity="0"></stop>
+</radialgradient>
+<radialgradient cx="50%" cy="50%" id="burst-violet" r="50%">
+<stop offset="0%" stop-color="#d0bcff" stop-opacity="1"></stop>
+<stop offset="50%" stop-color="#8B5CF6" stop-opacity="0.8"></stop>
+<stop offset="100%" stop-color="#8B5CF6" stop-opacity="0"></stop>
+</radialgradient>
+<radialgradient cx="50%" cy="50%" id="burst-error" r="50%">
+<stop offset="0%" stop-color="#ffb4ab" stop-opacity="1"></stop>
+<stop offset="50%" stop-color="#F43F5E" stop-opacity="0.9"></stop>
+<stop offset="100%" stop-color="#F43F5E" stop-opacity="0"></stop>
+</radialgradient>
+<radialgradient cx="50%" cy="50%" id="burst-green" r="50%">
+<stop offset="0%" stop-color="#a7f3d0" stop-opacity="1"></stop>
+<stop offset="50%" stop-color="#34D399" stop-opacity="0.8"></stop>
+<stop offset="100%" stop-color="#34D399" stop-opacity="0"></stop>
+</radialgradient>
+<marker id="marker-arrow" markerheight="6" markerwidth="8" orient="auto" refx="7" refy="3">
+<polygon fill="#343C4F" points="0 0, 8 3, 0 6"></polygon>
+</marker>
+<marker id="marker-arrow-cyan" markerheight="6" markerwidth="8" orient="auto" refx="7" refy="3">
+<polygon fill="#22D3EE" points="0 0, 8 3, 0 6"></polygon>
+</marker>
+<marker id="marker-arrow-violet" markerheight="6" markerwidth="8" orient="auto" refx="7" refy="3">
+<polygon fill="#8B5CF6" points="0 0, 8 3, 0 6"></polygon>
+</marker>
+<marker id="marker-arrow-err" markerheight="6" markerwidth="8" orient="auto" refx="7" refy="3">
+<polygon fill="#F43F5E" points="0 0, 8 3, 0 6"></polygon>
+</marker>
+</defs>
+<!-- Expanded Kinetic Spline Conduits -->
+<!-- Tier 1: Frontend CDN (490, 85) -> Edge Gateway (490, 160) -->
+<path d="M 490 85 C 490 115, 490 125, 490 160" fill="none" id="wire-cdn-edge" marker-end="url(#marker-arrow-cyan)" stroke="#343C4F" stroke-width="2.5"></path>
+<!-- Tier 2: Edge Gateway (490, 225) -> Auth Guard (490, 295) -->
+<path d="M 490 225 C 490 255, 490 265, 490 295" fill="none" id="wire-edge-auth" marker-end="url(#marker-arrow-cyan)" stroke="#22D3EE" stroke-opacity="0.7" stroke-width="2.5"></path>
+<!-- Tier 3: Auth Guard (490, 360) to 4 Service Branches -->
+<!-- 1. Auth -> Svc A Priority (150, 470) -->
+<path d="M 490 360 C 490 415, 150 415, 150 470" fill="none" id="wire-auth-svca" marker-end="url(#marker-arrow-cyan)" stroke="url(#conduit-cyan)" stroke-width="3"></path>
+<!-- 2. Auth -> Svc B Worker [DEGRADED] (380, 470) -->
+<path d="M 490 360 C 490 415, 380 415, 380 470" fill="none" id="wire-auth-svcb" marker-end="url(#marker-arrow-err)" stroke="#F43F5E" stroke-dasharray="6 4" stroke-width="2.5"></path>
+<!-- 3. Auth -> Svc C Analytics (610, 470) -->
+<path d="M 490 360 C 490 415, 610 415, 610 470" fill="none" id="wire-auth-svcc" marker-end="url(#marker-arrow-violet)" stroke="url(#conduit-cyan)" stroke-width="2"></path>
+<!-- 4. Auth -> Svc D Cache / Redis Direct (840, 470) -->
+<path d="M 490 360 C 490 415, 840 415, 840 470" fill="none" id="wire-auth-svcd" marker-end="url(#marker-arrow)" stroke="#343C4F" stroke-width="2"></path>
+<!-- Tier 4: Services to Kafka Event Bus (490, 610) -->
+<path d="M 150 535 C 150 575, 490 570, 490 610" fill="none" id="wire-svca-kafka" marker-end="url(#marker-arrow-violet)" stroke="#343C4F" stroke-width="2"></path>
+<path d="M 380 535 C 380 575, 490 570, 490 610" fill="none" id="wire-svcb-kafka" marker-end="url(#marker-arrow-err)" stroke="#F43F5E" stroke-opacity="0.6" stroke-width="2"></path>
+<path d="M 610 535 C 610 575, 490 570, 490 610" fill="none" id="wire-svcc-kafka" marker-end="url(#marker-arrow-violet)" stroke="url(#conduit-violet)" stroke-width="2.5"></path>
+<path d="M 840 535 C 840 575, 490 570, 490 610" fill="none" id="wire-svcd-kafka" marker-end="url(#marker-arrow)" stroke="#343C4F" stroke-width="2"></path>
+<!-- Tier 5: Kafka Event Bus (490, 675) to Aurora DB (360, 755) & Redis Cluster (620, 755) -->
+<path d="M 490 675 C 490 715, 360 715, 360 755" fill="none" id="wire-kafka-db" marker-end="url(#marker-arrow)" stroke="#34D399" stroke-opacity="0.8" stroke-width="2.5"></path>
+<path d="M 490 675 C 490 715, 620 715, 620 755" fill="none" id="wire-kafka-redis" marker-end="url(#marker-arrow)" stroke="#343C4F" stroke-width="2"></path>
+<!-- ANIMATED BURST PARTICLES -->
+<!-- Packet 1: CDN to Edge (Fast Cyan) -->
+<g>
+<circle fill="url(#burst-cyan)" r="12"><animatemotion dur="1.2s" path="M 490 85 C 490 115, 490 125, 490 160" repeatcount="indefinite"></animatemotion></circle>
+<circle fill="#22D3EE" r="4.5"><animatemotion dur="1.2s" path="M 490 85 C 490 115, 490 125, 490 160" repeatcount="indefinite"></animatemotion></circle>
+</g>
+<!-- Packet 2: Edge to Auth (Cyan) -->
+<g>
+<circle fill="url(#burst-cyan)" r="12"><animatemotion begin="0.4s" dur="1.2s" path="M 490 225 C 490 255, 490 265, 490 295" repeatcount="indefinite"></animatemotion></circle>
+<circle fill="#22D3EE" r="4"><animatemotion begin="0.4s" dur="1.2s" path="M 490 225 C 490 255, 490 265, 490 295" repeatcount="indefinite"></animatemotion></circle>
+</g>
+<!-- Packet 3: Auth to Svc A Priority (Cyan to Violet Burst) -->
+<g>
+<circle fill="url(#burst-cyan)" r="14"><animatemotion begin="0.8s" dur="1.8s" path="M 490 360 C 490 415, 150 415, 150 470" repeatcount="indefinite"></animatemotion></circle>
+<circle fill="#8B5CF6" r="5"><animatemotion begin="0.8s" dur="1.8s" path="M 490 360 C 490 415, 150 415, 150 470" repeatcount="indefinite"></animatemotion></circle>
+</g>
+<!-- Packet 4: Auth to Svc B (RED ERROR BURST) -->
+<g>
+<circle fill="url(#burst-error)" r="14"><animatemotion begin="0.2s" dur="2s" path="M 490 360 C 490 415, 380 415, 380 470" repeatcount="indefinite"></animatemotion></circle>
+<circle fill="#F43F5E" r="4.5"><animatemotion begin="0.2s" dur="2s" path="M 490 360 C 490 415, 380 415, 380 470" repeatcount="indefinite"></animatemotion></circle>
+</g>
+<!-- Packet 5: Auth to Svc C Analytics (Violet) -->
+<g>
+<circle fill="url(#burst-violet)" r="11"><animatemotion begin="1.1s" dur="2.1s" path="M 490 360 C 490 415, 610 415, 610 470" repeatcount="indefinite"></animatemotion></circle>
+<circle fill="#8B5CF6" r="4"><animatemotion begin="1.1s" dur="2.1s" path="M 490 360 C 490 415, 610 470, 610 470" repeatcount="indefinite"></animatemotion></circle>
+</g>
+<!-- Packet 6: Svc A to Kafka (Violet Burst) -->
+<g>
+<circle fill="url(#burst-violet)" r="12"><animatemotion begin="1.4s" dur="1.9s" path="M 150 535 C 150 575, 490 570, 490 610" repeatcount="indefinite"></animatemotion></circle>
+<circle fill="#8B5CF6" r="4.5"><animatemotion begin="1.4s" dur="1.9s" path="M 150 535 C 150 575, 490 570, 490 610" repeatcount="indefinite"></animatemotion></circle>
+</g>
+<!-- Packet 7: Svc C to Kafka -->
+<g>
+<circle fill="url(#burst-violet)" r="10"><animatemotion begin="0.5s" dur="1.8s" path="M 610 535 C 610 575, 490 570, 490 610" repeatcount="indefinite"></animatemotion></circle>
+<circle fill="#22D3EE" r="4"><animatemotion begin="0.5s" dur="1.8s" path="M 610 535 C 610 575, 490 570, 490 610" repeatcount="indefinite"></animatemotion></circle>
+</g>
+<!-- Packet 8: Kafka to Aurora DB (Green commit token) -->
+<g>
+<circle fill="url(#burst-green)" r="12"><animatemotion begin="1.9s" dur="1.7s" path="M 490 675 C 490 715, 360 715, 360 755" repeatcount="indefinite"></animatemotion></circle>
+<circle fill="#34D399" r="4.5"><animatemotion begin="1.9s" dur="1.7s" path="M 490 675 C 490 715, 360 715, 360 755" repeatcount="indefinite"></animatemotion></circle>
+</g>
+</svg>
+<!-- Ratio Badges Over Splines -->
+<div class="absolute z-10 pointer-events-none" style="left: 240px; top: 410px;">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-bg-2/95 border border-border-structural text-text-1 font-chip-metric text-chip-metric shadow-md">
+<span class="w-1.5 h-1.5 rounded-full bg-node-queue"></span>
+<span>priority</span>
+<span class="text-node-queue font-code-sm font-semibold">54%</span>
+</span>
+</div>
+<div class="absolute z-10 pointer-events-none" style="left: 410px; top: 410px;">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-bg-2/95 border border-status-error/40 text-status-error font-chip-metric text-chip-metric shadow-md">
+<span class="w-1.5 h-1.5 rounded-full bg-status-error animate-pulse"></span>
+<span>batch err</span>
+<span class="text-status-error font-code-sm font-semibold">18%</span>
+</span>
+</div>
+<div class="absolute z-10 pointer-events-none" style="left: 560px; top: 410px;">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-bg-2/95 border border-border-structural text-text-1 font-chip-metric text-chip-metric shadow-md">
+<span class="w-1.5 h-1.5 rounded-full bg-node-service"></span>
+<span>async</span>
+<span class="text-text-3 font-code-sm">22%</span>
+</span>
+</div>
+<div class="absolute z-10 pointer-events-none" style="left: 710px; top: 410px;">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-bg-2/95 border border-border-structural text-text-2 font-chip-metric text-chip-metric shadow-md">
+<span class="w-1.5 h-1.5 rounded-full bg-border-strong"></span>
+<span>cache hit</span>
+<span class="text-text-3 font-code-sm">6%</span>
+</span>
+</div>
+<!-- ================= TOPOLOGY NODES ================= -->
+<div class="absolute inset-0 z-10 pointer-events-none">
+<!-- 1. TIER 1: FRONTEND CDN -->
+<div class="absolute pointer-events-auto cursor-pointer transition-transform hover:-translate-y-0.5" style="left: 385px; top: 20px; width: 210px; height: 65px;">
+<div class="relative w-full h-full rounded-xl bg-bg-2 border border-border-structural px-3 py-2 flex items-center justify-between shadow-[0_8px_24px_rgba(0,0,0,0.4)] hover:border-border-strong group">
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-lg bg-node-source/15 flex items-center justify-center text-node-source shrink-0">
+<span class="material-symbols-outlined text-[20px]">cloud_done</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-node-label text-[13px] text-text-1 truncate group-hover:text-primary transition-colors">Frontend Edge CDN</span>
+<span class="font-code-sm text-[11px] text-text-3 truncate">cf_edge_pops</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="font-code-sm text-[11px] text-node-source font-semibold tabular-nums">12.4k/s</span>
+<span class="font-chip-metric text-chip-metric text-status-ok flex items-center gap-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span> 100%
+</span>
+</div>
+<div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong group-hover:scale-125 transition-transform"></div>
+</div>
+</div>
+<!-- 2. TIER 2: EDGE GATEWAY -->
+<div class="absolute pointer-events-auto cursor-pointer transition-transform hover:-translate-y-0.5" style="left: 385px; top: 160px; width: 210px; height: 65px;">
+<div class="relative w-full h-full rounded-xl bg-bg-2 border border-border-structural px-3 py-2 flex items-center justify-between shadow-[0_8px_24px_rgba(0,0,0,0.4)] hover:border-border-strong group">
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong"></div>
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-lg bg-node-queue/15 flex items-center justify-center text-node-queue shrink-0">
+<span class="material-symbols-outlined text-[20px]">router</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-node-label text-[13px] text-text-1 truncate group-hover:text-node-queue transition-colors">Edge Gateway</span>
+<span class="font-code-sm text-[11px] text-text-3 truncate">envoy_ingress</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="font-code-sm text-[11px] text-node-queue font-semibold tabular-nums">12.4k/s</span>
+<span class="font-chip-metric text-chip-metric text-text-3">Envoy v1.30</span>
+</div>
+<div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong group-hover:scale-125 transition-transform"></div>
+</div>
+</div>
+<!-- 3. TIER 3: AUTH GUARD (DECISION) -->
+<div class="absolute pointer-events-auto cursor-pointer transition-transform hover:-translate-y-0.5" style="left: 385px; top: 295px; width: 210px; height: 65px;">
+<div class="relative w-full h-full rounded-xl bg-bg-2 border border-border-structural pl-3 pr-3 py-2 flex items-center justify-between shadow-[0_8px_24px_rgba(0,0,0,0.4)] hover:border-border-strong group overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-[3px] bg-node-decision"></div>
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong"></div>
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-lg bg-node-decision/15 flex items-center justify-center text-node-decision shrink-0">
+<span class="material-symbols-outlined text-[20px]">verified_user</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-node-label text-[13px] text-text-1 truncate group-hover:text-node-decision transition-colors">Auth Guard</span>
+<span class="font-code-sm text-[11px] text-text-3 truncate">opa_decision_mesh</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="font-code-sm text-[11px] text-node-decision font-semibold tabular-nums">0.6ms</span>
+<span class="font-chip-metric text-chip-metric text-text-3">JWT Verify</span>
+</div>
+<div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong group-hover:scale-125 transition-transform"></div>
+</div>
+</div>
+<!-- 4A. TIER 4: SERVICE A (PRIORITY) - SELECTED / ACTIVE FOCUS -->
+<div class="absolute pointer-events-auto cursor-pointer transition-transform" style="left: 45px; top: 470px; width: 210px; height: 65px;">
+<div class="relative w-full h-full rounded-xl bg-bg-2 px-3 py-2 flex items-center justify-between shadow-[0_0_0_1.5px_rgba(34,211,238,0.7),0_0_24px_rgba(139,92,246,0.35)] border border-node-queue/80 group">
+<div class="absolute -top-2 left-3 px-1.5 py-0.2 rounded bg-node-queue text-bg-0 font-chip-metric text-[9px] font-bold tracking-wider uppercase">Active Focus</div>
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-node-queue"></div>
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-lg bg-node-service/20 flex items-center justify-center text-node-service shrink-0">
+<span class="material-symbols-outlined text-[20px]">memory</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-node-label text-[13px] text-text-1 truncate font-semibold">Service A (Priority)</span>
+<span class="font-code-sm text-[11px] text-node-queue truncate">svc_priority_proc</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="font-code-sm text-[11px] text-node-queue font-semibold tabular-nums">6.7k/s</span>
+<span class="font-chip-metric text-chip-metric text-status-ok flex items-center gap-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span> 99.9%
+</span>
+</div>
+<div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong group-hover:scale-125 transition-transform"></div>
+</div>
+</div>
+<!-- 4B. TIER 4: SERVICE B (WORKER) - WARNING / DEGRADED STATE -->
+<div class="absolute pointer-events-auto cursor-pointer transition-transform hover:-translate-y-0.5" style="left: 275px; top: 470px; width: 210px; height: 65px;">
+<div class="relative w-full h-full rounded-xl bg-bg-2 px-3 py-2 flex items-center justify-between border border-status-error shadow-[0_0_20px_rgba(244,63,94,0.3)] group">
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-status-error"></div>
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-lg bg-status-error/15 flex items-center justify-center text-status-error shrink-0">
+<span class="material-symbols-outlined text-[20px]">warning</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-node-label text-[13px] text-text-1 truncate group-hover:text-status-error transition-colors">Service B (Worker)</span>
+<span class="font-code-sm text-[11px] text-text-3 truncate">svc_async_worker</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="font-code-sm text-[11px] text-text-1 font-semibold tabular-nums">2.2k/s</span>
+<span class="font-chip-metric text-chip-metric text-status-error font-semibold bg-status-error/15 border border-status-error/30 px-1 py-0.2 rounded-full flex items-center gap-1 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-error animate-ping"></span> 182 err/s
+</span>
+</div>
+<div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong group-hover:scale-125 transition-transform"></div>
+</div>
+</div>
+<!-- 4C. TIER 4: SERVICE C (ANALYTICS) -->
+<div class="absolute pointer-events-auto cursor-pointer transition-transform hover:-translate-y-0.5" style="left: 505px; top: 470px; width: 210px; height: 65px;">
+<div class="relative w-full h-full rounded-xl bg-bg-2 border border-border-structural px-3 py-2 flex items-center justify-between shadow-[0_8px_24px_rgba(0,0,0,0.4)] hover:border-border-strong group">
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong"></div>
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-lg bg-node-service/15 flex items-center justify-center text-node-service shrink-0">
+<span class="material-symbols-outlined text-[20px]">insights</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-node-label text-[13px] text-text-1 truncate group-hover:text-node-service transition-colors">Service C (Analytics)</span>
+<span class="font-code-sm text-[11px] text-text-3 truncate">svc_telemetry_agg</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="font-code-sm text-[11px] text-node-service font-semibold tabular-nums">2.7k/s</span>
+<span class="font-chip-metric text-chip-metric text-status-ok">p95 8ms</span>
+</div>
+<div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong group-hover:scale-125 transition-transform"></div>
+</div>
+</div>
+<!-- 4D. TIER 4: SERVICE D (CACHE / DIRECT) -->
+<div class="absolute pointer-events-auto cursor-pointer transition-transform hover:-translate-y-0.5" style="left: 735px; top: 470px; width: 210px; height: 65px;">
+<div class="relative w-full h-full rounded-xl bg-bg-2 border border-border-structural px-3 py-2 flex items-center justify-between shadow-[0_8px_24px_rgba(0,0,0,0.4)] hover:border-border-strong group">
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong"></div>
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-lg bg-node-queue/15 flex items-center justify-center text-node-queue shrink-0">
+<span class="material-symbols-outlined text-[20px]">bolt</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-node-label text-[13px] text-text-1 truncate group-hover:text-node-queue transition-colors">Service D (Cache)</span>
+<span class="font-code-sm text-[11px] text-text-3 truncate">svc_fast_proxy</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="font-code-sm text-[11px] text-text-1 font-semibold tabular-nums">814/s</span>
+<span class="font-chip-metric text-chip-metric text-status-ok">99.99%</span>
+</div>
+<div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong group-hover:scale-125 transition-transform"></div>
+</div>
+</div>
+<!-- 5. TIER 5: KAFKA EVENT BUS (STREAMING CONDUIT HUB) -->
+<div class="absolute pointer-events-auto cursor-pointer transition-transform hover:-translate-y-0.5" style="left: 370px; top: 610px; width: 240px; height: 65px;">
+<div class="relative w-full h-full rounded-xl bg-bg-2 border border-node-service/40 px-3.5 py-2 flex items-center justify-between shadow-[0_8px_28px_rgba(139,92,246,0.2)] hover:border-node-service group">
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong"></div>
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-lg bg-node-service/20 flex items-center justify-center text-node-service shrink-0">
+<span class="material-symbols-outlined text-[20px]">stream</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-node-label text-[13px] text-text-1 truncate group-hover:text-node-service transition-colors">Kafka Event Bus</span>
+<span class="font-code-sm text-[11px] text-node-queue truncate">event_stream_tier</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="font-code-sm text-[11px] text-node-service font-semibold tabular-nums">11.6k msg/s</span>
+<span class="font-chip-metric text-chip-metric text-status-ok">3 Partitions</span>
+</div>
+<div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong group-hover:scale-125 transition-transform"></div>
+</div>
+</div>
+<!-- 6A. TIER 6: AURORA DB (DATASTORE) -->
+<div class="absolute pointer-events-auto cursor-pointer transition-transform hover:-translate-y-0.5" style="left: 255px; top: 755px; width: 210px; height: 65px;">
+<div class="relative w-full h-full rounded-xl bg-bg-2 border border-border-structural px-3 py-2 flex items-center justify-between shadow-[0_8px_24px_rgba(0,0,0,0.4)] hover:border-border-strong group">
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong"></div>
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-lg bg-node-datastore/15 flex items-center justify-center text-node-datastore shrink-0">
+<span class="material-symbols-outlined text-[20px]">database</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-node-label text-[13px] text-text-1 truncate group-hover:text-node-datastore transition-colors">Aurora DB Cluster</span>
+<span class="font-code-sm text-[11px] text-text-3 truncate">db_postgres_prim</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="font-code-sm text-[11px] text-node-datastore font-semibold tabular-nums">4.6k qps</span>
+<span class="font-chip-metric text-chip-metric text-status-ok">IOPS: 12k</span>
+</div>
+</div>
+</div>
+<!-- 6B. TIER 6: REDIS CLUSTER (CACHE) -->
+<div class="absolute pointer-events-auto cursor-pointer transition-transform hover:-translate-y-0.5" style="left: 515px; top: 755px; width: 210px; height: 65px;">
+<div class="relative w-full h-full rounded-xl bg-bg-2 border border-border-structural px-3 py-2 flex items-center justify-between shadow-[0_8px_24px_rgba(0,0,0,0.4)] hover:border-border-strong group">
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-bg-0 border-2 border-border-strong"></div>
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-lg bg-node-queue/15 flex items-center justify-center text-node-queue shrink-0">
+<span class="material-symbols-outlined text-[20px]">storage</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-node-label text-[13px] text-text-1 truncate group-hover:text-node-queue transition-colors">Redis Clustercache</span>
+<span class="font-code-sm text-[11px] text-text-3 truncate">cache_redis_shards</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="font-code-sm text-[11px] text-node-queue font-semibold tabular-nums">7.1k ops</span>
+<span class="font-chip-metric text-chip-metric text-status-ok">Hit 94.2%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating Node Hover HUD / Instant Telemetry Inspector (Collapsible Right HUD) -->
+<div class="absolute top-16 right-5 w-84 z-20 pointer-events-auto">
+<div class="rounded-2xl bg-bg-1/95 border border-border-structural backdrop-blur-xl shadow-[0_16px_40px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col">
+<!-- HUD Header with Pill & Close/Pin -->
+<div class="p-3 border-b border-border-structural bg-bg-2/50 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-node-service animate-pulse"></span>
+<span class="font-label-md text-label-md font-semibold text-text-1">Service A (Priority)</span>
+<span class="px-1.5 py-0.2 rounded bg-node-service/20 text-node-service font-code-sm text-[10px]">SELECTED</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-6 h-6 rounded flex items-center justify-center text-text-3 hover:text-text-1 hover:bg-bg-3" title="Pin HUD">
+<span class="material-symbols-outlined text-[15px]">push_pin</span>
+</button>
+<button class="w-6 h-6 rounded flex items-center justify-center text-text-3 hover:text-text-1 hover:bg-bg-3" title="Collapse HUD">
+<span class="material-symbols-outlined text-[15px]">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Compact Stats Matrix -->
+<div class="p-3 grid grid-cols-3 gap-2 border-b border-border-structural text-center">
+<div class="p-2 rounded-lg bg-bg-0/60 border border-border-structural/60">
+<span class="text-[10px] text-text-3 block">Throughput</span>
+<span class="font-code-sm text-code-sm font-semibold text-text-1">6,720/s</span>
+</div>
+<div class="p-2 rounded-lg bg-bg-0/60 border border-border-structural/60">
+<span class="text-[10px] text-text-3 block">Heap Mem</span>
+<span class="font-code-sm text-code-sm font-semibold text-node-queue">1.42 GB</span>
+</div>
+<div class="p-2 rounded-lg bg-bg-0/60 border border-border-structural/60">
+<span class="text-[10px] text-text-3 block">Threads</span>
+<span class="font-code-sm text-code-sm font-semibold text-status-ok">48 pool</span>
+</div>
+</div>
+<!-- Instant Waterfall Micro-view -->
+<div class="p-3 border-b border-border-structural flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-label-uppercase text-[11px] text-text-3 font-semibold">Request Latency Waterfall</span>
+<span class="font-code-sm text-[11px] text-node-queue">18.4ms total</span>
+</div>
+<div class="space-y-1.5 font-code-sm text-[11px]">
+<!-- Step 1 -->
+<div>
+<div class="flex justify-between text-text-3 text-[10px]">
+<span>ingress_handshake</span>
+<span>2.1ms</span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-bg-3 overflow-hidden">
+<div class="h-full bg-node-source rounded-full" style="width: 12%;"></div>
+</div>
+</div>
+<!-- Step 2 -->
+<div>
+<div class="flex justify-between text-text-3 text-[10px]">
+<span>auth_jwt_eval</span>
+<span>3.4ms</span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-bg-3 overflow-hidden">
+<div class="h-full bg-node-decision rounded-full ml-[12%]" style="width: 18%;"></div>
+</div>
+</div>
+<!-- Step 3 (Longest) -->
+<div>
+<div class="flex justify-between text-text-3 text-[10px]">
+<span>priority_exec</span>
+<span>10.8ms</span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-bg-3 overflow-hidden">
+<div class="h-full bg-node-queue rounded-full ml-[30%]" style="width: 58%;"></div>
+</div>
+</div>
+<!-- Step 4 -->
+<div>
+<div class="flex justify-between text-text-3 text-[10px]">
+<span>kafka_publish</span>
+<span>2.1ms</span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-bg-3 overflow-hidden">
+<div class="h-full bg-node-service rounded-full ml-[88%]" style="width: 12%;"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Live Actions -->
+<div class="p-2.5 bg-bg-2/30 flex items-center justify-between gap-2">
+<button class="flex-1 py-1 px-2 rounded-lg bg-bg-3 border border-border-structural hover:border-border-strong text-text-1 font-label-sm text-[12px] flex items-center justify-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[14px]">terminal</span>
+<span>Logs</span>
+</button>
+<button class="flex-1 py-1 px-2 rounded-lg bg-gradient-to-r from-node-queue to-node-service text-bg-0 font-label-sm text-[12px] font-semibold flex items-center justify-center gap-1 hover:opacity-90 transition-opacity">
+<span>Trace Tree</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Compact Minimap Docked at Bottom-Right -->
+<div class="absolute bottom-20 right-5 w-44 h-32 rounded-xl bg-bg-1/95 border border-border-structural p-2 shadow-2xl backdrop-blur-xl z-20 flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-chip-metric text-[10px] uppercase tracking-wider text-text-3 font-semibold">Minimap Scope</span>
+<span class="font-code-sm text-[10px] text-node-queue font-medium">8 Nodes</span>
+</div>
+<div class="relative w-full h-22 bg-bg-0 rounded-lg overflow-hidden border border-border-structural/50">
+<svg class="w-full h-full" viewbox="0 0 160 88">
+<!-- Mini Graph Links -->
+<path d="M 80 10 L 80 22 L 80 34 M 80 34 L 25 48 M 80 34 L 62 48 M 80 34 L 98 48 M 80 34 L 135 48 M 25 48 L 80 62 M 62 48 L 80 62 M 98 48 L 80 62 M 135 48 L 80 62 M 80 62 L 60 76 M 80 62 L 100 76" fill="none" opacity="0.6" stroke="#343C4F" stroke-width="1.2"></path>
+<circle cx="80" cy="10" fill="#60A5FA" r="2.5"></circle>
+<circle cx="80" cy="22" fill="#22D3EE" r="2.5"></circle>
+<circle cx="80" cy="34" fill="#F59E0B" r="2.5"></circle>
+<circle cx="25" cy="48" fill="#8B5CF6" r="3" stroke="#22D3EE" stroke-width="1"></circle>
+<circle cx="62" cy="48" fill="#F43F5E" r="2.5"></circle>
+<circle cx="98" cy="48" fill="#8B5CF6" r="2.5"></circle>
+<circle cx="135" cy="48" fill="#22D3EE" r="2.5"></circle>
+<circle cx="80" cy="62" fill="#8B5CF6" r="3"></circle>
+<circle cx="60" cy="76" fill="#34D399" r="2.5"></circle>
+<circle cx="100" cy="76" fill="#22D3EE" r="2.5"></circle>
+<!-- Viewport Rect Indicator -->
+<rect fill="none" height="82" opacity="0.85" rx="3" stroke="#22D3EE" stroke-dasharray="2 2" stroke-width="1" width="150" x="5" y="3"></rect>
+</svg>
+</div>
+</div>
+<!-- Expanded Floating Bottom Playback & Time-Travel Dock -->
+<div class="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 pointer-events-auto">
+<div class="h-12 px-4 rounded-full bg-bg-1/95 border border-border-structural backdrop-blur-2xl shadow-[0_16px_50px_rgba(0,0,0,0.7)] flex items-center gap-4">
+<!-- Playback / Live Mode Switch -->
+<button class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-bg-3 border border-border-structural hover:border-border-strong text-text-1 transition-all">
+<span class="w-2 h-2 rounded-full bg-status-ok animate-pulse"></span>
+<span class="font-label-md text-label-md font-semibold text-status-ok">Live Stream</span>
+</button>
+<div class="h-4 w-px bg-border-structural"></div>
+<!-- Time-Travel Timeline Scrubber (-5m to Now) -->
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-text-3">history</span>
+<span class="font-code-sm text-[11px] text-text-3 font-medium">-5m</span>
+<input class="w-28 sm:w-40 h-1.5 bg-bg-3 rounded-lg appearance-none cursor-pointer accent-node-queue" max="0" min="-300" step="1" type="range" value="0"/>
+<span class="font-code-sm text-[11px] text-node-queue font-semibold tabular-nums">NOW</span>
+</div>
+<div class="h-4 w-px bg-border-structural"></div>
+<!-- Speed Multiplier Buttons -->
+<div class="flex items-center p-0.5 rounded-full bg-bg-0 border border-border-structural text-label-sm font-label-sm">
+<button class="px-2 py-0.5 rounded-full text-text-3 hover:text-text-1">0.5×</button>
+<button class="px-2.5 py-0.5 rounded-full bg-bg-2 text-text-1 font-semibold shadow-xs">1.0×</button>
+<button class="px-2 py-0.5 rounded-full text-text-3 hover:text-text-1">2.0×</button>
+<button class="px-2 py-0.5 rounded-full text-text-3 hover:text-text-1">4.0×</button>
+</div>
+<div class="h-4 w-px bg-border-structural"></div>
+<!-- Flow Label Toggle Button -->
+<button class="px-2.5 py-1 rounded-full bg-bg-3 border border-node-queue/50 text-node-queue font-label-sm text-label-sm font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check</span>
+<span>Labels &amp; Rates</span>
+</button>
+<!-- Fit to Viewport / Recenter -->
+<button class="w-7 h-7 rounded-lg bg-bg-2 border border-border-structural text-text-2 hover:text-text-1 flex items-center justify-center transition-colors" title="Fit Canvas to Viewport">
+<span class="material-symbols-outlined text-[16px]">fit_screen</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div></main></body></html>

@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {"darkMode":"class","theme":{"extend":{"colors":{"on-primary-fixed-variant":"#004e5a","bg-0":"#0B0D12","primary-container":"#22d3ee","status-discovered":"#F59E0B","on-secondary-fixed":"#23005c","on-background":"#e2e2e9","node-decision":"#F59E0B","text-1":"#E8ECF4","primary-fixed-dim":"#2fd9f4","secondary":"#d0bcff","node-datastore":"#34D399","primary":"#8aebff","inverse-primary":"#006877","status-error":"#F43F5E","surface-container-highest":"#33353a","on-error-container":"#ffdad6","surface-container-lowest":"#0c0e13","inverse-on-surface":"#2e3036","surface-container-low":"#1a1b21","on-primary-container":"#005763","surface-bright":"#37393f","status-info":"#60A5FA","error":"#ffb4ab","on-primary-fixed":"#001f25","on-tertiary-fixed-variant":"#643f00","on-secondary":"#3c0091","text-3":"#7C869C","border-strong":"#343C4F","on-primary":"#00363e","on-tertiary-container":"#6e4600","text-2":"#A3ACBF","node-external":"#94A3B8","tertiary-container":"#ffb13b","on-tertiary":"#462b00","status-ok":"#34D399","bg-3":"#1E2330","on-secondary-container":"#c4abff","on-surface-variant":"#bbc9cd","tertiary":"#ffd6a3","background":"#111318","outline-variant":"#3c494c","bg-2":"#171B24","on-error":"#690005","status-warn":"#F59E0B","surface":"#111318","node-service":"#8B5CF6","secondary-container":"#571bc1","on-surface":"#e2e2e9","on-tertiary-fixed":"#2a1800","surface-container-high":"#282a2f","inverse-surface":"#e2e2e9","node-queue":"#22D3EE","surface-variant":"#33353a","secondary-fixed-dim":"#d0bcff","on-secondary-fixed-variant":"#5516be","tertiary-fixed-dim":"#ffb957","secondary-fixed":"#e9ddff","surface-dim":"#111318","outline":"#859397","bg-1":"#11141B","surface-container":"#1e1f25","border-structural":"#262C3A","surface-tint":"#2fd9f4","tertiary-fixed":"#ffddb5","error-container":"#93000a","node-source":"#60A5FA","node-end":"#F472B6","primary-fixed":"#a2eeff"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-lg":"1rem","space-xl":"1.5rem","space-md":"0.75rem","gutter":"1rem","gutter-desktop":"1.5rem","margin":"1rem","space-xs":"0.25rem","space-sm":"0.5rem","margin-desktop":"1.5rem"},"fontFamily":{"headline-lg":["Inter"],"body-md":["Inter"],"label-sm":["Inter"],"label-md":["Inter"],"label-uppercase":["Inter"],"code-sm":["JetBrains Mono"],"chip-metric":["Inter"],"headline-lg-mobile":["Inter"],"code-block":["JetBrains Mono"],"headline-sm":["Inter"],"body-node-label":["Inter"],"headline-md":["Inter"],"display-mobile":["Inter"],"body-lg":["Inter"],"display":["Inter"]},"fontSize":{"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"label-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"label-md":["13px",{"lineHeight":"18px","fontWeight":"500"}],"label-uppercase":["12px",{"lineHeight":"16px","letterSpacing":"0.08em","fontWeight":"500"}],"code-sm":["12px",{"lineHeight":"16px","fontWeight":"500"}],"chip-metric":["11px",{"lineHeight":"14px","fontWeight":"500"}],"headline-lg-mobile":["26px",{"lineHeight":"32px","fontWeight":"600"}],"code-block":["13px",{"lineHeight":"20px","fontWeight":"400"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"body-node-label":["14px",{"lineHeight":"20px","fontWeight":"600"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],"display-mobile":["36px",{"lineHeight":"42px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"display":["48px",{"lineHeight":"52px","letterSpacing":"-0.02em","fontWeight":"600"}]}}}</script></head><body class="bg-bg-0 font-body-md text-body-md text-on-surface antialiased"><header class="fixed top-0 w-full z-50 bg-bg-1/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.25)]"><div class="h-14 max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-xl"><a class="flex items-center gap-space-sm text-text-1 hover:text-primary transition-colors" data-path="home" href="#"><div class="w-7 h-7 rounded-lg bg-surface-container-high flex items-center justify-center"><span class="material-symbols-outlined text-primary-container text-[18px]">hub</span></div><span class="font-headline-sm text-headline-sm tracking-tight text-text-1 font-semibold">FlowTrace</span></a><nav class="hidden md:flex items-center gap-space-xs" data-active-classes="bg-surface-container-high text-primary rounded-lg"><a class="px-space-md py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg transition-colors" data-path="product" href="#">Product</a><a class="px-space-md py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg transition-colors" data-path="templates" href="#">Templates</a><a class="px-space-md py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg transition-colors" data-path="docs" href="#">Docs</a><a aria-current="page" class="px-space-md py-space-xs font-label-md transition-colors bg-surface-container-high text-primary rounded-lg" data-path="pricing" href="#">Pricing</a></nav></div><div class="flex items-center gap-space-md"><a class="hidden sm:inline-flex px-space-md py-space-xs font-label-md text-label-md text-text-2 hover:text-text-1 hover:bg-surface-container-high rounded-lg transition-colors" data-path="login" href="#">Log in</a><a class="inline-flex items-center justify-center px-space-md py-space-xs h-[36px] rounded-[10px] bg-gradient-to-r from-primary-container to-node-service text-bg-0 font-label-md text-label-md font-semibold transition-all hover:brightness-110" data-path="signup" href="#">Start free</a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center ml-space-xs"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-14 bg-bg-0 min-h-screen"><div class="flex flex-col w-full relative">
+<!-- Ambient Telemetry Grid and Kinetic Radiance -->
+<div class="absolute inset-0 pointer-events-none overflow-hidden select-none">
+<div class="absolute top-12 left-1/2 -translate-x-1/2 w-[1000px] h-[480px] bg-gradient-to-b from-primary-container/10 via-node-service/5 to-transparent blur-[120px] rounded-full"></div>
+<div class="absolute top-[420px] left-[15%] w-96 h-96 bg-primary-container/5 blur-[100px] rounded-full"></div>
+<div class="absolute top-[520px] right-[10%] w-[420px] h-[420px] bg-node-service/5 blur-[120px] rounded-full"></div>
+</div>
+<div class="max-w-7xl mx-auto px-6 lg:px-12 w-full pt-12 pb-24 relative z-10">
+<!-- Header Section -->
+<div class="flex flex-col items-center text-center max-w-3xl mx-auto mb-16">
+<!-- Pill Badge -->
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-bg-2 shadow-sm mb-6">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+<span class="font-label-uppercase text-label-uppercase text-text-2 tracking-widest text-[11px]">TRANSPARENT OBSERVABILITY PRICING</span>
+</div>
+<!-- Main Heading -->
+<h1 class="font-display text-display text-text-1 tracking-tight mb-4">
+        Simple, predictable pricing
+      </h1>
+<p class="font-body-lg text-body-lg text-text-2 max-w-2xl leading-relaxed mb-10">
+        Choose the scale that matches your architecture. Zero surprise overages, real-time live tracing, and cancel anytime.
+      </p>
+<!-- Billing Cycle Toggle Switch -->
+<div class="flex items-center p-1 rounded-xl bg-bg-2 shadow-inner">
+<button class="px-5 py-2 rounded-lg font-label-md text-label-md transition-all text-text-1 bg-bg-3 shadow-sm font-semibold" id="toggle-monthly" onclick="setBilling('monthly')">
+          Monthly billing
+        </button>
+<button class="px-5 py-2 rounded-lg font-label-md text-label-md transition-all text-text-3 hover:text-text-2 flex items-center gap-2" id="toggle-annually" onclick="setBilling('annually')">
+<span>Annual billing</span>
+<span class="px-2 py-0.5 rounded-full text-[11px] font-semibold tracking-wide bg-status-ok/15 text-status-ok">
+            2 months free
+          </span>
+</button>
+</div>
+</div>
+<!-- Pricing Cards 4-Column Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch mb-20">
+<!-- 1. Free Card -->
+<div class="flex flex-col justify-between rounded-2xl bg-bg-2 p-7 shadow-xl transition-all duration-300 hover:bg-bg-3">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="font-headline-sm text-headline-sm text-text-1 font-semibold">Free</span>
+<span class="p-2 rounded-lg bg-bg-3 text-text-3">
+<span class="material-symbols-outlined text-[20px]">terminal</span>
+</span>
+</div>
+<p class="font-body-md text-body-md text-text-3 mb-6 min-h-[40px]">
+            For indie hackers, personal prototypes &amp; hobby projects.
+          </p>
+<div class="flex items-baseline gap-1 mb-6">
+<span class="text-3xl lg:text-4xl font-headline-lg text-text-1 font-bold">€0</span>
+<span class="font-body-md text-body-md text-text-3 billing-unit">/ month</span>
+</div>
+<!-- Specs Summary Pill Matrix -->
+<div class="p-3.5 rounded-xl bg-bg-1 space-y-2 mb-6">
+<div class="flex items-center justify-between text-[13px]">
+<span class="text-text-3 font-body-md">Workspace</span>
+<span class="font-code-sm text-code-sm text-text-1 font-medium">1 project</span>
+</div>
+<div class="flex items-center justify-between text-[13px]">
+<span class="text-text-3 font-body-md">Ingest quota</span>
+<span class="font-code-sm text-code-sm text-text-1 font-medium">100k events/mo</span>
+</div>
+<div class="flex items-center justify-between text-[13px]">
+<span class="text-text-3 font-body-md">Trace retention</span>
+<span class="font-code-sm text-code-sm text-text-1 font-medium">24 hours</span>
+</div>
+<div class="flex items-center justify-between text-[13px]">
+<span class="text-text-3 font-body-md">Seats</span>
+<span class="font-code-sm text-code-sm text-text-1 font-medium">1 member</span>
+</div>
+</div>
+<!-- Feature List -->
+<div class="space-y-3 mb-8">
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-2">Live topology stream</span>
+</div>
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-2">Standard community templates</span>
+</div>
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-2">OpenTelemetry &amp; UDP SDKs</span>
+</div>
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-2">Discord community support</span>
+</div>
+</div>
+</div>
+<a class="w-full h-11 rounded-xl bg-bg-3 hover:bg-surface-bright text-text-1 font-label-md text-label-md font-semibold flex items-center justify-center transition-colors shadow-sm" data-path="signup" href="#">
+          Start Free
+        </a>
+</div>
+<!-- 2. Pro Card (Highlighted & Elevated) -->
+<div class="flex flex-col justify-between rounded-2xl bg-bg-2 p-7 relative shadow-[0_0_40px_rgba(34,211,238,0.15)] ring-1 ring-primary-container/40 -translate-y-2 transition-all duration-300">
+<!-- Accent Glow Badge -->
+<div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-gradient-to-r from-primary-container to-node-service text-bg-0 font-label-uppercase text-[11px] font-bold tracking-wider shadow-md uppercase">
+          Most popular
+        </div>
+<div>
+<div class="flex items-center justify-between mb-4 mt-1">
+<span class="font-headline-sm text-headline-sm text-text-1 font-semibold">Pro</span>
+<span class="p-2 rounded-lg bg-primary-container/10 text-primary-container">
+<span class="material-symbols-outlined text-[20px]">bolt</span>
+</span>
+</div>
+<p class="font-body-md text-body-md text-text-3 mb-6 min-h-[40px]">
+            For growing engineering teams &amp; production services.
+          </p>
+<div class="flex items-baseline gap-1 mb-6">
+<span class="text-3xl lg:text-4xl font-headline-lg text-text-1 font-bold" id="price-pro">€19</span>
+<span class="font-body-md text-body-md text-text-3 billing-unit">/ month</span>
+<span class="hidden text-xs text-status-ok ml-2 font-code-sm" id="discount-sub-pro">billed €180/yr</span>
+</div>
+<!-- Specs Summary Pill Matrix -->
+<div class="p-3.5 rounded-xl bg-bg-1 space-y-2 mb-6">
+<div class="flex items-center justify-between text-[13px]">
+<span class="text-text-3 font-body-md">Workspaces</span>
+<span class="font-code-sm text-code-sm text-primary-container font-medium">5 projects</span>
+</div>
+<div class="flex items-center justify-between text-[13px]">
+<span class="text-text-3 font-body-md">Ingest quota</span>
+<span class="font-code-sm text-code-sm text-text-1 font-medium">2,000,000 events/mo</span>
+</div>
+<div class="flex items-center justify-between text-[13px]">
+<span class="text-text-3 font-body-md">Trace retention</span>
+<span class="font-code-sm text-code-sm text-text-1 font-medium">7 days deep replay</span>
+</div>
+<div class="flex items-center justify-between text-[13px]">
+<span class="text-text-3 font-body-md">Seats</span>
+<span class="font-code-sm text-code-sm text-text-1 font-medium">5 team members</span>
+</div>
+</div>
+<!-- Feature List -->
+<div class="space-y-3 mb-8">
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-1 font-medium">Everything in Free, plus:</span>
+</div>
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-2">Full Trace Replay studio</span>
+</div>
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-2">Custom webhook &amp; Slack alerts</span>
+</div>
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-2">50 active topology nodes</span>
+</div>
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-2">Priority email support</span>
+</div>
+</div>
+</div>
+<a class="w-full h-11 rounded-xl bg-gradient-to-r from-primary-container to-node-service hover:brightness-110 text-bg-0 font-label-md text-label-md font-bold flex items-center justify-center transition-all shadow-lg hover:shadow-cyan-500/20" data-path="signup" href="#">
+          Start 14-day Pro Trial →
+        </a>
+</div>
+<!-- 3. Team Card -->
+<div class="flex flex-col justify-between rounded-2xl bg-bg-2 p-7 shadow-xl transition-all duration-300 hover:bg-bg-3">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="font-headline-sm text-headline-sm text-text-1 font-semibold">Team</span>
+<span class="p-2 rounded-lg bg-bg-3 text-text-3">
+<span class="material-symbols-outlined text-[20px]">diversity_3</span>
+</span>
+</div>
+<p class="font-body-md text-body-md text-text-3 mb-6 min-h-[40px]">
+            For high-throughput systems &amp; multi-service distributed backends.
+          </p>
+<div class="flex items-baseline gap-1 mb-6">
+<span class="text-3xl lg:text-4xl font-headline-lg text-text-1 font-bold" id="price-team">€79</span>
+<span class="font-body-md text-body-md text-text-3 billing-unit">/ month</span>
+<span class="hidden text-xs text-status-ok ml-2 font-code-sm" id="discount-sub-team">billed €780/yr</span>
+</div>
+<!-- Specs Summary Pill Matrix -->
+<div class="p-3.5 rounded-xl bg-bg-1 space-y-2 mb-6">
+<div class="flex items-center justify-between text-[13px]">
+<span class="text-text-3 font-body-md">Workspaces</span>
+<span class="font-code-sm text-code-sm text-text-1 font-medium">20 projects</span>
+</div>
+<div class="flex items-center justify-between text-[13px]">
+<span class="text-text-3 font-body-md">Ingest quota</span>
+<span class="font-code-sm text-code-sm text-text-1 font-medium">10,000,000 events/mo</span>
+</div>
+<div class="flex items-center justify-between text-[13px]">
+<span class="text-text-3 font-body-md">Trace retention</span>
+<span class="font-code-sm text-code-sm text-text-1 font-medium">30 days deep replay</span>
+</div>
+<div class="flex items-center justify-between text-[13px]">
+<span class="text-text-3 font-body-md">Seats</span>
+<span class="font-code-sm text-code-sm text-text-1 font-medium">25 team members</span>
+</div>
+</div>
+<!-- Feature List -->
+<div class="space-y-3 mb-8">
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-1 font-medium">Everything in Pro, plus:</span>
+</div>
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-2">PagerDuty &amp; Opsgenie triggers</span>
+</div>
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-2">SAML 2.0 &amp; Okta SSO</span>
+</div>
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-2">Incident diagnostic studio</span>
+</div>
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-2">99.9% Uptime SLA</span>
+</div>
+</div>
+</div>
+<a class="w-full h-11 rounded-xl bg-bg-3 hover:bg-surface-bright text-text-1 font-label-md text-label-md font-semibold flex items-center justify-center transition-colors shadow-sm" data-path="signup" href="#">
+          Upgrade to Team
+        </a>
+</div>
+<!-- 4. Business Card -->
+<div class="flex flex-col justify-between rounded-2xl bg-bg-2 p-7 shadow-xl transition-all duration-300 hover:bg-bg-3">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="font-headline-sm text-headline-sm text-text-1 font-semibold">Business</span>
+<span class="p-2 rounded-lg bg-bg-3 text-text-3">
+<span class="material-symbols-outlined text-[20px]">corporate_fare</span>
+</span>
+</div>
+<p class="font-body-md text-body-md text-text-3 mb-6 min-h-[40px]">
+            For enterprise clusters, high-compliance workloads &amp; bespoke limits.
+          </p>
+<div class="flex items-baseline gap-1 mb-6">
+<span class="font-body-md text-body-md text-text-3">from</span>
+<span class="text-3xl lg:text-4xl font-headline-lg text-text-1 font-bold">€249</span>
+<span class="font-body-md text-body-md text-text-3 billing-unit">/ month</span>
+</div>
+<!-- Specs Summary Pill Matrix -->
+<div class="p-3.5 rounded-xl bg-bg-1 space-y-2 mb-6">
+<div class="flex items-center justify-between text-[13px]">
+<span class="text-text-3 font-body-md">Workspaces</span>
+<span class="font-code-sm text-code-sm text-text-1 font-medium">Unlimited</span>
+</div>
+<div class="flex items-center justify-between text-[13px]">
+<span class="text-text-3 font-body-md">Ingest quota</span>
+<span class="font-code-sm text-code-sm text-text-1 font-medium">50M+ tailored</span>
+</div>
+<div class="flex items-center justify-between text-[13px]">
+<span class="text-text-3 font-body-md">Trace retention</span>
+<span class="font-code-sm text-code-sm text-text-1 font-medium">90 days to 1 year</span>
+</div>
+<div class="flex items-center justify-between text-[13px]">
+<span class="text-text-3 font-body-md">Seats</span>
+<span class="font-code-sm text-code-sm text-text-1 font-medium">Unlimited</span>
+</div>
+</div>
+<!-- Feature List -->
+<div class="space-y-3 mb-8">
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-1 font-medium">Everything in Team, plus:</span>
+</div>
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-2">VPC / Kubernetes on-prem deploy</span>
+</div>
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-2">SOC-2 Type II report &amp; BAA</span>
+</div>
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-2">Custom PII scrubbing engine</span>
+</div>
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-ok text-[18px] shrink-0 mt-0.5">check_circle</span>
+<span class="font-body-md text-body-md text-text-2">Dedicated TAM &amp; 1h priority SLA</span>
+</div>
+</div>
+</div>
+<a class="w-full h-11 rounded-xl bg-bg-3 hover:bg-surface-bright text-text-1 font-label-md text-label-md font-semibold flex items-center justify-center transition-colors shadow-sm" data-path="contact" href="#">
+          Contact Sales
+        </a>
+</div>
+</div>
+<!-- Callout Banner: "Hard limits — no surprise bills" -->
+<div class="rounded-2xl bg-bg-2 p-8 lg:p-10 mb-24 relative overflow-hidden shadow-2xl">
+<div class="absolute -right-12 -bottom-12 w-80 h-80 bg-status-warn/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+<div class="lg:col-span-8 flex flex-col sm:flex-row items-start gap-6">
+<div class="w-14 h-14 rounded-2xl bg-status-warn/10 text-status-warn flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[32px]">shield_lock</span>
+</div>
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="font-headline-sm text-headline-sm text-text-1 font-semibold">
+                Hard limits — zero surprise bills
+              </span>
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-status-warn/15 text-status-warn uppercase tracking-wider">
+                Protected Ingest
+              </span>
+</div>
+<p class="font-body-md text-body-md text-text-2 leading-relaxed">
+              When you reach 100% of your monthly event quota, FlowTrace gracefully holds newly incoming traces in a 24-hour lossless memory buffer. We never bill you variable micro-fees or silent burst penalties. Upgrade smoothly or resume ingest on your own terms.
+            </p>
+</div>
+</div>
+<!-- 3 Metric Telemetry Badges -->
+<div class="lg:col-span-4 grid grid-cols-3 gap-3">
+<div class="p-4 rounded-xl bg-bg-1 flex flex-col items-center text-center">
+<span class="font-headline-sm text-headline-sm text-primary-container font-code-sm font-semibold">€0</span>
+<span class="text-[11px] font-body-md text-text-3 mt-1 leading-tight">Unexpected invoices</span>
+</div>
+<div class="p-4 rounded-xl bg-bg-1 flex flex-col items-center text-center">
+<span class="font-headline-sm text-headline-sm text-status-ok font-code-sm font-semibold">24h</span>
+<span class="text-[11px] font-body-md text-text-3 mt-1 leading-tight">Buffer hold window</span>
+</div>
+<div class="p-4 rounded-xl bg-bg-1 flex flex-col items-center text-center">
+<span class="font-headline-sm text-headline-sm text-node-service font-code-sm font-semibold">1-Click</span>
+<span class="text-[11px] font-body-md text-text-3 mt-1 leading-tight">Self-serve unpause</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Comprehensive Feature Comparison Table -->
+<div class="mb-24">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+<div>
+<span class="font-label-uppercase text-label-uppercase text-primary-container tracking-wider block mb-2">GRANULAR MATRIX</span>
+<h2 class="font-headline-lg text-headline-lg text-text-1 font-semibold">Compare all capability layers</h2>
+</div>
+<p class="font-body-md text-body-md text-text-3 max-w-md">
+          Every plan includes complete access to the core distributed visualizer and real-time canvas canvas engine.
+        </p>
+</div>
+<!-- Table Container -->
+<div class="rounded-2xl bg-bg-1 shadow-2xl overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[760px]">
+<thead>
+<tr class="bg-bg-2 text-text-1">
+<th class="py-5 px-6 font-label-md text-label-md font-semibold w-2/5">Platform Feature</th>
+<th class="py-5 px-4 font-label-md text-label-md font-semibold text-center w-[15%]">Free</th>
+<th class="py-5 px-4 font-label-md text-label-md font-semibold text-center w-[15%] bg-primary-container/5 text-primary-container">
+                  Pro (Trial)
+                </th>
+<th class="py-5 px-4 font-label-md text-label-md font-semibold text-center w-[15%]">Team</th>
+<th class="py-5 px-4 font-label-md text-label-md font-semibold text-center w-[15%]">Business</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-transparent font-body-md text-body-md text-text-2">
+<!-- Category 1: Volume & Retention -->
+<tr class="bg-bg-2/50">
+<td class="py-3 px-6 font-label-uppercase text-label-uppercase text-text-3 tracking-wider text-[11px]" colspan="5">
+                  1. Volume &amp; Retention
+                </td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">Monthly Ingest Volume</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm">100k</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm bg-primary-container/5 font-semibold text-primary-container">2,000,000</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm">10,000,000</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm">50M+ / Bespoke</td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">Trace Window Retention</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm text-text-3">24 hours</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm bg-primary-container/5 text-text-1">7 days</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm text-text-1">30 days</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm text-text-1">Up to 365 days</td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">Spike Buffer Grace Storage</td>
+<td class="py-3.5 px-4 text-center"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center bg-primary-container/5 text-status-ok font-code-sm text-code-sm">24h hold</td>
+<td class="py-3.5 px-4 text-center text-status-ok font-code-sm text-code-sm">48h hold</td>
+<td class="py-3.5 px-4 text-center text-status-ok font-code-sm text-code-sm">7-day zero-drop</td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">Raw S3 / GCS Telemetry Export</td>
+<td class="py-3.5 px-4 text-center"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center bg-primary-container/5"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+</tr>
+<!-- Category 2: Canvas & Visualization -->
+<tr class="bg-bg-2/50">
+<td class="py-3 px-6 font-label-uppercase text-label-uppercase text-text-3 tracking-wider text-[11px]" colspan="5">
+                  2. Canvas &amp; Visualization Engine
+                </td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">Real-time Topology Canvas</td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+<td class="py-3.5 px-4 text-center bg-primary-container/5 text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">Trace Replay Studio (Frame-by-Frame)</td>
+<td class="py-3.5 px-4 text-center"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center bg-primary-container/5 text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">Decision Nodes &amp; Branch Heatmaps</td>
+<td class="py-3.5 px-4 text-center"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center bg-primary-container/5 text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">Active Monitored Nodes per Canvas</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm">15</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm bg-primary-container/5 font-semibold text-text-1">50</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm">Unlimited</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm">Unlimited</td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">Ops Wallboard / NOC TV Mode</td>
+<td class="py-3.5 px-4 text-center"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center bg-primary-container/5"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+</tr>
+<!-- Category 3: Collaboration & Security -->
+<tr class="bg-bg-2/50">
+<td class="py-3 px-6 font-label-uppercase text-label-uppercase text-text-3 tracking-wider text-[11px]" colspan="5">
+                  3. Collaboration &amp; Governance
+                </td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">Team Members Included</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm">1</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm bg-primary-container/5 text-text-1">5</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm text-text-1">25</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm text-text-1">Unlimited</td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">SAML 2.0 / Okta SSO</td>
+<td class="py-3.5 px-4 text-center"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center bg-primary-container/5"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">Granular RBAC &amp; API Key Scoping</td>
+<td class="py-3.5 px-4 text-center"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center bg-primary-container/5"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">Audit Log History</td>
+<td class="py-3.5 px-4 text-center"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center bg-primary-container/5 text-text-3 font-code-sm text-code-sm">7 days</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm text-text-1">90 days</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm text-text-1">Immutable 1-year</td>
+</tr>
+<!-- Category 4: Integrations & Delivery -->
+<tr class="bg-bg-2/50">
+<td class="py-3 px-6 font-label-uppercase text-label-uppercase text-text-3 tracking-wider text-[11px]" colspan="5">
+                  4. Telemetry Integrations &amp; Alerts
+                </td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">OpenTelemetry / OTLP gRPC Native</td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+<td class="py-3.5 px-4 text-center bg-primary-container/5 text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">Slack, Discord &amp; Webhook Dispatch</td>
+<td class="py-3.5 px-4 text-center"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center bg-primary-container/5 text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">PagerDuty &amp; Opsgenie Incident Routing</td>
+<td class="py-3.5 px-4 text-center"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center bg-primary-container/5"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">On-Prem VPC / Private Cloud Gateway</td>
+<td class="py-3.5 px-4 text-center"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center bg-primary-container/5"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+</tr>
+<!-- Category 5: Compliance & SLAs -->
+<tr class="bg-bg-2/50">
+<td class="py-3 px-6 font-label-uppercase text-label-uppercase text-text-3 tracking-wider text-[11px]" colspan="5">
+                  5. Security, Compliance &amp; SLAs
+                </td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">Support Turnaround Time</td>
+<td class="py-3.5 px-4 text-center text-text-3">Community</td>
+<td class="py-3.5 px-4 text-center bg-primary-container/5 font-code-sm text-code-sm text-text-1">&lt;24 hours</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm text-text-1">&lt;4 hours</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm text-primary-container font-semibold">1-hour guaranteed</td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">Target Platform Uptime SLA</td>
+<td class="py-3.5 px-4 text-center text-text-3">Best effort</td>
+<td class="py-3.5 px-4 text-center bg-primary-container/5 text-text-3">99.5%</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm text-text-1">99.9%</td>
+<td class="py-3.5 px-4 text-center font-code-sm text-code-sm text-status-ok font-semibold">99.99% Custom</td>
+</tr>
+<tr class="hover:bg-bg-2/30 transition-colors">
+<td class="py-3.5 px-6 text-text-1">SOC-2 Type II Report &amp; HIPAA BAA</td>
+<td class="py-3.5 px-4 text-center"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center bg-primary-container/5"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center"><span class="text-text-3">—</span></td>
+<td class="py-3.5 px-4 text-center text-status-ok"><span class="material-symbols-outlined text-[18px]">check</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Developer FAQ Accordion Section -->
+<div class="mb-24 max-w-4xl mx-auto w-full">
+<div class="text-center mb-12">
+<span class="font-label-uppercase text-label-uppercase text-text-3 tracking-widest text-[11px] block mb-2">CLARITY FIRST</span>
+<h2 class="font-headline-lg text-headline-lg text-text-1 font-semibold">Frequently Asked Questions</h2>
+</div>
+<div class="space-y-4" id="faq-container">
+<!-- FAQ Item 1 -->
+<div class="faq-item rounded-2xl bg-bg-2 transition-colors cursor-pointer overflow-hidden" onclick="toggleFaq(this)">
+<div class="p-6 flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-[17px] text-text-1 font-medium">What counts as an event in FlowTrace?</span>
+<span class="faq-icon material-symbols-outlined text-text-3 transition-transform duration-300">expand_more</span>
+</div>
+<div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-6">
+<p class="pb-6 font-body-md text-body-md text-text-2 leading-relaxed">
+              An event corresponds to a single span record, transaction checkpoint, or diagnostic anomaly trace sent through our client SDKs (e.g., <code class="font-code-sm text-code-sm px-1.5 py-0.5 rounded bg-bg-3 text-primary-container">tracer.span()</code> or OpenTelemetry OTLP packets). Heartbeats and topology keep-alive pings are completely free and unmetered.
+            </p>
+</div>
+</div>
+<!-- FAQ Item 2 -->
+<div class="faq-item rounded-2xl bg-bg-2 transition-colors cursor-pointer overflow-hidden" onclick="toggleFaq(this)">
+<div class="p-6 flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-[17px] text-text-1 font-medium">What happens when my system hits the monthly quota limit?</span>
+<span class="faq-icon material-symbols-outlined text-text-3 transition-transform duration-300">expand_more</span>
+</div>
+<div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-6">
+<p class="pb-6 font-body-md text-body-md text-text-2 leading-relaxed">
+              We never silently penalize or charge your card for burst spikes. When your workspace hits 100%, our ingest service activates a 24-hour grace buffer that safely holds incoming events. You will receive an automated Slack or email alert with the option to upgrade instantly or let the buffer safely drain.
+            </p>
+</div>
+</div>
+<!-- FAQ Item 3 -->
+<div class="faq-item rounded-2xl bg-bg-2 transition-colors cursor-pointer overflow-hidden" onclick="toggleFaq(this)">
+<div class="p-6 flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-[17px] text-text-1 font-medium">Can we self-host FlowTrace on our own VPC or Kubernetes cluster?</span>
+<span class="faq-icon material-symbols-outlined text-text-3 transition-transform duration-300">expand_more</span>
+</div>
+<div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-6">
+<p class="pb-6 font-body-md text-body-md text-text-2 leading-relaxed">
+              Yes. The Business tier includes an enterprise Helm chart and Docker Compose suite verified on AWS EKS, Google Cloud GKE, and Azure AKS. In self-hosted setups, raw trace payloads never leave your cloud perimeter, while configuration state syncs securely.
+            </p>
+</div>
+</div>
+<!-- FAQ Item 4 -->
+<div class="faq-item rounded-2xl bg-bg-2 transition-colors cursor-pointer overflow-hidden" onclick="toggleFaq(this)">
+<div class="p-6 flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-[17px] text-text-1 font-medium">How does the annual discount work?</span>
+<span class="faq-icon material-symbols-outlined text-text-3 transition-transform duration-300">expand_more</span>
+</div>
+<div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-6">
+<p class="pb-6 font-body-md text-body-md text-text-2 leading-relaxed">
+              Choosing annual billing provides a direct 2-month bonus (~17% discount). For example, the Pro plan is reduced from €19/mo to €15/mo (invoiced at €180/year), and the Team tier drops from €79/mo to €65/mo.
+            </p>
+</div>
+</div>
+<!-- FAQ Item 5 -->
+<div class="faq-item rounded-2xl bg-bg-2 transition-colors cursor-pointer overflow-hidden" onclick="toggleFaq(this)">
+<div class="p-6 flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-[17px] text-text-1 font-medium">Does FlowTrace add latency to our application runtime?</span>
+<span class="faq-icon material-symbols-outlined text-text-3 transition-transform duration-300">expand_more</span>
+</div>
+<div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-6">
+<p class="pb-6 font-body-md text-body-md text-text-2 leading-relaxed">
+              No. Our instrumentation SDKs use non-blocking background daemons and lightweight circular ring buffers over UDP or asynchronous HTTP/2 multiplexing. The median overhead benchmarked in production is &lt;0.18ms per trace span.
+            </p>
+</div>
+</div>
+<!-- FAQ Item 6 -->
+<div class="faq-item rounded-2xl bg-bg-2 transition-colors cursor-pointer overflow-hidden" onclick="toggleFaq(this)">
+<div class="p-6 flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-[17px] text-text-1 font-medium">Can I change or cancel my plan at any time?</span>
+<span class="faq-icon material-symbols-outlined text-text-3 transition-transform duration-300">expand_more</span>
+</div>
+<div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-6">
+<p class="pb-6 font-body-md text-body-md text-text-2 leading-relaxed">
+              Yes, you can upgrade, downgrade, or cancel at any time directly in your organization settings. Plan adjustments are prorated down to the second. If you downgrade, your telemetry history remains available until the end of your billing cycle.
+            </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Luminous Conversion CTA Banner -->
+<div class="relative rounded-3xl bg-gradient-to-b from-bg-2 to-bg-1 p-10 lg:p-14 overflow-hidden shadow-2xl">
+<!-- Glow effect -->
+<div class="absolute inset-0 bg-gradient-to-r from-primary-container/10 via-node-service/10 to-transparent pointer-events-none"></div>
+<div class="flex flex-col lg:flex-row items-center justify-between gap-8 relative z-10">
+<div class="max-w-2xl text-center lg:text-left">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-bg-3 mb-4">
+<span class="w-2 h-2 rounded-full bg-status-ok animate-ping"></span>
+<span class="font-code-sm text-code-sm text-status-ok">Live streaming engine ready</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-text-1 font-semibold mb-3">
+            Ready to see your requests move in real time?
+          </h3>
+<p class="font-body-md text-body-md text-text-2">
+            Deploy the OpenTelemetry exporter in 3 minutes. Zero credit card required to start on the Free tier.
+          </p>
+</div>
+<div class="flex flex-col sm:flex-row items-center gap-4 shrink-0">
+<a class="w-full sm:w-auto px-6 h-12 rounded-xl bg-gradient-to-r from-primary-container to-node-service hover:brightness-110 text-bg-0 font-label-md text-label-md font-bold flex items-center justify-center transition-all shadow-lg hover:shadow-cyan-500/25" data-path="signup" href="#">
+            Start Free Tier
+          </a>
+<a class="w-full sm:w-auto px-6 h-12 rounded-xl bg-bg-3 hover:bg-surface-bright text-text-1 font-label-md text-label-md font-semibold flex items-center justify-center transition-colors shadow-sm" data-path="contact" href="#">
+            Talk to an Engineer
+          </a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  function setBilling(cycle) {
+    const btnMonthly = document.getElementById('toggle-monthly');
+    const btnAnnually = document.getElementById('toggle-annually');
+    const pricePro = document.getElementById('price-pro');
+    const priceTeam = document.getElementById('price-team');
+    const discountPro = document.getElementById('discount-sub-pro');
+    const discountTeam = document.getElementById('discount-sub-team');
+    const billingUnits = document.querySelectorAll('.billing-unit');
+
+    if (cycle === 'annually') {
+      btnAnnually.classList.remove('text-text-3');
+      btnAnnually.classList.add('text-text-1', 'bg-bg-3', 'shadow-sm', 'font-semibold');
+      btnMonthly.classList.remove('text-text-1', 'bg-bg-3', 'shadow-sm', 'font-semibold');
+      btnMonthly.classList.add('text-text-3');
+
+      pricePro.innerText = '€15';
+      priceTeam.innerText = '€65';
+      discountPro.classList.remove('hidden');
+      discountTeam.classList.remove('hidden');
+
+      billingUnits.forEach(u => u.innerText = '/ month');
+    } else {
+      btnMonthly.classList.remove('text-text-3');
+      btnMonthly.classList.add('text-text-1', 'bg-bg-3', 'shadow-sm', 'font-semibold');
+      btnAnnually.classList.remove('text-text-1', 'bg-bg-3', 'shadow-sm', 'font-semibold');
+      btnAnnually.classList.add('text-text-3');
+
+      pricePro.innerText = '€19';
+      priceTeam.innerText = '€79';
+      discountPro.classList.add('hidden');
+      discountTeam.classList.add('hidden');
+
+      billingUnits.forEach(u => u.innerText = '/ month');
+    }
+  }
+
+  function toggleFaq(element) {
+    const content = element.querySelector('.faq-content');
+    const icon = element.querySelector('.faq-icon');
+    const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
+
+    document.querySelectorAll('.faq-content').forEach(c => {
+      c.style.maxHeight = '0px';
+    });
+    document.querySelectorAll('.faq-icon').forEach(i => {
+      i.style.transform = 'rotate(0deg)';
+    });
+
+    if (!isOpen) {
+      content.style.maxHeight = content.scrollHeight + 'px';
+      icon.style.transform = 'rotate(180deg)';
+    }
+  }
+</script></main><footer class="w-full bg-bg-1 shadow-[0_-1px_8px_rgba(0,0,0,0.2)]"><div class="max-w-7xl mx-auto px-6 lg:px-12 py-space-xl"><div class="grid grid-cols-2 md:grid-cols-5 gap-space-xl mb-space-xl"><div class="col-span-2 flex flex-col gap-space-sm"><div class="flex items-center gap-space-sm text-text-1"><div class="w-6 h-6 rounded bg-surface-container-high flex items-center justify-center"><span class="material-symbols-outlined text-primary-container text-[16px]">hub</span></div><span class="font-headline-sm text-headline-sm font-semibold tracking-tight text-text-1">FlowTrace</span></div><p class="font-body-md text-body-md text-text-3 max-w-sm">Real-time execution telemetry and graph visualization for high-velocity distributed engineering teams.</p><div class="flex items-center gap-space-xs mt-space-xs"><span class="w-2 h-2 rounded-full bg-status-ok animate-pulse"></span><span class="font-code-sm text-code-sm text-text-2">All systems operational</span></div></div><div class="flex flex-col gap-space-sm"><span class="font-label-uppercase text-label-uppercase text-text-3">Product</span><a class="font-body-md text-body-md text-text-2 hover:text-text-1 transition-colors" data-path="product" href="#">Flow Visualizer</a><a class="font-body-md text-body-md text-text-2 hover:text-text-1 transition-colors" data-path="templates" href="#">Templates</a><a class="font-body-md text-body-md text-text-2 hover:text-text-1 transition-colors" data-path="pricing" href="#">Pricing</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-uppercase text-label-uppercase text-text-3">Architecture</span><a class="font-body-md text-body-md text-text-2 hover:text-text-1 transition-colors" data-path="docs" href="#">Telemetry Engine</a><a class="font-body-md text-body-md text-text-2 hover:text-text-1 transition-colors" data-path="docs" href="#">Tracing Mesh</a><a class="font-body-md text-body-md text-text-2 hover:text-text-1 transition-colors" data-path="docs" href="#">Edge Runtime</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-uppercase text-label-uppercase text-text-3">Resources</span><a class="font-body-md text-body-md text-text-2 hover:text-text-1 transition-colors" data-path="docs" href="#">Documentation</a><a class="font-body-md text-body-md text-text-2 hover:text-text-1 transition-colors" data-path="docs" href="#">API Reference</a><a class="font-body-md text-body-md text-text-2 hover:text-text-1 transition-colors" data-path="legal" href="#">Legal &amp; Privacy</a></div></div><div class="pt-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-sm text-text-3 font-label-sm text-label-sm"><p>© 2024 FlowTrace Systems Inc. Built for technical operations.</p><div class="flex items-center gap-space-lg"><a class="hover:text-text-2 transition-colors" data-path="legal" href="#">Security</a><a class="hover:text-text-2 transition-colors" data-path="legal" href="#">Privacy Policy</a><a class="hover:text-text-2 transition-colors" data-path="legal" href="#">Terms of Service</a></div></div></div></footer></body></html>

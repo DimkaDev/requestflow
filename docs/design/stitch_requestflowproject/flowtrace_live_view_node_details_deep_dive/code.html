@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"node-service":"#8B5CF6","status-discovered":"#F59E0B","error-container":"#93000a","surface-container":"#1e1f25","border-strong":"#343C4F","text-1":"#E8ECF4","outline-variant":"#3c494c","on-secondary-container":"#c4abff","on-primary":"#00363e","primary-fixed-dim":"#2fd9f4","surface-container-low":"#1a1b21","node-queue":"#22D3EE","node-decision":"#F59E0B","node-datastore":"#34D399","bg-3":"#1E2330","inverse-on-surface":"#2e3036","surface-variant":"#33353a","on-secondary-fixed-variant":"#5516be","bg-0":"#0B0D12","on-background":"#e2e2e9","surface-tint":"#2fd9f4","surface-container-highest":"#33353a","status-error":"#F43F5E","primary-container":"#22d3ee","error":"#ffb4ab","on-tertiary":"#462b00","on-surface-variant":"#bbc9cd","node-end":"#F472B6","on-surface":"#e2e2e9","tertiary-container":"#ffb13b","surface-dim":"#111318","border-structural":"#262C3A","status-info":"#60A5FA","on-error":"#690005","secondary-fixed-dim":"#d0bcff","text-3":"#7C869C","surface-container-high":"#282a2f","primary-fixed":"#a2eeff","bg-2":"#171B24","on-tertiary-container":"#6e4600","tertiary":"#ffd6a3","node-external":"#94A3B8","bg-1":"#11141B","on-error-container":"#ffdad6","on-primary-container":"#005763","primary":"#8aebff","inverse-primary":"#006877","surface-container-lowest":"#0c0e13","background":"#111318","tertiary-fixed":"#ffddb5","text-2":"#A3ACBF","on-tertiary-fixed-variant":"#643f00","secondary":"#d0bcff","node-source":"#60A5FA","on-tertiary-fixed":"#2a1800","outline":"#859397","surface-bright":"#37393f","secondary-fixed":"#e9ddff","status-ok":"#34D399","on-secondary-fixed":"#23005c","status-warn":"#F59E0B","inverse-surface":"#e2e2e9","on-primary-fixed":"#001f25","on-primary-fixed-variant":"#004e5a","surface":"#111318","tertiary-fixed-dim":"#ffb957","secondary-container":"#571bc1","on-secondary":"#3c0091"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-xl":"1.5rem","space-lg":"1rem","gutter":"1rem","space-md":"0.75rem","gutter-desktop":"1.5rem","space-xs":"0.25rem","margin":"1rem","margin-desktop":"1.5rem","space-sm":"0.5rem"},"fontFamily":{"display":["Inter"],"headline-sm":["Inter"],"headline-lg-mobile":["Inter"],"label-uppercase":["Inter"],"label-md":["Inter"],"display-mobile":["Inter"],"body-node-label":["Inter"],"body-md":["Inter"],"label-sm":["Inter"],"code-sm":["JetBrains Mono"],"body-lg":["Inter"],"chip-metric":["Inter"],"headline-lg":["Inter"],"headline-md":["Inter"],"code-block":["JetBrains Mono"]},"fontSize":{"display":["48px",{"lineHeight":"52px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"headline-lg-mobile":["26px",{"lineHeight":"32px","fontWeight":"600"}],"label-uppercase":["12px",{"lineHeight":"16px","letterSpacing":"0.08em","fontWeight":"500"}],"label-md":["13px",{"lineHeight":"18px","fontWeight":"500"}],"display-mobile":["36px",{"lineHeight":"42px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-node-label":["14px",{"lineHeight":"20px","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"label-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"code-sm":["12px",{"lineHeight":"16px","fontWeight":"500"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"chip-metric":["11px",{"lineHeight":"14px","fontWeight":"500"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],"code-block":["13px",{"lineHeight":"20px","fontWeight":"400"}]}}}</script></head><body class="bg-bg-0 font-body-md text-text-1 min-h-screen selection:bg-node-queue selection:text-bg-0"><header class="fixed top-0 left-0 right-0 h-14 z-50 bg-bg-1/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.5)]"><div class="h-14 w-full px-4 lg:px-6 flex items-center justify-between gap-4"><div class="flex items-center gap-4 min-w-0"><div class="flex items-center gap-2.5 flex-shrink-0"><div class="w-7 h-7 rounded-lg bg-gradient-to-br from-node-queue to-node-service flex items-center justify-center shadow-[0_0_12px_rgba(34,211,238,0.3)]"><span class="material-symbols-outlined text-bg-0 text-[18px]">hub</span></div><span class="font-headline-sm text-headline-sm text-text-1 tracking-tight hidden sm:inline-block">FlowTrace</span></div><div class="h-4 w-px bg-border-structural flex-shrink-0 hidden md:block"></div><nav aria-label="Cluster Breadcrumbs" class="hidden md:flex items-center gap-1.5 min-w-0 font-code-sm text-code-sm"><span class="text-text-3 flex items-center gap-1 hover:text-text-2 cursor-pointer transition-colors"><span class="material-symbols-outlined text-[16px]">cloud</span>prod-us-east-1</span><span class="text-border-strong text-[10px]">/</span><span class="text-text-3 flex items-center gap-1 hover:text-text-2 cursor-pointer transition-colors"><span class="material-symbols-outlined text-[16px]">dns</span>telemetry-mesh</span><span class="text-border-strong text-[10px]">/</span><span class="px-2 py-0.5 rounded-full bg-bg-3 text-node-queue flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-status-ok animate-pulse"></span>live-stream</span></nav></div><div class="flex-1 max-w-md hidden lg:flex items-center mx-2"><div class="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-3 text-text-2 transition-all"><span class="material-symbols-outlined text-[18px] text-text-3">search</span><span class="font-label-sm text-label-sm text-text-3 flex-1">Search spans, trace IDs, trace parent...</span><kbd class="px-1.5 py-0.5 rounded bg-bg-0 font-code-sm text-code-sm text-text-3">⌘K</kbd></div></div><div class="flex items-center gap-2 sm:gap-3 flex-shrink-0"><div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-bg-3 font-chip-metric text-chip-metric"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-ok opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-status-ok"></span></span><span class="text-status-ok font-code-sm text-code-sm hidden sm:inline">LIVE</span><span class="text-text-3 hidden md:inline">• 42.8k eps</span></div><button aria-label="Theme Mode" class="w-8 h-8 rounded-lg bg-bg-3 hover:bg-surface-container flex items-center justify-center text-text-2 hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">dark_mode</span></button><button aria-label="Share Trace Topology" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-bg-3 hover:bg-surface-container text-text-2 hover:text-on-surface font-label-md text-label-md transition-colors" type="button"><span class="material-symbols-outlined text-[16px]">share</span>Share</button><div class="h-4 w-px bg-border-structural"></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><aside class="fixed left-0 top-14 bottom-0 w-64 bg-bg-1 z-40 flex flex-col justify-between p-3"><div class="space-y-4"><div class="px-3 pt-2"><span class="font-label-uppercase text-label-uppercase text-text-3 uppercase tracking-wider">Observability</span></div><nav class="space-y-1" data-active-classes="bg-bg-3 text-node-queue font-semibold"><a aria-current="page" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-all bg-bg-3 text-node-queue font-semibold" data-path="live-topology" href="#"><span class="material-symbols-outlined text-[20px] text-node-queue">account_tree</span>Live Topology</a><a class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-2 hover:bg-bg-3 hover:text-on-surface transition-all font-body-md text-body-md" data-path="traces-explorer" href="#"><span class="material-symbols-outlined text-[20px] text-node-service">reorder</span>Traces Explorer</a><a class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-2 hover:bg-bg-3 hover:text-on-surface transition-all font-body-md text-body-md" data-path="service-metrics" href="#"><span class="material-symbols-outlined text-[20px] text-node-datastore">monitoring</span>Service Metrics</a><a class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-2 hover:bg-bg-3 hover:text-on-surface transition-all font-body-md text-body-md" data-path="cluster-health" href="#"><span class="material-symbols-outlined text-[20px] text-status-warn">health_and_safety</span>Cluster Health</a><a class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-2 hover:bg-bg-3 hover:text-on-surface transition-all font-body-md text-body-md" data-path="alerts-incident-logs" href="#"><span class="material-symbols-outlined text-[20px] text-status-error">warning</span>Alerts &amp; Incidents</a></nav><div class="px-3 pt-4"><span class="font-label-uppercase text-label-uppercase text-text-3 uppercase tracking-wider">Config</span></div><nav class="space-y-1" data-active-classes="bg-bg-3 text-node-queue font-semibold"><a class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-2 hover:bg-bg-3 hover:text-on-surface transition-all font-body-md text-body-md" data-path="sampling-rules" href="#"><span class="material-symbols-outlined text-[20px] text-text-3">tune</span>Sampling Rules</a><a class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-2 hover:bg-bg-3 hover:text-on-surface transition-all font-body-md text-body-md" data-path="connectors-pipelines" href="#"><span class="material-symbols-outlined text-[20px] text-text-3">input</span>Pipelines</a></nav></div><div class="p-3 rounded-lg bg-bg-2 space-y-2"><div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-text-3">Ingestion Buffer</span><span class="font-code-sm text-code-sm text-status-ok">99.8%</span></div><div class="w-full h-1.5 rounded-full bg-bg-0 overflow-hidden"><div class="h-full bg-gradient-to-r from-node-queue to-node-service w-3/4 rounded-full"></div></div><div class="flex items-center justify-between text-text-3 font-code-sm text-code-sm"><span>us-east-1a</span><span class="text-status-ok flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>Nominal</span></div></div></aside><div class="pl-64"><main class="relative pt-14 bg-bg-0 min-h-screen"><div class="flex flex-col w-full relative overflow-hidden select-none">
+<!-- Interactive Viewport Wrapper -->
+<div class="relative w-full h-[calc(100vh-3.5rem)] flex overflow-hidden bg-bg-0">
+<!-- CANVAS BACKGROUND (DIMMED TOPOLOGY GRAPH) -->
+<div class="relative flex-1 h-full overflow-hidden">
+<!-- 24px Dot Grid Coordinate Matrix -->
+<div class="absolute inset-0 pointer-events-none opacity-25" style="background-image: radial-gradient(circle, rgba(255, 255, 255, 0.22) 1px, transparent 1px); background-size: 24px 24px;">
+</div>
+<!-- Live Floating Graph Canvas -->
+<div class="absolute inset-0 flex items-center justify-center p-8 transition-all duration-300">
+<!-- SVG Directed Graph Edges with Gradient Glows -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none overflow-visible" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient id="edge-active-glow" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#22D3EE" stop-opacity="0.8"></stop>
+<stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.8"></stop>
+</lineargradient>
+<lineargradient id="stream-pulse" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#22D3EE" stop-opacity="0"></stop>
+<stop offset="50%" stop-color="#22D3EE" stop-opacity="1"></stop>
+<stop offset="100%" stop-color="#8B5CF6" stop-opacity="0"></stop>
+</lineargradient>
+<filter height="140%" id="glow-filter" width="140%" x="-20%" y="-20%">
+<fegaussianblur result="blur" stddeviation="3"></fegaussianblur>
+<fecomposite in="SourceGraphic" in2="blur" operator="over"></fecomposite>
+</filter>
+</defs>
+<!-- Edge 1: Edge Gateway -> Load Balancer -->
+<path d="M 170 340 C 230 340, 250 340, 300 340" fill="none" stroke="#262C3A" stroke-width="2"></path>
+<circle cx="235" cy="340" fill="#60A5FA" opacity="0.85" r="2.5">
+<animate attributename="cx" dur="2.4s" repeatcount="indefinite" values="170;300"></animate>
+</circle>
+<!-- Edge 2: Load Balancer -> Tier Router (Highlighted / Active Flow) -->
+<path d="M 440 340 C 500 340, 520 340, 570 340" fill="none" filter="url(#glow-filter)" stroke="url(#edge-active-glow)" stroke-width="2.5"></path>
+<circle cx="505" cy="340" fill="#22D3EE" r="3.5">
+<animate attributename="cx" dur="1.2s" repeatcount="indefinite" values="440;570"></animate>
+</circle>
+<!-- Edge 3: Tier Router -> Service A (VIP Pool) -->
+<path d="M 720 325 C 780 325, 800 240, 860 240" fill="none" stroke="url(#edge-active-glow)" stroke-width="2.5"></path>
+<circle cx="790" cy="282" fill="#22D3EE" r="3">
+<animate attributename="cx" dur="1.5s" repeatcount="indefinite" values="720;860"></animate>
+<animate attributename="cy" dur="1.5s" repeatcount="indefinite" values="325;240"></animate>
+</circle>
+<!-- Edge 4: Tier Router -> Service B (Batch Worker) -->
+<path d="M 720 355 C 780 355, 800 440, 860 440" fill="none" stroke="#262C3A" stroke-dasharray="6 4" stroke-width="2"></path>
+<!-- Edge 5: Service A -> Aurora Postgres -->
+<path d="M 1000 240 C 1050 240, 1070 320, 1120 320" fill="none" stroke="#262C3A" stroke-width="2"></path>
+<!-- Edge 6: Service B -> Aurora Postgres -->
+<path d="M 1000 440 C 1050 440, 1070 360, 1120 360" fill="none" stroke="#262C3A" stroke-width="2"></path>
+</svg>
+<!-- Topology Nodes Hierarchy -->
+<div class="relative w-full max-w-5xl h-full flex items-center justify-between text-text-1">
+<!-- Node 1: Cloudflare Edge (Source) -->
+<div class="relative group cursor-pointer transition-transform duration-200 hover:-translate-y-0.5" style="left: 20px; top: -10px;">
+<div class="w-48 bg-bg-2/90 backdrop-blur-md p-3.5 rounded-xl border border-border-structural shadow-lg flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-node-source/15 flex items-center justify-center text-node-source">
+<span class="material-symbols-outlined text-[20px]">public</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="font-body-node-label text-body-node-label text-text-1 truncate">edge_gateway</div>
+<div class="font-code-sm text-[11px] text-text-3">4,812 req/s</div>
+</div>
+<span class="w-2 h-2 rounded-full bg-status-ok shadow-[0_0_8px_#34D399]"></span>
+</div>
+</div>
+<!-- Node 2: Load Balancer (Internal Envoy) -->
+<div class="relative group cursor-pointer transition-transform duration-200 hover:-translate-y-0.5" style="left: 10px; top: -10px;">
+<div class="w-48 bg-bg-2/90 backdrop-blur-md p-3.5 rounded-xl border border-border-structural shadow-lg flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-node-queue/15 flex items-center justify-center text-node-queue">
+<span class="material-symbols-outlined text-[20px]">alt_route</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="font-body-node-label text-body-node-label text-text-1 truncate">envoy_internal_lb</div>
+<div class="font-code-sm text-[11px] text-text-3">p95 0.12ms</div>
+</div>
+<span class="w-2 h-2 rounded-full bg-status-ok"></span>
+</div>
+</div>
+<!-- Node 3: TIER ROUTER (ACTIVE / SELECTED INSPECTOR TARGET) -->
+<div class="relative z-20 cursor-pointer transform -translate-y-2.5">
+<!-- Pulsing Accent Halo behind selected card -->
+<div class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-node-queue to-node-service opacity-70 blur-md animate-pulse"></div>
+<div class="relative w-56 bg-bg-2 p-4 rounded-xl border-2 border-node-queue shadow-[0_0_24px_rgba(34,211,238,0.35)]">
+<!-- Decision Indicator Bar -->
+<div class="absolute left-0 top-3 bottom-3 w-1 bg-node-decision rounded-r"></div>
+<div class="flex items-center gap-3 pl-1.5">
+<div class="w-10 h-10 rounded-lg bg-node-decision/20 flex items-center justify-center text-node-decision shadow-[0_0_12px_rgba(245,158,11,0.25)]">
+<span class="material-symbols-outlined text-[22px]">call_split</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center justify-between">
+<span class="font-label-uppercase text-[10px] tracking-wider text-node-decision uppercase font-semibold">Decision</span>
+<span class="inline-flex items-center gap-1 font-chip-metric text-[10px] text-status-ok bg-bg-0/60 px-1.5 py-0.5 rounded">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok animate-ping"></span>99.98%
+                    </span>
+</div>
+<div class="font-headline-sm text-[15px] font-semibold text-text-1 truncate">Tier Router</div>
+<div class="font-code-sm text-[11px] text-node-queue truncate">eval_jwt_policy</div>
+</div>
+</div>
+<!-- Metric micro-strip -->
+<div class="mt-3 pt-2.5 border-t border-border-structural/60 grid grid-cols-2 gap-2 text-[11px] font-code-sm text-text-2">
+<div>IN: <span class="text-text-1 font-medium">4.81k</span></div>
+<div class="text-right">LAT: <span class="text-status-ok font-medium">0.42ms</span></div>
+</div>
+</div>
+</div>
+<!-- Downstream Cluster Group (Service A & B) -->
+<div class="flex flex-col gap-12 relative" style="right: 30px;">
+<!-- Service A: VIP Pool -->
+<div class="w-48 bg-bg-2/80 backdrop-blur-md p-3.5 rounded-xl border border-border-structural shadow-lg flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-node-service/20 flex items-center justify-center text-node-service">
+<span class="material-symbols-outlined text-[20px]">bolt</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="font-body-node-label text-body-node-label text-text-1 truncate">svc_priority_proc</div>
+<div class="font-code-sm text-[11px] text-text-3">3,272 req/s (68%)</div>
+</div>
+<span class="w-2 h-2 rounded-full bg-status-ok"></span>
+</div>
+<!-- Service B: Batch Worker -->
+<div class="w-48 bg-bg-2/80 backdrop-blur-md p-3.5 rounded-xl border border-border-structural shadow-lg flex items-center gap-3 opacity-90">
+<div class="w-9 h-9 rounded-lg bg-node-service/20 flex items-center justify-center text-node-service">
+<span class="material-symbols-outlined text-[20px]">layers</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="font-body-node-label text-body-node-label text-text-1 truncate">svc_batch_worker</div>
+<div class="font-code-sm text-[11px] text-text-3">1,539 req/s (32%)</div>
+</div>
+<span class="w-2 h-2 rounded-full bg-status-ok"></span>
+</div>
+</div>
+<!-- Node 5: Aurora Cluster (Datastore) -->
+<div class="relative group cursor-pointer" style="right: 10px;">
+<div class="w-48 bg-bg-2/80 backdrop-blur-md p-3.5 rounded-xl border border-border-structural shadow-lg flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-node-datastore/15 flex items-center justify-center text-node-datastore">
+<span class="material-symbols-outlined text-[20px]">database</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="font-body-node-label text-body-node-label text-text-1 truncate">aurora_pg_primary</div>
+<div class="font-code-sm text-[11px] text-text-3">conn: 142 · 1.2ms</div>
+</div>
+<span class="w-2 h-2 rounded-full bg-status-ok"></span>
+</div>
+</div>
+</div>
+</div>
+<!-- Backdrop Dim Overlay for Drawer Focus -->
+<div class="absolute inset-0 bg-bg-0/65 backdrop-blur-[3px] pointer-events-auto transition-opacity duration-300"></div>
+<!-- Floating Topology Controls on Canvas Bottom-Left -->
+<div class="absolute bottom-4 left-6 z-10 flex items-center gap-2 bg-bg-1/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-border-structural shadow-xl">
+<button class="w-7 h-7 rounded-lg hover:bg-bg-3 flex items-center justify-center text-text-2 hover:text-text-1 transition-colors" title="Zoom In" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+<button class="w-7 h-7 rounded-lg hover:bg-bg-3 flex items-center justify-center text-text-2 hover:text-text-1 transition-colors" title="Zoom Out" type="button">
+<span class="material-symbols-outlined text-[18px]">remove</span>
+</button>
+<div class="h-4 w-px bg-border-structural"></div>
+<button class="w-7 h-7 rounded-lg hover:bg-bg-3 flex items-center justify-center text-text-2 hover:text-text-1 transition-colors" title="Fit to Screen" type="button">
+<span class="material-symbols-outlined text-[18px]">fit_screen</span>
+</button>
+<span class="font-code-sm text-[11px] text-text-3 px-1">100%</span>
+</div>
+</div>
+<!-- FULL-HEIGHT RIGHT DRAWER: "NODE DETAILS" (500px WIDTH) -->
+<aside class="relative z-30 w-[500px] h-full flex flex-col bg-bg-1 border-l border-border-structural shadow-[0_0_50px_rgba(0,0,0,0.85)] flex-shrink-0" id="node-inspector-drawer">
+<!-- 1. DRAWER HEADER -->
+<div class="px-6 pt-5 pb-4 border-b border-border-structural/80 bg-bg-1/95 flex-shrink-0">
+<!-- Top Control Bar: Category Chip & Action Buttons -->
+<div class="flex items-center justify-between mb-3.5">
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-0.5 rounded-full bg-node-decision/15 border border-node-decision/30 text-node-decision font-label-uppercase text-[11px] tracking-wider uppercase font-semibold flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-node-decision"></span>
+              Decision Node
+            </span>
+<span class="font-code-sm text-[11px] text-text-3">v2.4.1-prod</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-1.5 rounded-lg text-text-3 hover:text-text-1 hover:bg-bg-3 transition-colors" title="Pin Drawer" type="button">
+<span class="material-symbols-outlined text-[18px]">keep</span>
+</button>
+<button class="p-1.5 rounded-lg text-text-3 hover:text-text-1 hover:bg-bg-3 transition-colors" title="Open in Full Page" type="button">
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+</button>
+<button class="p-1.5 rounded-lg text-text-3 hover:text-text-1 hover:bg-bg-3 transition-colors ml-1" id="close-drawer-btn" title="Close Drawer (Esc)" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+<!-- Node Title, Tile, Key & SLO Status -->
+<div class="flex items-start gap-3.5">
+<div class="w-11 h-11 rounded-xl bg-node-decision/20 border border-node-decision/30 flex items-center justify-center text-node-decision flex-shrink-0 shadow-[0_0_16px_rgba(245,158,11,0.2)]">
+<span class="material-symbols-outlined text-[24px]">call_split</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<h1 class="font-headline-sm text-headline-sm text-text-1 font-semibold tracking-tight truncate">Tier Router</h1>
+<span class="px-1.5 py-0.5 rounded bg-bg-3 text-status-ok font-chip-metric text-[10px] uppercase font-semibold">Active</span>
+</div>
+<!-- Monospace Key with Click-to-Copy -->
+<div class="flex items-center gap-2 mt-1">
+<div class="group relative flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-bg-3/80 hover:bg-bg-3 border border-border-structural text-text-2 cursor-pointer transition-all" id="copy-key-btn" title="Click to copy node key">
+<span class="font-code-sm text-code-sm text-node-queue">eval_jwt_policy</span>
+<span class="material-symbols-outlined text-[14px] text-text-3 group-hover:text-text-1 transition-colors">content_copy</span>
+<!-- Interactive Tooltip -->
+<span class="absolute -top-7 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-node-queue text-bg-0 font-code-sm text-[10px] font-semibold rounded opacity-0 pointer-events-none transition-opacity duration-200" id="copied-tooltip">
+                  Copied!
+                </span>
+</div>
+<span class="text-border-strong text-[12px]">•</span>
+<span class="font-code-sm text-[11px] text-text-3">ID: <span class="text-text-2">node_8f99e4</span></span>
+</div>
+</div>
+</div>
+<!-- Real-Time Health Badge Strip -->
+<div class="mt-3.5 flex items-center justify-between pt-2.5 border-t border-border-structural/50 text-[12px]">
+<div class="flex items-center gap-2">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-ok opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-status-ok"></span>
+</span>
+<span class="font-label-md text-label-md font-medium text-status-ok tracking-wide">HEALTHY</span>
+<span class="text-text-3">·</span>
+<span class="font-code-sm text-code-sm text-text-2">99.98% SLO</span>
+</div>
+<span class="font-code-sm text-[11px] text-text-3 flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">schedule</span> eval 2s ago
+          </span>
+</div>
+</div>
+<!-- 2. NAVIGATION TABS (Overview, Traces, Settings) -->
+<div class="px-6 bg-bg-1 border-b border-border-structural flex items-center gap-7 flex-shrink-0">
+<button class="drawer-tab-btn relative py-3 font-label-md text-label-md font-semibold text-text-1 flex items-center gap-2 transition-colors" data-tab-target="overview" type="button">
+          Overview
+          <span class="px-1.5 py-0.2 rounded-full bg-node-queue/15 text-node-queue font-chip-metric text-[10px]">Live</span>
+<span class="tab-indicator absolute bottom-0 left-0 right-0 h-0.5 bg-node-queue rounded-t"></span>
+</button>
+<button class="drawer-tab-btn relative py-3 font-label-md text-label-md font-medium text-text-3 hover:text-text-1 flex items-center gap-2 transition-colors" data-tab-target="traces" type="button">
+          Traces
+          <span class="px-1.5 py-0.2 rounded-full bg-bg-3 text-text-2 font-code-sm text-[10px]">2,840</span>
+<span class="tab-indicator hidden absolute bottom-0 left-0 right-0 h-0.5 bg-node-queue rounded-t"></span>
+</button>
+<button class="drawer-tab-btn relative py-3 font-label-md text-label-md font-medium text-text-3 hover:text-text-1 flex items-center gap-1.5 transition-colors" data-tab-target="settings" type="button">
+<span class="material-symbols-outlined text-[16px]">settings</span>
+          Settings
+          <span class="tab-indicator hidden absolute bottom-0 left-0 right-0 h-0.5 bg-node-queue rounded-t"></span>
+</button>
+</div>
+<!-- 3. SCROLLABLE TAB PANELS WRAPPER -->
+<div class="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6">
+<!-- TAB CONTENT: OVERVIEW -->
+<div class="space-y-6" id="tab-overview">
+<!-- 4 METRIC TILES GRID -->
+<div class="grid grid-cols-2 gap-3">
+<!-- Metric 1: In / Out Counter -->
+<div class="p-3.5 rounded-xl bg-bg-2 border border-border-structural shadow-sm hover:border-border-strong transition-colors">
+<div class="flex items-center justify-between text-text-3 mb-1.5">
+<span class="font-label-uppercase text-[11px] tracking-wider uppercase">Throughput</span>
+<span class="font-code-sm text-[11px] text-status-ok font-medium flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]">trending_up</span>+8.4%
+                </span>
+</div>
+<div class="font-headline-sm text-[18px] font-semibold text-text-1 flex items-baseline gap-1.5">
+                4,812 <span class="font-code-sm text-[12px] text-text-3 font-normal">in/s</span>
+</div>
+<div class="font-code-sm text-[11px] text-text-3 mt-1 flex items-center justify-between">
+<span>Out: 4,809/s</span>
+<span class="text-node-queue">Δ -3 loss</span>
+</div>
+</div>
+<!-- Metric 2: Error Rate -->
+<div class="p-3.5 rounded-xl bg-bg-2 border border-border-structural shadow-sm hover:border-border-strong transition-colors">
+<div class="flex items-center justify-between text-text-3 mb-1.5">
+<span class="font-label-uppercase text-[11px] tracking-wider uppercase">Error Rate</span>
+<span class="font-chip-metric text-[10px] text-status-ok bg-status-ok/10 px-1.5 py-0.5 rounded">SLO &lt;0.1%</span>
+</div>
+<div class="font-headline-sm text-[18px] font-semibold text-status-ok flex items-baseline gap-1.5">
+                0.02%
+              </div>
+<div class="font-code-sm text-[11px] text-text-3 mt-1">
+                1 fail per 5.2k reqs
+              </div>
+</div>
+<!-- Metric 3: Avg Hop Latency -->
+<div class="p-3.5 rounded-xl bg-bg-2 border border-border-structural shadow-sm hover:border-border-strong transition-colors">
+<div class="flex items-center justify-between text-text-3 mb-1.5">
+<span class="font-label-uppercase text-[11px] tracking-wider uppercase">Hop Latency</span>
+<span class="font-code-sm text-[11px] text-text-3">avg</span>
+</div>
+<div class="font-headline-sm text-[18px] font-semibold text-text-1 flex items-baseline gap-1.5">
+                0.42 <span class="font-code-sm text-[12px] text-text-3 font-normal">ms</span>
+</div>
+<div class="font-code-sm text-[11px] text-text-3 mt-1 flex items-center justify-between">
+<span>p95: 0.88ms</span>
+<span class="text-text-2">p99: 1.40ms</span>
+</div>
+</div>
+<!-- Metric 4: Memory & CPU Usage -->
+<div class="p-3.5 rounded-xl bg-bg-2 border border-border-structural shadow-sm hover:border-border-strong transition-colors">
+<div class="flex items-center justify-between text-text-3 mb-1.5">
+<span class="font-label-uppercase text-[11px] tracking-wider uppercase">Resources</span>
+<span class="font-chip-metric text-[10px] text-text-3">Nominal</span>
+</div>
+<div class="font-headline-sm text-[18px] font-semibold text-text-1 flex items-baseline gap-1.5">
+                4.8% <span class="font-code-sm text-[12px] text-text-3 font-normal">CPU</span>
+</div>
+<div class="font-code-sm text-[11px] text-text-3 mt-1 flex items-center justify-between">
+<span>Heap: 42MB</span>
+<span class="text-status-ok">No leaks</span>
+</div>
+</div>
+</div>
+<!-- TELEMETRY LINE CHART SECTION -->
+<div class="p-4 rounded-xl bg-bg-2 border border-border-structural space-y-3.5">
+<!-- Chart Header Controls -->
+<div class="flex items-center justify-between">
+<div>
+<h3 class="font-label-md text-label-md font-semibold text-text-1">Throughput &amp; Hop Latency</h3>
+<p class="font-code-sm text-[11px] text-text-3">Rolling 1-second sampled telemetry</p>
+</div>
+<div class="flex items-center gap-1.5">
+<div class="flex items-center gap-1 px-2 py-1 rounded-md bg-bg-3 border border-border-structural text-text-2 font-code-sm text-[11px] cursor-pointer hover:bg-surface-container transition-colors">
+<span>Last 15m</span>
+<span class="material-symbols-outlined text-[14px]">expand_more</span>
+</div>
+<span class="px-2 py-1 rounded-md bg-bg-3 font-code-sm text-[11px] text-text-3">1s</span>
+</div>
+</div>
+<!-- Chart Legends -->
+<div class="flex items-center gap-4 text-[11px] font-code-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-sm bg-node-queue"></span>
+<span class="text-text-2">Throughput (req/s)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-sm bg-node-service"></span>
+<span class="text-text-2">p99 Latency (ms)</span>
+</div>
+</div>
+<!-- Chart SVG Canvas with Crosshair overlay -->
+<div class="relative w-full h-44 bg-bg-0/60 rounded-lg p-2 border border-border-structural/60 overflow-hidden group">
+<!-- Y-Axis Ticks Guidelines -->
+<div class="absolute inset-x-2 inset-y-2 flex flex-col justify-between pointer-events-none opacity-20 text-[9px] font-code-sm text-text-3">
+<div class="border-b border-border-strong w-full flex justify-between"><span>6.0k</span><span>2.0ms</span></div>
+<div class="border-b border-border-strong w-full flex justify-between"><span>4.5k</span><span>1.5ms</span></div>
+<div class="border-b border-border-strong w-full flex justify-between"><span>3.0k</span><span>1.0ms</span></div>
+<div class="border-b border-border-strong w-full flex justify-between"><span>1.5k</span><span>0.5ms</span></div>
+<div class="w-full flex justify-between"><span>0</span><span>0ms</span></div>
+</div>
+<!-- Vector Curves & Area Fill -->
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 440 140">
+<defs>
+<lineargradient id="area-cyan-grad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#22D3EE" stop-opacity="0.32"></stop>
+<stop offset="100%" stop-color="#22D3EE" stop-opacity="0.01"></stop>
+</lineargradient>
+<lineargradient id="area-violet-grad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.25"></stop>
+<stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<!-- Throughput Area Fill -->
+<path d="M 0 75 Q 40 68, 80 72 T 160 55 T 240 62 T 320 40 T 360 48 T 400 42 T 440 45 L 440 140 L 0 140 Z" fill="url(#area-cyan-grad)"></path>
+<!-- Throughput Line Curve (#22D3EE) -->
+<path d="M 0 75 Q 40 68, 80 72 T 160 55 T 240 62 T 320 40 T 360 48 T 400 42 T 440 45" fill="none" stroke="#22D3EE" stroke-linecap="round" stroke-width="2.5"></path>
+<!-- Latency Line Curve (#8B5CF6) -->
+<path d="M 0 110 Q 50 105, 100 108 T 200 95 T 300 88 T 360 82 T 400 78 T 440 75" fill="none" stroke="#8B5CF6" stroke-dasharray="0" stroke-linecap="round" stroke-width="2"></path>
+<!-- Interactive Cursor Crosshair Reference Line -->
+<line opacity="0.8" stroke="#859397" stroke-dasharray="3 3" stroke-width="1.5" x1="320" x2="320" y1="0" y2="140"></line>
+<circle cx="320" cy="40" fill="#22D3EE" r="4.5" stroke="#0B0D12" stroke-width="2"></circle>
+<circle cx="320" cy="88" fill="#8B5CF6" r="4" stroke="#0B0D12" stroke-width="2"></circle>
+</svg>
+<!-- Hover Tooltip Box pinned to cursor line -->
+<div class="absolute top-2 left-64 bg-bg-1/95 border border-border-strong rounded-lg p-2 shadow-xl backdrop-blur-md font-code-sm pointer-events-none transition-all">
+<div class="text-[10px] text-text-3 mb-1 flex items-center justify-between gap-3">
+<span>14:28:10 UTC</span>
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+</div>
+<div class="text-[11px] text-node-queue flex items-center justify-between gap-4 font-semibold">
+<span>Throughput:</span>
+<span>4,850 req/s</span>
+</div>
+<div class="text-[11px] text-node-service flex items-center justify-between gap-4 font-semibold">
+<span>Latency:</span>
+<span>0.38 ms</span>
+</div>
+</div>
+</div>
+<!-- Min/Max/Avg Stat Strip -->
+<div class="grid grid-cols-3 gap-2 pt-2 border-t border-border-structural/60 font-code-sm text-[11px] text-center">
+<div class="bg-bg-3/50 p-1.5 rounded">
+<span class="text-text-3 block text-[10px]">MIN THROUGHPUT</span>
+<span class="text-text-1 font-medium">3,940 req/s</span>
+</div>
+<div class="bg-bg-3/50 p-1.5 rounded">
+<span class="text-text-3 block text-[10px]">AVG THROUGHPUT</span>
+<span class="text-node-queue font-medium">4,792 req/s</span>
+</div>
+<div class="bg-bg-3/50 p-1.5 rounded">
+<span class="text-text-3 block text-[10px]">PEAK HOP SPIKE</span>
+<span class="text-status-warn font-medium">1.62 ms</span>
+</div>
+</div>
+</div>
+<!-- TRAFFIC DISTRIBUTION BREAKDOWN (INCOMING & OUTGOING EDGES) -->
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="font-label-md text-label-md font-semibold text-text-1">Traffic Distribution</h3>
+<span class="font-code-sm text-[11px] text-text-3">10 edges mapped</span>
+</div>
+<!-- INCOMING EDGES (TOP 5) -->
+<div class="p-4 rounded-xl bg-bg-2 border border-border-structural space-y-3">
+<div class="flex items-center justify-between text-xs pb-1 border-b border-border-structural/50">
+<span class="font-label-uppercase text-[11px] tracking-wider text-text-3 font-semibold uppercase flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-node-source">arrow_downward</span>
+                  Incoming Edges (Upstream)
+                </span>
+<span class="font-code-sm text-[11px] text-text-3">Total: 4,812 r/s</span>
+</div>
+<div class="space-y-2.5">
+<!-- Ingress Item 1 -->
+<div>
+<div class="flex items-center justify-between font-code-sm text-[12px] mb-1">
+<span class="text-text-1 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-info"></span>
+                      lb_edge_traff <span class="text-text-3 font-body-md text-[11px]">(Load Balancer)</span>
+</span>
+<span class="text-text-2 font-medium">4,210 req/s <span class="text-status-info font-semibold">(87.5%)</span></span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-bg-3 overflow-hidden">
+<div class="h-full bg-status-info rounded-full" style="width: 87.5%"></div>
+</div>
+</div>
+<!-- Ingress Item 2 -->
+<div>
+<div class="flex items-center justify-between font-code-sm text-[12px] mb-1">
+<span class="text-text-1 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-node-queue"></span>
+                      api_gateway_internal <span class="text-text-3 font-body-md text-[11px]">(Gateway)</span>
+</span>
+<span class="text-text-2 font-medium">480 req/s <span class="text-node-queue font-semibold">(10.0%)</span></span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-bg-3 overflow-hidden">
+<div class="h-full bg-node-queue rounded-full" style="width: 10%"></div>
+</div>
+</div>
+<!-- Ingress Item 3 -->
+<div>
+<div class="flex items-center justify-between font-code-sm text-[12px] mb-1">
+<span class="text-text-1 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-node-service"></span>
+                      webhook_ingest <span class="text-text-3 font-body-md text-[11px]">(Worker)</span>
+</span>
+<span class="text-text-2 font-medium">98 req/s <span class="text-node-service font-semibold">(2.0%)</span></span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-bg-3 overflow-hidden">
+<div class="h-full bg-node-service rounded-full" style="width: 2%"></div>
+</div>
+</div>
+<!-- Ingress Item 4 -->
+<div>
+<div class="flex items-center justify-between font-code-sm text-[12px] mb-1">
+<span class="text-text-2 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-text-3"></span>
+                      canary_synthetic_probe
+                    </span>
+<span class="text-text-3">20 req/s <span class="text-text-2">(0.4%)</span></span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-bg-3 overflow-hidden">
+<div class="h-full bg-text-3 rounded-full" style="width: 0.4%"></div>
+</div>
+</div>
+<!-- Ingress Item 5 -->
+<div>
+<div class="flex items-center justify-between font-code-sm text-[12px] mb-1">
+<span class="text-text-2 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-text-3"></span>
+                      grpc_mesh_relay
+                    </span>
+<span class="text-text-3">4 req/s <span class="text-text-2">(0.1%)</span></span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-bg-3 overflow-hidden">
+<div class="h-full bg-text-3 rounded-full" style="width: 0.1%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- OUTGOING EDGES (ROUTING SPLIT) -->
+<div class="p-4 rounded-xl bg-bg-2 border border-border-structural space-y-3">
+<div class="flex items-center justify-between text-xs pb-1 border-b border-border-structural/50">
+<span class="font-label-uppercase text-[11px] tracking-wider text-text-3 font-semibold uppercase flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-node-decision">arrow_upward</span>
+                  Outgoing Edges (Routing Decisions)
+                </span>
+<span class="font-code-sm text-[11px] text-text-3">Total: 4,809 r/s</span>
+</div>
+<div class="space-y-3">
+<!-- Egress Item 1: VIP Pool (Cyan Bar) -->
+<div>
+<div class="flex items-center justify-between font-code-sm text-[12px] mb-1">
+<span class="text-text-1 flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-node-queue"></span>
+                      svc_priority_proc <span class="text-text-3 font-body-md text-[11px]">(VIP Tier)</span>
+</span>
+<span class="text-text-1 font-semibold">3,272 req/s <span class="text-node-queue">(68.0%)</span></span>
+</div>
+<div class="w-full h-2 rounded-full bg-bg-3 overflow-hidden p-0.5">
+<div class="h-full bg-gradient-to-r from-node-queue to-node-service rounded-full shadow-[0_0_8px_rgba(34,211,238,0.5)]" style="width: 68%"></div>
+</div>
+<div class="mt-1 flex items-center justify-between text-[10px] font-code-sm text-text-3">
+<span>Criteria: JWT tier == 'enterprise'</span>
+<span>SLO p95: 0.35ms</span>
+</div>
+</div>
+<!-- Egress Item 2: Batch Worker (Amber Bar) -->
+<div>
+<div class="flex items-center justify-between font-code-sm text-[12px] mb-1">
+<span class="text-text-1 flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-node-decision"></span>
+                      svc_batch_worker <span class="text-text-3 font-body-md text-[11px]">(Standard)</span>
+</span>
+<span class="text-text-1 font-semibold">1,539 req/s <span class="text-node-decision">(32.0%)</span></span>
+</div>
+<div class="w-full h-2 rounded-full bg-bg-3 overflow-hidden p-0.5">
+<div class="h-full bg-node-decision rounded-full shadow-[0_0_8px_rgba(245,158,11,0.4)]" style="width: 32%"></div>
+</div>
+<div class="mt-1 flex items-center justify-between text-[10px] font-code-sm text-text-3">
+<span>Criteria: Default fallback</span>
+<span>SLO p95: 0.85ms</span>
+</div>
+</div>
+<!-- Egress Item 3: Sandbox (Muted) -->
+<div class="opacity-60">
+<div class="flex items-center justify-between font-code-sm text-[12px] mb-1">
+<span class="text-text-3 flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-text-3"></span>
+                      shadow_eval_sandbox <span class="text-[11px]">(Dark traffic)</span>
+</span>
+<span class="text-text-3 font-medium">0 req/s (0.0%)</span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-bg-3 overflow-hidden">
+<div class="h-full bg-text-3 rounded-full" style="width: 0%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Policy Logic Monospace Preview -->
+<div class="p-3.5 rounded-xl bg-bg-0 border border-border-structural">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-uppercase text-[11px] tracking-wider text-text-3 uppercase">Active Rego / Policy Code</span>
+<span class="font-code-sm text-[10px] text-node-queue">v1.12-enforce</span>
+</div>
+<pre class="font-code-block text-[12px] text-text-2 leading-relaxed overflow-x-auto"><code><span class="text-node-service">default</span> route = <span class="text-status-warn">"svc_batch_worker"</span>
+
+route = <span class="text-node-queue">"svc_priority_proc"</span> {
+    <span class="text-node-source">input</span>.headers.authorization != null
+    <span class="text-node-source">jwt</span>.claims.plan == <span class="text-status-ok">"enterprise"</span>
+}</code></pre>
+</div>
+</div>
+<!-- TAB CONTENT: TRACES (Interactive Trace Log Table) -->
+<div class="hidden space-y-4" id="tab-traces">
+<div class="flex items-center justify-between">
+<div class="relative flex-1 max-w-xs">
+<span class="material-symbols-outlined absolute left-2.5 top-2 text-[16px] text-text-3">search</span>
+<input class="w-full bg-bg-2 border border-border-structural rounded-lg pl-8 pr-3 py-1.5 text-text-1 font-code-sm text-[12px] focus:outline-none focus:border-node-queue" placeholder="Filter trace ID, client..." type="text"/>
+</div>
+<button class="px-2.5 py-1.5 rounded-lg bg-bg-3 hover:bg-surface-container text-text-2 text-xs flex items-center gap-1.5 border border-border-structural" type="button">
+<span class="material-symbols-outlined text-[14px]">tune</span> Filter
+            </button>
+</div>
+<!-- Traces Table -->
+<div class="rounded-xl border border-border-structural bg-bg-2 overflow-hidden">
+<table class="w-full text-left font-code-sm text-[11px]">
+<thead class="bg-bg-3/70 text-text-3 border-b border-border-structural">
+<tr>
+<th class="py-2.5 px-3">TRACE ID</th>
+<th class="py-2.5 px-2">TIER</th>
+<th class="py-2.5 px-2">STATUS</th>
+<th class="py-2.5 px-3 text-right">DUR</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-structural/50 text-text-2">
+<tr class="hover:bg-bg-3/50 cursor-pointer">
+<td class="py-2 px-3 font-semibold text-node-queue flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+                    tr_9c01a7df
+                  </td>
+<td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded bg-node-queue/10 text-node-queue">enterprise</span></td>
+<td class="py-2 px-2 text-status-ok">200 OK</td>
+<td class="py-2 px-3 text-right text-text-1">0.34ms</td>
+</tr>
+<tr class="hover:bg-bg-3/50 cursor-pointer">
+<td class="py-2 px-3 font-semibold text-node-queue flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+                    tr_8b417e22
+                  </td>
+<td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded bg-node-decision/10 text-node-decision">standard</span></td>
+<td class="py-2 px-2 text-status-ok">200 OK</td>
+<td class="py-2 px-3 text-right text-text-1">0.68ms</td>
+</tr>
+<tr class="hover:bg-bg-3/50 cursor-pointer">
+<td class="py-2 px-3 font-semibold text-node-queue flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+                    tr_55de019c
+                  </td>
+<td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded bg-node-queue/10 text-node-queue">enterprise</span></td>
+<td class="py-2 px-2 text-status-ok">200 OK</td>
+<td class="py-2 px-3 text-right text-text-1">0.29ms</td>
+</tr>
+<tr class="hover:bg-bg-3/50 cursor-pointer">
+<td class="py-2 px-3 font-semibold text-status-warn flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-warn"></span>
+                    tr_33bb9021
+                  </td>
+<td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded bg-text-3/15 text-text-3">guest</span></td>
+<td class="py-2 px-2 text-status-warn">429 RateLimit</td>
+<td class="py-2 px-3 text-right text-status-warn">1.92ms</td>
+</tr>
+<tr class="hover:bg-bg-3/50 cursor-pointer">
+<td class="py-2 px-3 font-semibold text-node-queue flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+                    tr_10fa8c33
+                  </td>
+<td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded bg-node-queue/10 text-node-queue">enterprise</span></td>
+<td class="py-2 px-2 text-status-ok">200 OK</td>
+<td class="py-2 px-3 text-right text-text-1">0.38ms</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="font-code-sm text-[11px] text-text-3 text-center">Displaying 5 of 2,840 recent sampled spans</p>
+</div>
+<!-- TAB CONTENT: SETTINGS (Node Configuration) -->
+<div class="hidden space-y-5" id="tab-settings">
+<!-- Parameter Form -->
+<div class="space-y-4">
+<div>
+<label class="block font-label-md text-label-md font-medium text-text-2 mb-1.5">Node Display Name</label>
+<input class="w-full bg-bg-2 border border-border-structural rounded-lg px-3 py-2 text-text-1 font-body-md text-body-md focus:border-node-queue focus:outline-none" type="text" value="Tier Router"/>
+</div>
+<div>
+<label class="block font-label-md text-label-md font-medium text-text-2 mb-1.5">Evaluation Strategy</label>
+<select class="w-full bg-bg-2 border border-border-structural rounded-lg px-3 py-2 text-text-1 font-body-md text-body-md focus:border-node-queue focus:outline-none">
+<option selected="">Open Policy Agent (OPA / Rego)</option>
+<option>Weighted Round Robin</option>
+<option>Least Outstanding Requests</option>
+</select>
+</div>
+<div>
+<label class="block font-label-md text-label-md font-medium text-text-2 mb-1.5">Max Execution Timeout (ms)</label>
+<div class="flex items-center gap-3">
+<input class="w-28 bg-bg-2 border border-border-structural rounded-lg px-3 py-2 text-text-1 font-code-sm text-code-sm focus:border-node-queue focus:outline-none" type="number" value="2"/>
+<span class="font-code-sm text-[12px] text-text-3">Strict breach fallback to Batch Worker</span>
+</div>
+</div>
+</div>
+<!-- Danger Zone Section -->
+<div class="mt-8 pt-5 border-t border-border-structural space-y-3">
+<div class="flex items-center gap-2 text-status-error font-label-md text-label-md font-semibold">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+              Danger Zone
+            </div>
+<p class="font-body-md text-body-md text-text-3">Deleting or unbinding this decision node will disrupt traffic routing policies for active enterprise sessions.</p>
+<button class="w-full py-2.5 px-4 rounded-lg bg-status-error/10 hover:bg-status-error/20 border border-status-error/40 text-status-error font-label-md text-label-md font-medium flex items-center justify-center gap-2 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">delete</span>
+              Delete Node from Topology
+            </button>
+</div>
+</div>
+</div>
+<!-- 4. QUICK ACTIONS BAR (PINNED BOTTOM FOOTER) -->
+<div class="p-4 bg-bg-1 border-t border-border-structural/80 flex items-center justify-between gap-2 flex-shrink-0">
+<button class="flex-1 py-2 px-3 rounded-lg bg-bg-3 hover:bg-surface-container border border-border-structural text-text-1 font-label-md text-label-md font-medium flex items-center justify-center gap-1.5 transition-all" type="button">
+<span class="material-symbols-outlined text-[16px] text-node-queue">filter_center_focus</span>
+          Filter Topology
+        </button>
+<button class="py-2 px-3 rounded-lg bg-bg-3 hover:bg-surface-container border border-border-structural text-text-2 hover:text-text-1 font-label-md text-label-md flex items-center gap-1.5 transition-colors" title="Export Telemetry Payload" type="button">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+          JSON
+        </button>
+<button class="py-2 px-3 rounded-lg bg-gradient-to-r from-node-queue to-node-service text-bg-0 font-label-md text-label-md font-semibold flex items-center gap-1.5 shadow-[0_0_12px_rgba(34,211,238,0.25)] hover:opacity-95 transition-opacity" type="button">
+<span>Live Logs</span>
+<span class="material-symbols-outlined text-[16px]">north_east</span>
+</button>
+</div>
+</aside>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+    (function () {
+      // 1. Copy Key to Clipboard with Animated Tooltip
+      const copyBtn = document.getElementById('copy-key-btn');
+      const tooltip = document.getElementById('copied-tooltip');
+      if (copyBtn && tooltip) {
+        copyBtn.addEventListener('click', function () {
+          navigator.clipboard.writeText('eval_jwt_policy').catch(function () {});
+          tooltip.classList.remove('opacity-0');
+          tooltip.classList.add('opacity-100');
+          setTimeout(function () {
+            tooltip.classList.remove('opacity-100');
+            tooltip.classList.add('opacity-0');
+          }, 1400);
+        });
+      }
+
+      // 2. Tab Navigation Switcher
+      const tabButtons = document.querySelectorAll('.drawer-tab-btn');
+      const tabOverview = document.getElementById('tab-overview');
+      const tabTraces = document.getElementById('tab-traces');
+      const tabSettings = document.getElementById('tab-settings');
+
+      const panels = {
+        overview: tabOverview,
+        traces: tabTraces,
+        settings: tabSettings
+      };
+
+      tabButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const target = btn.getAttribute('data-tab-target');
+
+          // Reset all tabs
+          tabButtons.forEach(function (b) {
+            b.classList.remove('text-text-1', 'font-semibold');
+            b.classList.add('text-text-3', 'font-medium');
+            const ind = b.querySelector('.tab-indicator');
+            if (ind) ind.classList.add('hidden');
+          });
+
+          // Activate clicked tab
+          btn.classList.remove('text-text-3', 'font-medium');
+          btn.classList.add('text-text-1', 'font-semibold');
+          const indicator = btn.querySelector('.tab-indicator');
+          if (indicator) indicator.classList.remove('hidden');
+
+          // Toggle visibility of panels
+          Object.keys(panels).forEach(function (key) {
+            if (panels[key]) {
+              if (key === target) {
+                panels[key].classList.remove('hidden');
+              } else {
+                panels[key].classList.add('hidden');
+              }
+            }
+          });
+        });
+      });
+
+      // 3. Close Drawer Toggle Simulation
+      const closeBtn = document.getElementById('close-drawer-btn');
+      const drawer = document.getElementById('node-inspector-drawer');
+      if (closeBtn && drawer) {
+        closeBtn.addEventListener('click', function () {
+          drawer.classList.add('translate-x-full');
+          drawer.style.transition = 'transform 0.25s ease-in-out';
+          setTimeout(function () {
+            drawer.classList.remove('translate-x-full');
+          }, 1500);
+        });
+      }
+    })();
+  </script>
+</div></main></div></body></html>

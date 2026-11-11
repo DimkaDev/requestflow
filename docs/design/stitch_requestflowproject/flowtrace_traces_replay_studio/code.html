@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-container":"#22d3ee","primary-fixed-dim":"#2fd9f4","surface-variant":"#33353a","on-surface":"#e2e2e9","surface-container":"#1e1f25","on-primary-container":"#005763","inverse-surface":"#e2e2e9","inverse-primary":"#006877","status-warn":"#F59E0B","surface-container-high":"#282a2f","bg-0":"#0B0D12","on-error":"#690005","secondary":"#d0bcff","node-service":"#8B5CF6","outline":"#859397","secondary-fixed":"#e9ddff","outline-variant":"#3c494c","background":"#111318","status-error":"#F43F5E","error":"#ffb4ab","on-error-container":"#ffdad6","text-3":"#7C869C","on-secondary-container":"#c4abff","text-2":"#A3ACBF","status-ok":"#34D399","bg-1":"#11141B","border-strong":"#343C4F","bg-2":"#171B24","on-primary-fixed":"#001f25","tertiary-container":"#ffb13b","on-background":"#e2e2e9","on-tertiary":"#462b00","surface-dim":"#111318","text-1":"#E8ECF4","tertiary":"#ffd6a3","surface-container-low":"#1a1b21","surface":"#111318","on-tertiary-container":"#6e4600","node-datastore":"#34D399","secondary-container":"#571bc1","secondary-fixed-dim":"#d0bcff","on-surface-variant":"#bbc9cd","on-tertiary-fixed":"#2a1800","status-discovered":"#F59E0B","primary":"#8aebff","on-secondary-fixed-variant":"#5516be","on-secondary-fixed":"#23005c","surface-bright":"#37393f","surface-tint":"#2fd9f4","surface-container-highest":"#33353a","tertiary-fixed":"#ffddb5","primary-fixed":"#a2eeff","inverse-on-surface":"#2e3036","border-structural":"#262C3A","node-end":"#F472B6","on-primary":"#00363e","on-tertiary-fixed-variant":"#643f00","node-decision":"#F59E0B","node-external":"#94A3B8","node-source":"#60A5FA","node-queue":"#22D3EE","on-primary-fixed-variant":"#004e5a","on-secondary":"#3c0091","surface-container-lowest":"#0c0e13","bg-3":"#1E2330","status-info":"#60A5FA","tertiary-fixed-dim":"#ffb957","error-container":"#93000a"},borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},spacing:{"space-xl":"1.5rem","margin-desktop":"1.5rem","gutter-desktop":"1.5rem",margin:"1rem",gutter:"1rem","space-lg":"1rem","space-md":"0.75rem","space-sm":"0.5rem","space-xs":"0.25rem"},fontFamily:{"headline-lg":["Inter"],"code-block":["JetBrains Mono"],"headline-sm":["Inter"],"headline-lg-mobile":["Inter"],"body-lg":["Inter"],"chip-metric":["Inter"],display:["Inter"],"label-uppercase":["Inter"],"label-sm":["Inter"],"body-md":["Inter"],"label-md":["Inter"],"code-sm":["JetBrains Mono"],"headline-md":["Inter"],"body-node-label":["Inter"],"display-mobile":["Inter"]},fontSize:{"headline-lg":["32px",{lineHeight:"40px",letterSpacing:"-0.01em",fontWeight:"600"}],"code-block":["13px",{lineHeight:"20px",fontWeight:"400"}],"headline-sm":["20px",{lineHeight:"28px",fontWeight:"600"}],"headline-lg-mobile":["26px",{lineHeight:"32px",fontWeight:"600"}],"body-lg":["16px",{lineHeight:"24px",fontWeight:"400"}],"chip-metric":["11px",{lineHeight:"14px",fontWeight:"500"}],display:["48px",{lineHeight:"52px",letterSpacing:"-0.02em",fontWeight:"600"}],"label-uppercase":["12px",{lineHeight:"16px",letterSpacing:"0.08em",fontWeight:"500"}],"label-sm":["12px",{lineHeight:"16px",fontWeight:"400"}],"body-md":["14px",{lineHeight:"20px",fontWeight:"400"}],"label-md":["13px",{lineHeight:"18px",fontWeight:"500"}],"code-sm":["12px",{lineHeight:"16px",fontWeight:"500"}],"headline-md":["24px",{lineHeight:"32px",fontWeight:"600"}],"body-node-label":["14px",{lineHeight:"20px",fontWeight:"600"}],"display-mobile":["36px",{lineHeight:"42px",letterSpacing:"-0.01em",fontWeight:"600"}]}}}}</script></head><body class="bg-bg-0 text-text-1 font-body-md text-body-md min-h-screen selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 left-0 right-0 h-14 bg-bg-1/90 backdrop-blur-md border-b border-border-structural z-50 flex items-center justify-between px-margin-desktop"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><div class="w-7 h-7 rounded-lg bg-bg-2 border border-border-structural flex items-center justify-center"><span class="material-symbols-outlined text-primary text-[18px]">hub</span></div><span class="font-headline-sm text-headline-sm tracking-tight text-text-1 font-semibold">FlowTrace</span></div><div class="h-4 w-[1px] bg-border-structural"></div><button class="flex items-center gap-space-xs px-space-sm py-1 bg-bg-2 border border-border-structural rounded-lg text-text-2 hover:text-text-1 hover:border-border-strong font-code-sm text-code-sm transition-all"><span class="material-symbols-outlined text-[15px] text-text-3">dns</span><span class="text-text-3">clusters</span><span class="text-border-strong">/</span><span class="text-text-2">us-east-prod</span><span class="text-border-strong">/</span><span class="text-primary font-medium">checkout-v4</span><span class="material-symbols-outlined text-[16px] text-text-3 ml-0.5">unfold_more</span></button><nav class="hidden xl:flex items-center gap-1" data-active-classes="bg-bg-3 text-text-1 font-medium border border-border-structural"><a class="px-space-md py-1.5 rounded-lg font-label-md text-label-md text-text-2 hover:bg-bg-2 hover:text-text-1 transition-all" data-path="live-topology" href="#">Live Topology</a><a class="px-space-md py-1.5 rounded-lg font-label-md text-label-md text-text-2 hover:bg-bg-2 hover:text-text-1 transition-all" data-path="traces-replay" href="#">Traces &amp; Replay</a><a class="px-space-md py-1.5 rounded-lg font-label-md text-label-md text-text-2 hover:bg-bg-2 hover:text-text-1 transition-all" data-path="service-mesh" href="#">Service Mesh</a><a class="px-space-md py-1.5 rounded-lg font-label-md text-label-md text-text-2 hover:bg-bg-2 hover:text-text-1 transition-all" data-path="metrics" href="#">Metrics</a><a class="px-space-md py-1.5 rounded-lg font-label-md text-label-md text-text-2 hover:bg-bg-2 hover:text-text-1 transition-all" data-path="alerts" href="#">Alerts</a></nav></div><div class="flex items-center gap-space-md"><div class="relative hidden md:flex items-center"><span class="material-symbols-outlined absolute left-2.5 text-text-3 text-[17px]">search</span><input class="w-64 h-8 bg-bg-2 border border-border-structural rounded-lg pl-8 pr-12 text-text-1 placeholder-text-3 font-body-md text-body-md focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" placeholder="Search telemetry, spans, spansets..." type="text"/><kbd class="absolute right-2 px-1.5 py-0.5 bg-bg-3 border border-border-structural rounded text-text-3 font-code-sm text-code-sm text-[10px]">⌘K</kbd></div><div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-bg-2 border border-border-structural"><span class="w-2 h-2 rounded-full bg-status-ok shadow-[0_0_8px_rgba(52,211,153,0.6)]"></span><span class="font-chip-metric text-chip-metric uppercase tracking-wider text-text-2 font-medium">Mesh Active</span></div><div class="h-4 w-[1px] bg-border-structural"></div><button aria-label="Toggle Theme" class="w-8 h-8 rounded-lg bg-bg-2 border border-border-structural flex items-center justify-center text-text-2 hover:text-text-1 hover:border-border-strong transition-all"><span class="material-symbols-outlined text-[18px]">dark_mode</span></button><button aria-label="Share Workspace" class="flex items-center gap-1 h-8 px-space-sm rounded-lg bg-bg-2 border border-border-structural text-text-2 hover:text-text-1 hover:border-border-strong font-label-md text-label-md transition-all"><span class="material-symbols-outlined text-[16px]">share</span><span class="hidden sm:inline">Share</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><aside class="fixed left-0 top-14 bottom-0 w-64 bg-bg-1 border-r border-border-structural z-40 flex flex-col justify-between p-space-sm"><div class="flex flex-col gap-space-xs"><div class="px-space-sm py-2 font-label-uppercase text-label-uppercase text-text-3 tracking-wider">Telemetry Studio</div><nav class="flex flex-col gap-0.5" data-active-classes="bg-bg-3 text-text-1 font-medium border border-border-structural"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 font-body-md text-body-md transition-all" data-path="live-topology" href="#"><span class="material-symbols-outlined text-[18px] text-node-source">schema</span><span>Live Topology</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 font-body-md text-body-md transition-all" data-path="traces-replay" href="#"><span class="material-symbols-outlined text-[18px] text-primary-container">history_toggle_off</span><span>Traces &amp; Replay</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 font-body-md text-body-md transition-all" data-path="service-mesh" href="#"><span class="material-symbols-outlined text-[18px] text-node-service">lan</span><span>Service Mesh</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 font-body-md text-body-md transition-all" data-path="metrics" href="#"><span class="material-symbols-outlined text-[18px] text-node-queue">monitoring</span><span>Metrics</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 font-body-md text-body-md transition-all" data-path="alerts" href="#"><span class="material-symbols-outlined text-[18px] text-status-warn">notifications_active</span><span>Alerts</span></a></nav><div class="mt-space-md px-space-sm py-2 font-label-uppercase text-label-uppercase text-text-3 tracking-wider">Inspect &amp; Debug</div><nav class="flex flex-col gap-0.5" data-active-classes="bg-bg-3 text-text-1 font-medium border border-border-structural"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 font-body-md text-body-md transition-all" data-path="span-inspector" href="#"><span class="material-symbols-outlined text-[18px] text-text-3">terminal</span><span>Span Inspector</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 font-body-md text-body-md transition-all" data-path="cluster-settings" href="#"><span class="material-symbols-outlined text-[18px] text-text-3">settings</span><span>Cluster Config</span></a></nav></div><div class="p-space-sm bg-bg-2 border border-border-structural rounded-xl flex items-center justify-between"><div class="flex flex-col"><span class="font-label-sm text-label-sm text-text-3">Agent v4.18.2</span><span class="font-code-sm text-code-sm text-text-2">48.2k spans/sec</span></div><span class="material-symbols-outlined text-status-ok text-[18px]">verified</span></div></aside><div class="pl-64"><main class="relative pt-14 min-h-screen bg-bg-0"><div class="flex flex-col w-full text-text-1">
+<!-- TOP FILTER TOOLBAR -->
+<section class="w-full bg-bg-1 border-b border-border-structural px-margin-desktop py-2.5 flex items-center justify-between gap-space-md z-30 shrink-0 select-none">
+<div class="flex items-center gap-space-sm flex-1 min-w-0">
+<!-- Search Trace ID -->
+<div class="relative flex items-center min-w-[280px] max-w-sm w-full">
+<span class="material-symbols-outlined absolute left-3 text-text-3 text-[17px] pointer-events-none">manage_search</span>
+<input class="w-full h-8 bg-bg-2 border border-border-structural rounded-lg pl-9 pr-14 font-code-sm text-code-sm text-text-1 placeholder-text-3 focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" placeholder="Search trace ID (e.g. 0194fe26_x7)..." type="text" value="0194fe26_x7"/>
+<kbd class="absolute right-2 px-1.5 py-0.5 bg-bg-3 border border-border-structural rounded text-text-3 font-code-sm text-[10px]">⌘K</kbd>
+</div>
+<!-- Time Range Selector -->
+<button class="flex items-center gap-1.5 h-8 px-2.5 bg-bg-2 border border-border-structural rounded-lg text-text-2 hover:text-text-1 hover:border-border-strong font-label-md text-label-md transition-all">
+<span class="material-symbols-outlined text-[15px] text-text-3">schedule</span>
+<span>Last 15 minutes</span>
+<span class="material-symbols-outlined text-[16px] text-text-3">expand_more</span>
+</button>
+<!-- Status Filter -->
+<button class="flex items-center gap-2 h-8 px-2.5 bg-bg-2 border border-border-structural rounded-lg text-text-2 hover:text-text-1 hover:border-border-strong font-label-md text-label-md transition-all">
+<span class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-status-error"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-status-warn"></span>
+</span>
+<span>All Statuses</span>
+<span class="material-symbols-outlined text-[16px] text-text-3">expand_more</span>
+</button>
+<!-- Node Filter -->
+<button class="flex items-center gap-1.5 h-8 px-2.5 bg-bg-2 border border-border-structural rounded-lg text-text-2 hover:text-text-1 hover:border-border-strong font-label-md text-label-md transition-all">
+<span class="material-symbols-outlined text-[15px] text-node-source">hub</span>
+<span>Node: All Nodes (8)</span>
+<span class="material-symbols-outlined text-[16px] text-text-3">expand_more</span>
+</button>
+<!-- Add Attribute Filter -->
+<button class="flex items-center gap-1.5 h-8 px-2.5 bg-bg-3/60 hover:bg-bg-3 border border-dashed border-border-strong rounded-lg text-text-2 hover:text-text-1 font-label-md text-label-md transition-all">
+<span class="material-symbols-outlined text-[15px] text-primary-container">add</span>
+<span>Filter Attribute</span>
+</button>
+</div>
+<!-- Quick stats right -->
+<div class="hidden xl:flex items-center gap-space-md shrink-0 font-code-sm text-code-sm text-text-3">
+<span class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-status-discovered animate-pulse"></span>
+<strong class="text-text-2 font-medium">1,428</strong> traces captured
+      </span>
+<span class="text-border-strong">/</span>
+<span class="text-primary-container font-medium">Showing 48 matches</span>
+</div>
+</section>
+<!-- 3-COLUMN WORKSPACE BODY -->
+<div class="flex w-full h-[calc(100vh-6.75rem)] overflow-hidden">
+<!-- LEFT COLUMN: TRACE LIST (340px) -->
+<aside class="w-[340px] shrink-0 bg-bg-1 border-r border-border-structural flex flex-col h-full overflow-hidden select-none">
+<!-- List Header & Controls -->
+<div class="p-space-sm border-b border-border-structural flex items-center justify-between shrink-0 bg-bg-1/90">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-text-1">Traces</span>
+<span class="px-2 py-0.5 rounded-full bg-bg-3 border border-border-structural font-chip-metric text-chip-metric text-text-2">48</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="flex items-center gap-1 px-2 py-1 rounded bg-bg-2 border border-border-structural text-text-2 hover:text-text-1 font-code-sm text-[11px] transition-all">
+<span>Duration (p99)</span>
+<span class="material-symbols-outlined text-[13px]">expand_more</span>
+</button>
+<div class="flex items-center gap-1.5 pl-1.5 border-l border-border-structural" title="Live stream incoming traces">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok animate-ping"></span>
+<span class="font-chip-metric text-[10px] text-text-3 uppercase tracking-wider font-semibold">Live</span>
+</div>
+</div>
+</div>
+<!-- Traces Scroll List -->
+<div class="flex-1 overflow-y-auto divide-y divide-border-structural/60 p-space-xs space-y-1">
+<!-- ACTIVE ITEM: 0194fe26_x7 (Selected Replay Trace) -->
+<div class="group relative p-3 rounded-xl bg-bg-2 border border-transparent transition-all cursor-pointer shadow-[0_0_0_1px_rgba(34,211,238,0.35),0_0_24px_rgba(139,92,246,0.22)] bg-gradient-to-r from-bg-2 via-bg-2 to-bg-3">
+<div class="absolute left-0 top-3 bottom-3 w-1 bg-gradient-to-b from-primary-container to-node-service rounded-r"></div>
+<div class="flex items-center justify-between mb-1.5 pl-1.5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-status-warn shadow-[0_0_8px_rgba(245,158,11,0.7)] animate-pulse"></span>
+<span class="font-code-sm text-code-sm font-semibold text-primary">0194fe26_x7</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="font-code-sm text-[11px] text-status-warn font-semibold bg-status-warn/10 px-1.5 py-0.5 rounded border border-status-warn/25">380.4ms</span>
+<span class="font-code-sm text-[10px] text-text-3">14:28:19</span>
+</div>
+</div>
+<div class="text-[12px] text-text-2 pl-1.5 font-code-sm truncate mb-2">
+            Website <span class="text-text-3">→</span> LB <span class="text-text-3">→</span> <span class="text-status-warn font-medium">Svc B (Err)</span> <span class="text-text-3">→</span> DB
+          </div>
+<div class="flex items-center gap-1.5 pl-1.5 flex-wrap">
+<span class="px-1.5 py-0.5 rounded bg-bg-3 border border-border-strong font-code-sm text-[10px] text-text-2">tier:vip</span>
+<span class="px-1.5 py-0.5 rounded bg-status-error/15 border border-status-error/30 font-code-sm text-[10px] text-error">err:conn_timeout</span>
+<span class="ml-auto font-chip-metric text-[10px] text-primary-container font-medium uppercase tracking-wider">Replaying</span>
+</div>
+</div>
+<!-- ITEM 2: 0194fe2b_gw -->
+<div class="p-3 rounded-xl bg-bg-1 hover:bg-bg-2 border border-transparent hover:border-border-structural transition-all cursor-pointer">
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-status-ok"></span>
+<span class="font-code-sm text-code-sm font-medium text-text-1">0194fe2b_gw</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="font-code-sm text-[11px] text-status-ok bg-status-ok/10 px-1.5 py-0.5 rounded">42ms</span>
+<span class="font-code-sm text-[10px] text-text-3">14:28:18</span>
+</div>
+</div>
+<div class="text-[12px] text-text-3 font-code-sm truncate mb-2">
+            Website <span class="text-border-strong">→</span> Ingress <span class="text-border-strong">→</span> Auth <span class="text-border-strong">→</span> Gateway
+          </div>
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-1.5 py-0.5 rounded bg-bg-2 border border-border-structural font-code-sm text-[10px] text-text-3">http:200</span>
+<span class="px-1.5 py-0.5 rounded bg-bg-2 border border-border-structural font-code-sm text-[10px] text-text-3">env:prod</span>
+</div>
+</div>
+<!-- ITEM 3: 0194fe28_k2 (Error) -->
+<div class="p-3 rounded-xl bg-bg-1 hover:bg-bg-2 border border-transparent hover:border-border-structural transition-all cursor-pointer">
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-status-error shadow-[0_0_6px_rgba(244,63,94,0.5)]"></span>
+<span class="font-code-sm text-code-sm font-medium text-text-1">0194fe28_k2</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="font-code-sm text-[11px] text-status-error bg-status-error/10 px-1.5 py-0.5 rounded border border-status-error/25">1,240ms</span>
+<span class="font-code-sm text-[10px] text-text-3">14:28:17</span>
+</div>
+</div>
+<div class="text-[12px] text-text-3 font-code-sm truncate mb-2">
+            Webhook <span class="text-border-strong">→</span> Worker <span class="text-border-strong">→</span> <span class="text-status-error font-medium">AuroraDB (Deadlock)</span>
+</div>
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-1.5 py-0.5 rounded bg-status-error/15 border border-status-error/30 font-code-sm text-[10px] text-error">sql:deadlock</span>
+<span class="px-1.5 py-0.5 rounded bg-bg-2 border border-border-structural font-code-sm text-[10px] text-text-3">retry:3</span>
+</div>
+</div>
+<!-- ITEM 4: 0194fe24_a9 -->
+<div class="p-3 rounded-xl bg-bg-1 hover:bg-bg-2 border border-transparent hover:border-border-structural transition-all cursor-pointer">
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-status-ok"></span>
+<span class="font-code-sm text-code-sm font-medium text-text-1">0194fe24_a9</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="font-code-sm text-[11px] text-status-ok bg-status-ok/10 px-1.5 py-0.5 rounded">18ms</span>
+<span class="font-code-sm text-[10px] text-text-3">14:28:16</span>
+</div>
+</div>
+<div class="text-[12px] text-text-3 font-code-sm truncate mb-2">
+            Website <span class="text-border-strong">→</span> LB <span class="text-border-strong">→</span> Service A <span class="text-border-strong">→</span> Cache
+          </div>
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-bg-2 border border-border-structural font-code-sm text-[10px] text-text-3">cache:hit</span>
+</div>
+</div>
+<!-- ITEM 5: 0194fe21_c3 -->
+<div class="p-3 rounded-xl bg-bg-1 hover:bg-bg-2 border border-transparent hover:border-border-structural transition-all cursor-pointer">
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-status-ok"></span>
+<span class="font-code-sm text-code-sm font-medium text-text-1">0194fe21_c3</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="font-code-sm text-[11px] text-status-ok bg-status-ok/10 px-1.5 py-0.5 rounded">88ms</span>
+<span class="font-code-sm text-[10px] text-text-3">14:28:15</span>
+</div>
+</div>
+<div class="text-[12px] text-text-3 font-code-sm truncate mb-2">
+            API Gateway <span class="text-border-strong">→</span> Auth Guard <span class="text-border-strong">→</span> Tier Router
+          </div>
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-bg-2 border border-border-structural font-code-sm text-[10px] text-text-3">auth:jwt_v2</span>
+</div>
+</div>
+<!-- ITEM 6: 0194fe19_m8 -->
+<div class="p-3 rounded-xl bg-bg-1 hover:bg-bg-2 border border-transparent hover:border-border-structural transition-all cursor-pointer">
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-status-warn"></span>
+<span class="font-code-sm text-code-sm font-medium text-text-1">0194fe19_m8</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="font-code-sm text-[11px] text-status-warn bg-status-warn/10 px-1.5 py-0.5 rounded">210ms</span>
+<span class="font-code-sm text-[10px] text-text-3">14:28:14</span>
+</div>
+</div>
+<div class="text-[12px] text-text-3 font-code-sm truncate mb-2">
+            Payment Svc <span class="text-border-strong">→</span> Stripe Connector <span class="text-border-strong">→</span> Webhook
+          </div>
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-bg-2 border border-border-structural font-code-sm text-[10px] text-text-3">p95_spike</span>
+</div>
+</div>
+<!-- ITEM 7: 0194fe15_z1 -->
+<div class="p-3 rounded-xl bg-bg-1 hover:bg-bg-2 border border-transparent hover:border-border-structural transition-all cursor-pointer">
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-status-ok"></span>
+<span class="font-code-sm text-code-sm font-medium text-text-1">0194fe15_z1</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="font-code-sm text-[11px] text-status-ok bg-status-ok/10 px-1.5 py-0.5 rounded">34ms</span>
+<span class="font-code-sm text-[10px] text-text-3">14:28:12</span>
+</div>
+</div>
+<div class="text-[12px] text-text-3 font-code-sm truncate">
+            Ingress <span class="text-border-strong">→</span> Cache Redis <span class="text-border-strong">→</span> Edge
+          </div>
+</div>
+</div>
+</aside>
+<!-- CENTER COLUMN: REPLAY DIAGRAM CANVAS -->
+<div class="relative flex-1 h-full bg-bg-0 overflow-hidden flex flex-col select-none">
+<!-- Infinite Canvas 24px Dot Grid Background -->
+<div class="absolute inset-0 pointer-events-none opacity-40" style="background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px); background-size: 24px 24px;"></div>
+<!-- Canvas Header Overlay -->
+<div class="absolute top-4 left-6 right-6 flex items-center justify-between z-20 pointer-events-none">
+<div class="flex items-center gap-3 bg-bg-1/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-border-structural shadow-xl pointer-events-auto">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[18px]">replay</span>
+<span class="font-label-md text-label-md text-text-2">Replaying Trace:</span>
+<span class="font-code-sm text-code-sm text-text-1 font-semibold">0194fe26_x7</span>
+</div>
+<button class="text-text-3 hover:text-text-1 flex items-center transition-colors" title="Copy Trace ID">
+<span class="material-symbols-outlined text-[15px]">content_copy</span>
+</button>
+<div class="h-3.5 w-[1px] bg-border-structural"></div>
+<div class="flex items-center gap-2 font-code-sm text-[12px]">
+<span class="text-text-3">Duration:</span>
+<span class="text-status-warn font-semibold">380.4ms</span>
+<span class="px-1.5 py-0.2 rounded bg-status-error/15 text-status-error text-[10px] font-medium">+148ms vs SLA</span>
+</div>
+</div>
+<!-- Canvas Controls -->
+<div class="flex items-center gap-1 bg-bg-1/80 backdrop-blur-md p-1 rounded-xl border border-border-structural shadow-xl pointer-events-auto">
+<button class="w-8 h-8 rounded-lg text-text-2 hover:text-text-1 hover:bg-bg-2 flex items-center justify-center transition-all" title="Zoom in">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+<span class="font-code-sm text-[11px] text-text-3 px-1">100%</span>
+<button class="w-8 h-8 rounded-lg text-text-2 hover:text-text-1 hover:bg-bg-2 flex items-center justify-center transition-all" title="Zoom out">
+<span class="material-symbols-outlined text-[18px]">remove</span>
+</button>
+<div class="h-4 w-[1px] bg-border-structural"></div>
+<button class="w-8 h-8 rounded-lg text-text-2 hover:text-text-1 hover:bg-bg-2 flex items-center justify-center transition-all" title="Fit to view">
+<span class="material-symbols-outlined text-[18px]">crop_free</span>
+</button>
+</div>
+</div>
+<!-- Canvas Graph Stage (SVG Edges + HTML Nodes) -->
+<div class="relative w-full flex-1 flex items-center justify-center min-h-[580px] p-8 pb-32">
+<!-- SVG Vector Topology Conduit Edges -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<!-- Cyan-to-Violet Replay Linear Gradient -->
+<lineargradient id="replayGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#22D3EE"></stop>
+<stop offset="60%" stop-color="#8B5CF6"></stop>
+<stop offset="100%" stop-color="#F43F5E"></stop>
+</lineargradient>
+<filter height="140%" id="neonGlow" width="140%" x="-20%" y="-20%">
+<fegaussianblur result="blur" stddeviation="3"></fegaussianblur>
+<fecomposite in="SourceGraphic" in2="blur" operator="over"></fecomposite>
+</filter>
+</defs>
+<!-- INACTIVE / BRANCH EDGES (Subdued 30% opacity) -->
+<!-- LB Branch out to Service A -->
+<path d="M 50% 180 C 50% 210, 24% 210, 24% 260" fill="none" opacity="0.3" stroke="#343C4F" stroke-dasharray="4 4" stroke-width="2"></path>
+<!-- PRIMARY REPLAY PATH EDGES -->
+<!-- Edge 1: Website Edge -> Load Balancer -->
+<path d="M 50% 92 C 50% 120, 50% 120, 50% 150" fill="none" filter="url(#neonGlow)" stroke="url(#replayGradient)" stroke-width="3"></path>
+<!-- Edge 2: Load Balancer -> Tier Router -->
+<path d="M 50% 222 C 50% 250, 50% 250, 50% 278" fill="none" filter="url(#neonGlow)" stroke="url(#replayGradient)" stroke-width="3"></path>
+<!-- Edge 3: Tier Router -> Service B (Worker) - ACTIVE MID-FLIGHT SEGMENT -->
+<path d="M 50% 350 C 50% 385, 50% 385, 50% 418" fill="none" filter="url(#neonGlow)" id="activeReplaySpline" stroke="url(#replayGradient)" stroke-width="3.5"></path>
+<!-- Edge 4: Service B -> Aurora Postgres -->
+<path d="M 50% 490 C 50% 515, 50% 515, 50% 542" fill="none" opacity="0.7" stroke="#343C4F" stroke-dasharray="4 3" stroke-width="2"></path>
+<!-- Edge Rate Latency Chips positioned along curves -->
+<g transform="translate(0, 0)">
+<!-- Pill 1: 12.1ms -->
+<foreignobject height="20" transform="translate(10, 0)" width="60" x="50%" y="112">
+<div class="h-5 px-2 bg-bg-2 border border-border-structural rounded-full flex items-center justify-center font-chip-metric text-[10px] text-text-2 tabular-nums" xmlns="http://www.w3.org/1999/xhtml">
+                12.1ms
+              </div>
+</foreignobject>
+<!-- Pill 2: 4.0ms -->
+<foreignobject height="20" transform="translate(10, 0)" width="56" x="50%" y="240">
+<div class="h-5 px-2 bg-bg-2 border border-border-structural rounded-full flex items-center justify-center font-chip-metric text-[10px] text-text-2 tabular-nums" xmlns="http://www.w3.org/1999/xhtml">
+                4.0ms
+              </div>
+</foreignobject>
+<!-- Pill 3: 184ms Degraded Wait -->
+<foreignobject height="20" transform="translate(14, 0)" width="70" x="50%" y="374">
+<div class="h-5 px-2 bg-status-warn/20 border border-status-warn/40 rounded-full flex items-center justify-center font-chip-metric text-[10px] text-status-warn font-semibold tabular-nums" xmlns="http://www.w3.org/1999/xhtml">
+                184ms wait
+              </div>
+</foreignobject>
+</g>
+<!-- ENERGIZED GLOWING REPLAY TOKEN (Mid-travel between Tier Router & Service B) -->
+<!-- Motion trailing blur ribbon -->
+<line opacity="0.75" stroke="#22D3EE" stroke-linecap="round" stroke-width="4" x1="50%" x2="50%" y1="366" y2="388"></line>
+<line opacity="0.4" stroke="#8B5CF6" stroke-linecap="round" stroke-width="6" x1="50%" x2="50%" y1="372" y2="388"></line>
+<!-- Outer luminous pulse halo -->
+<circle cx="50%" cy="388" fill="rgba(34, 211, 238, 0.35)" filter="url(#neonGlow)" r="9">
+<animate attributename="r" dur="1.4s" repeatcount="indefinite" values="8;13;8"></animate>
+<animate attributename="opacity" dur="1.4s" repeatcount="indefinite" values="0.8;0.3;0.8"></animate>
+</circle>
+<!-- Solid Core Token -->
+<circle cx="50%" cy="388" fill="#22D3EE" r="5" stroke="#0B0D12" stroke-width="2"></circle>
+</svg>
+<!-- GRAPH TOPOLOGY NODES (Vertical Flow) -->
+<div class="relative z-10 flex flex-col items-center gap-14 w-full max-w-sm pointer-events-auto">
+<!-- 1. WEBSITE EDGE NODE (Source) -->
+<div class="w-[240px] h-[72px] bg-bg-2 border border-border-structural rounded-[14px] p-3 flex items-center gap-3 relative shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_8px_24px_rgba(0,0,0,0.35)] hover:border-border-strong transition-all">
+<!-- Port Bottom -->
+<div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-bg-0 border-2 border-border-strong"></div>
+<!-- Icon -->
+<div class="w-10 h-10 rounded-[10px] bg-node-source/15 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-node-source text-[22px]">public</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center justify-between">
+<span class="font-body-node-label text-body-node-label text-text-1 truncate">Website Edge</span>
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+</div>
+<span class="font-code-sm text-[11px] text-text-3 font-medium">web_ingress_01</span>
+<span class="font-chip-metric text-[10px] text-text-2">4.8k req/s · US-East</span>
+</div>
+</div>
+<!-- 2. LOAD BALANCER NODE (Service) -->
+<div class="w-[240px] h-[72px] bg-bg-2 border border-border-structural rounded-[14px] p-3 flex items-center gap-3 relative shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_8px_24px_rgba(0,0,0,0.35)] hover:border-border-strong transition-all">
+<!-- Port Top & Bottom -->
+<div class="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-bg-0 border-2 border-border-strong"></div>
+<div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-bg-0 border-2 border-border-strong"></div>
+<!-- Icon -->
+<div class="w-10 h-10 rounded-[10px] bg-node-service/15 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-node-service text-[22px]">alt_route</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center justify-between">
+<span class="font-body-node-label text-body-node-label text-text-1 truncate">Load Balancer</span>
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+</div>
+<span class="font-code-sm text-[11px] text-text-3 font-medium">lb_edge_traff</span>
+<span class="font-chip-metric text-[10px] text-text-2">Envoy v1.30 · 12.1ms</span>
+</div>
+</div>
+<!-- 3. TIER ROUTER NODE (Decision Node with left accent) -->
+<div class="w-[240px] h-[72px] bg-bg-2 border border-border-structural rounded-[14px] p-3 flex items-center gap-3 relative shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_8px_24px_rgba(0,0,0,0.35)] overflow-hidden">
+<!-- Decision Left Bar Accent -->
+<div class="absolute left-0 top-0 bottom-0 w-[3px] bg-node-decision"></div>
+<!-- Port Top & Bottom -->
+<div class="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-bg-0 border-2 border-border-strong"></div>
+<div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-bg-0 border-2 border-border-strong"></div>
+<!-- Icon -->
+<div class="w-10 h-10 rounded-[10px] bg-node-decision/15 flex items-center justify-center shrink-0 ml-1">
+<span class="material-symbols-outlined text-node-decision text-[22px]">rule</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center justify-between">
+<span class="font-body-node-label text-body-node-label text-text-1 truncate">Tier Router</span>
+<span class="px-1.5 py-0.2 rounded bg-bg-3 text-status-warn text-[10px] font-code-sm">VIP</span>
+</div>
+<span class="font-code-sm text-[11px] text-text-3 font-medium">eval_jwt_policy</span>
+<span class="font-chip-metric text-[10px] text-text-2">std.pool → worker_b</span>
+</div>
+</div>
+<!-- 4. SERVICE B (Worker) - ACTIVE ERROR/DEGRADED REPLAY TARGET -->
+<div class="w-[240px] h-[72px] bg-bg-2 border-2 border-status-error/80 rounded-[14px] p-3 flex items-center gap-3 relative shadow-[0_0_0_1px_rgba(244,63,94,0.4),0_0_24px_rgba(244,63,94,0.25)]">
+<!-- Replaying Pulse Halo Ring -->
+<div class="absolute -inset-1 rounded-[16px] border border-status-error/40 animate-pulse pointer-events-none"></div>
+<!-- Port Top & Bottom -->
+<div class="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-bg-0 border-2 border-status-error"></div>
+<div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-bg-0 border-2 border-border-strong"></div>
+<!-- Icon -->
+<div class="w-10 h-10 rounded-[10px] bg-status-error/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-status-error text-[22px]">dns</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center justify-between">
+<span class="font-body-node-label text-body-node-label text-text-1 truncate">Service B (Worker)</span>
+<span class="px-1 py-0.5 rounded bg-status-error/20 text-status-error font-code-sm text-[9px] font-bold">ERR_TIMEOUT</span>
+</div>
+<span class="font-code-sm text-[11px] text-text-3 font-medium">svc_batch_worker</span>
+<span class="font-chip-metric text-[10px] text-status-warn">Latency: 184ms (stalled)</span>
+</div>
+</div>
+<!-- 5. AURORA POSTGRES (Datastore) -->
+<div class="w-[240px] h-[72px] bg-bg-2 border border-border-structural rounded-[14px] p-3 flex items-center gap-3 relative shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_8px_24px_rgba(0,0,0,0.35)] opacity-85">
+<!-- Port Top -->
+<div class="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-bg-0 border-2 border-border-strong"></div>
+<!-- Icon -->
+<div class="w-10 h-10 rounded-[10px] bg-node-datastore/15 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-node-datastore text-[22px]">database</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center justify-between">
+<span class="font-body-node-label text-body-node-label text-text-1 truncate">Aurora Postgres</span>
+<span class="w-1.5 h-1.5 rounded-full bg-status-warn"></span>
+</div>
+<span class="font-code-sm text-[11px] text-text-3 font-medium">db_aurora_core</span>
+<span class="font-chip-metric text-[10px] text-text-2">Pool Cap 98% (Pending)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- FLOATING TIMELINE SCRUBBER TOOLBAR (Docked at canvas bottom) -->
+<div class="absolute bottom-5 left-1/2 -translate-x-1/2 w-[92%] max-w-4xl z-30 pointer-events-auto">
+<div class="bg-bg-1/90 backdrop-blur-md border border-border-structural rounded-2xl p-3.5 shadow-[0_12px_40px_rgba(0,0,0,0.6)] flex flex-col gap-2.5">
+<!-- Top Row: Controls & Hop Labels -->
+<div class="flex items-center justify-between px-1">
+<!-- Transport Controls -->
+<div class="flex items-center gap-1.5">
+<button class="w-8 h-8 rounded-lg bg-bg-2 border border-border-structural text-text-2 hover:text-text-1 flex items-center justify-center hover:border-border-strong transition-all" title="Step Back 1 Hop">
+<span class="material-symbols-outlined text-[18px]">skip_previous</span>
+</button>
+<!-- Primary Play/Pause CTA -->
+<button class="w-9 h-9 rounded-lg bg-gradient-to-br from-primary-container to-node-service text-bg-0 flex items-center justify-center font-bold shadow-[0_0_12px_rgba(34,211,238,0.4)] hover:brightness-110 active:scale-95 transition-all" title="Pause Replay">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">pause</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-bg-2 border border-border-structural text-text-2 hover:text-text-1 flex items-center justify-center hover:border-border-strong transition-all" title="Step Forward 1 Hop">
+<span class="material-symbols-outlined text-[18px]">skip_next</span>
+</button>
+<div class="h-4 w-[1px] bg-border-structural mx-1"></div>
+<!-- Speed Selector Pill -->
+<div class="flex items-center bg-bg-2 border border-border-structural rounded-lg px-2 py-1 gap-1 text-text-2 hover:text-text-1 cursor-pointer">
+<span class="font-code-sm text-[12px] font-semibold text-primary">1×</span>
+<span class="material-symbols-outlined text-[14px] text-text-3">expand_more</span>
+</div>
+<!-- Loop Pill Toggle -->
+<button class="flex items-center gap-1 px-2 py-1 rounded-lg bg-bg-3 border border-border-strong text-primary text-[12px] font-code-sm" title="Loop Replay">
+<span class="material-symbols-outlined text-[14px]">repeat</span>
+<span class="font-medium">Loop</span>
+</button>
+</div>
+<!-- Time Metrics Readout -->
+<div class="flex items-center gap-2 font-code-sm text-[12px]">
+<span class="text-primary-container font-semibold">00:01.2</span>
+<span class="text-text-3">/</span>
+<span class="text-text-3">00:02.8</span>
+</div>
+</div>
+<!-- Timeline Scrubber Bar with Discrete Hop Markers -->
+<div class="relative w-full pt-1 pb-2 px-1">
+<!-- Background Track -->
+<div class="relative w-full h-2 bg-bg-3 rounded-full cursor-pointer overflow-hidden">
+<!-- Active Progress Fill (43%) -->
+<div class="absolute left-0 top-0 bottom-0 w-[43%] bg-gradient-to-r from-primary-container to-node-service rounded-full shadow-[0_0_8px_rgba(34,211,238,0.5)]"></div>
+</div>
+<!-- Discrete Hop Markers along the timeline -->
+<div class="absolute inset-x-1 top-1.5 flex justify-between pointer-events-none">
+<!-- Hop 1: Website (0.0s) -->
+<div class="relative flex flex-col items-center -translate-x-1/2">
+<div class="w-3 h-3 rounded-full bg-primary-container border-2 border-bg-1"></div>
+<span class="absolute top-4 font-code-sm text-[10px] text-text-2 whitespace-nowrap">Hop 1 (0.0s)</span>
+</div>
+<!-- Hop 2: Load Balancer (0.4s) -->
+<div class="relative flex flex-col items-center -translate-x-1/2" style="margin-left: 14%;">
+<div class="w-3 h-3 rounded-full bg-primary-container border-2 border-bg-1"></div>
+<span class="absolute top-4 font-code-sm text-[10px] text-text-2 whitespace-nowrap">Hop 2: LB</span>
+</div>
+<!-- Hop 3: Tier Router (0.9s) -->
+<div class="relative flex flex-col items-center -translate-x-1/2" style="margin-left: 32%;">
+<div class="w-3 h-3 rounded-full bg-node-service border-2 border-bg-1"></div>
+<span class="absolute top-4 font-code-sm text-[10px] text-text-2 whitespace-nowrap">Hop 3: Router</span>
+</div>
+<!-- PLAYHEAD (1.2s - Active Mid-hop Cursor) -->
+<div class="absolute top-0 -translate-x-1/2 pointer-events-auto cursor-grab" style="left: 43%;">
+<div class="w-4 h-4 rounded-full bg-text-1 border-2 border-primary-container shadow-[0_0_12px_rgba(34,211,238,0.9)] animate-ping absolute -inset-0 opacity-40"></div>
+<div class="w-4 h-4 rounded-full bg-text-1 border-2 border-primary-container shadow-[0_0_10px_rgba(34,211,238,0.8)] relative z-10"></div>
+<span class="absolute -top-5 left-1/2 -translate-x-1/2 font-code-sm text-[9px] bg-primary text-on-primary px-1 rounded font-bold">1.2s</span>
+</div>
+<!-- Hop 4: Service B (1.8s) -->
+<div class="relative flex flex-col items-center -translate-x-1/2" style="margin-left: 64%;">
+<div class="w-3 h-3 rounded-full bg-status-error border-2 border-bg-1"></div>
+<span class="absolute top-4 font-code-sm text-[10px] text-status-warn whitespace-nowrap font-medium">Hop 4: Svc B</span>
+</div>
+<!-- Hop 5: Aurora DB (2.8s) -->
+<div class="relative flex flex-col items-center translate-x-1/2">
+<div class="w-3 h-3 rounded-full bg-border-strong border-2 border-bg-1"></div>
+<span class="absolute top-4 right-0 font-code-sm text-[10px] text-text-3 whitespace-nowrap">Hop 5: DB (2.8s)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: TRACE DETAIL DRAWER (380px) -->
+<aside class="w-[380px] shrink-0 bg-bg-1 border-l border-border-structural flex flex-col h-full overflow-hidden select-none">
+<!-- Drawer Header -->
+<div class="p-space-sm border-b border-border-structural flex items-center justify-between shrink-0 bg-bg-1/90">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[18px]">dock_to_left</span>
+<span class="font-headline-sm text-headline-sm text-text-1">Trace Inspector</span>
+</div>
+<div class="flex items-center gap-1.5">
+<button class="h-7 px-2 rounded-lg bg-bg-2 border border-border-structural text-text-2 hover:text-text-1 hover:border-border-strong font-code-sm text-[11px] flex items-center gap-1 transition-all" title="Copy JSON payload">
+<span class="material-symbols-outlined text-[13px]">code</span>
+<span>JSON</span>
+</button>
+<button class="w-7 h-7 rounded-lg bg-bg-2 border border-border-structural text-text-2 hover:text-text-1 hover:border-border-strong flex items-center justify-center transition-all" title="Close Drawer">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+</div>
+<!-- Drawer Content Scrollable Area -->
+<div class="flex-1 overflow-y-auto p-space-sm space-y-space-md">
+<!-- Executive Overview Card -->
+<div class="bg-bg-2 border border-border-structural rounded-xl p-3.5 space-y-3">
+<div class="flex items-center justify-between border-b border-border-structural pb-2.5">
+<div class="flex flex-col">
+<span class="font-label-uppercase text-[10px] text-text-3 tracking-wider">Overall Verdict</span>
+<span class="font-code-sm text-code-sm text-status-warn font-semibold flex items-center gap-1.5 mt-0.5">
+<span class="w-2 h-2 rounded-full bg-status-warn animate-pulse"></span>
+                DEGRADED (4xx/5xx)
+              </span>
+</div>
+<div class="flex flex-col text-right">
+<span class="font-label-uppercase text-[10px] text-text-3 tracking-wider">Total Duration</span>
+<span class="font-code-sm text-code-sm text-text-1 font-semibold mt-0.5">380.4ms</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 text-[12px] font-code-sm">
+<div>
+<span class="text-text-3 block text-[10px] uppercase">Replay Progress</span>
+<span class="text-primary-container font-medium">Hop 4 of 5 (Stalled)</span>
+</div>
+<div>
+<span class="text-text-3 block text-[10px] uppercase">Timestamp UTC</span>
+<span class="text-text-2">14:28:19.412</span>
+</div>
+</div>
+</div>
+<!-- Section: Hop Chronology & Spans (Vertical Timeline) -->
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between px-1">
+<span class="font-label-uppercase text-label-uppercase text-text-3 tracking-wider">Hop Chronology &amp; Spans</span>
+<span class="font-code-sm text-[11px] text-primary-container">5 events</span>
+</div>
+<!-- Vertical Timeline Stepper -->
+<div class="relative pl-6 space-y-3.5 before:absolute before:left-[11px] before:top-3 before:bottom-3 before:w-[2px] before:bg-border-structural">
+<!-- HOP 1 -->
+<div class="relative bg-bg-2 border border-border-structural rounded-xl p-3 space-y-1.5">
+<div class="absolute -left-[29px] top-3.5 w-3.5 h-3.5 rounded-full bg-bg-0 border-2 border-status-ok flex items-center justify-center">
+<div class="w-1.5 h-1.5 rounded-full bg-status-ok"></div>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-body-node-label text-[13px] text-text-1 font-semibold">1. Website Edge</span>
+<span class="font-code-sm text-[11px] text-status-ok">12ms</span>
+</div>
+<span class="font-code-sm text-[11px] text-text-3 block">web_ingress_01 · +0ms</span>
+<div class="flex flex-wrap gap-1 pt-1">
+<span class="px-1.5 py-0.5 rounded bg-bg-3 font-code-sm text-[10px] text-text-2 border border-border-structural">GET /api/v1/checkout</span>
+<span class="px-1.5 py-0.5 rounded bg-bg-3 font-code-sm text-[10px] text-text-3 border border-border-structural">ip: 185.141.xx.12</span>
+</div>
+</div>
+<!-- HOP 2 -->
+<div class="relative bg-bg-2 border border-border-structural rounded-xl p-3 space-y-1.5">
+<div class="absolute -left-[29px] top-3.5 w-3.5 h-3.5 rounded-full bg-bg-0 border-2 border-status-ok flex items-center justify-center">
+<div class="w-1.5 h-1.5 rounded-full bg-status-ok"></div>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-body-node-label text-[13px] text-text-1 font-semibold">2. Load Balancer</span>
+<span class="font-code-sm text-[11px] text-status-ok">8ms</span>
+</div>
+<span class="font-code-sm text-[11px] text-text-3 block">lb_edge_traff · +12ms</span>
+<div class="flex flex-wrap gap-1 pt-1">
+<span class="px-1.5 py-0.5 rounded bg-bg-3 font-code-sm text-[10px] text-text-2 border border-border-structural">proxy: envoy_v1.30</span>
+<span class="px-1.5 py-0.5 rounded bg-bg-3 font-code-sm text-[10px] text-text-3 border border-border-structural">tls: TLSv1.3</span>
+</div>
+</div>
+<!-- HOP 3 -->
+<div class="relative bg-bg-2 border border-border-structural rounded-xl p-3 space-y-1.5">
+<div class="absolute -left-[29px] top-3.5 w-3.5 h-3.5 rounded-full bg-bg-0 border-2 border-node-decision flex items-center justify-center">
+<div class="w-1.5 h-1.5 rounded-full bg-node-decision"></div>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-body-node-label text-[13px] text-text-1 font-semibold">3. Tier Router</span>
+<span class="font-code-sm text-[11px] text-status-ok">4ms</span>
+</div>
+<span class="font-code-sm text-[11px] text-text-3 block">eval_jwt_policy · +20ms</span>
+<div class="flex flex-wrap gap-1 pt-1">
+<span class="px-1.5 py-0.5 rounded bg-bg-3 font-code-sm text-[10px] text-text-2 border border-border-structural">route.tier: standard</span>
+<span class="px-1.5 py-0.5 rounded bg-bg-3 font-code-sm text-[10px] text-text-3 border border-border-structural">auth: valid_jwt</span>
+</div>
+</div>
+<!-- HOP 4: CURRENT ACTIVE REPLAY (Pulsing Highlight) -->
+<div class="relative bg-bg-2 border-2 border-primary-container rounded-xl p-3 space-y-2 shadow-[0_0_16px_rgba(34,211,238,0.25)]">
+<div class="absolute -left-[30px] top-3.5 w-4 h-4 rounded-full bg-bg-0 border-2 border-primary-container flex items-center justify-center shadow-[0_0_8px_rgba(34,211,238,0.8)]">
+<div class="w-2 h-2 rounded-full bg-primary-container animate-ping"></div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="font-body-node-label text-[13px] text-text-1 font-semibold">4. Service B (Worker)</span>
+<span class="px-1 py-0.2 rounded bg-primary-container/20 text-primary-container font-chip-metric text-[9px] font-bold">REPLAYING</span>
+</div>
+<span class="font-code-sm text-[11px] text-status-warn font-semibold">184ms (Degraded)</span>
+</div>
+<span class="font-code-sm text-[11px] text-text-3 block">svc_batch_worker · +24ms</span>
+<div class="flex flex-wrap gap-1 pt-0.5">
+<span class="px-1.5 py-0.5 rounded bg-bg-3 font-code-sm text-[10px] text-text-2 border border-border-structural">thread: pool_worker_4</span>
+<span class="px-1.5 py-0.5 rounded bg-status-warn/15 font-code-sm text-[10px] text-status-warn border border-status-warn/30">queue.wait: 142ms</span>
+<span class="px-1.5 py-0.5 rounded bg-status-error/15 font-code-sm text-[10px] text-error border border-status-error/30 font-medium">exception: ConnectionTimeout</span>
+</div>
+</div>
+<!-- HOP 5: PENDING -->
+<div class="relative bg-bg-2/60 border border-border-structural/60 rounded-xl p-3 space-y-1.5 opacity-75">
+<div class="absolute -left-[29px] top-3.5 w-3.5 h-3.5 rounded-full bg-bg-0 border-2 border-border-strong flex items-center justify-center">
+<div class="w-1.5 h-1.5 rounded-full bg-border-strong"></div>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-body-node-label text-[13px] text-text-2 font-medium">5. Aurora Postgres</span>
+<span class="font-code-sm text-[11px] text-status-error font-medium">142ms (Fatal Lock)</span>
+</div>
+<span class="font-code-sm text-[11px] text-text-3 block">db_aurora_core · +208ms</span>
+<div class="flex flex-wrap gap-1 pt-1">
+<span class="px-1.5 py-0.5 rounded bg-bg-3 font-code-sm text-[10px] text-text-3 border border-border-structural">SELECT * FROM orders_queue</span>
+<span class="px-1.5 py-0.5 rounded bg-bg-3 font-code-sm text-[10px] text-status-warn border border-border-structural">db.pool: 196/200</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Section: Attributes & Key-Value Metadata -->
+<div class="space-y-2 pt-2 border-t border-border-structural">
+<div class="flex items-center justify-between px-1">
+<span class="font-label-uppercase text-label-uppercase text-text-3 tracking-wider">Span Attributes</span>
+<span class="material-symbols-outlined text-[16px] text-text-3 cursor-pointer">unfold_more</span>
+</div>
+<div class="bg-bg-0 border border-border-structural rounded-xl p-3 font-code-block text-[12px] space-y-2">
+<div class="flex items-center justify-between text-text-3">
+<span>trace.id</span>
+<span class="text-text-1 select-all">0194fe26-7c91-b328-9821</span>
+</div>
+<div class="flex items-center justify-between text-text-3">
+<span>span.id</span>
+<span class="text-text-1 select-all">88a402f1b82</span>
+</div>
+<div class="flex items-center justify-between text-text-3">
+<span>http.status_code</span>
+<span class="text-status-error font-semibold">504 Gateway Timeout</span>
+</div>
+<div class="flex items-center justify-between text-text-3">
+<span>customer.tier</span>
+<span class="text-primary-container font-medium">enterprise_gold</span>
+</div>
+<div class="flex items-center justify-between text-text-3">
+<span>otel.library.version</span>
+<span class="text-text-2">v1.28.0</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</div></main></div></body></html>
