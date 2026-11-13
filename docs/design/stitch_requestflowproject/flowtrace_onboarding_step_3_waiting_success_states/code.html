@@ -1,349 +1,780 @@
 <!DOCTYPE html>
 
-<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"node-queue":"#22D3EE","node-datastore":"#34D399","surface-container-low":"#1a1b21","on-error":"#690005","on-secondary-container":"#c4abff","secondary":"#d0bcff","on-tertiary-fixed-variant":"#643f00","node-source":"#60A5FA","border-strong":"#343C4F","outline-variant":"#3c494c","on-secondary":"#3c0091","outline":"#859397","on-surface-variant":"#bbc9cd","border-structural":"#262C3A","inverse-surface":"#e2e2e9","bg-2":"#171B24","node-decision":"#F59E0B","text-1":"#E8ECF4","status-ok":"#34D399","secondary-fixed":"#e9ddff","on-secondary-fixed":"#23005c","on-surface":"#e2e2e9","node-end":"#F472B6","tertiary":"#ffd6a3","on-tertiary":"#462b00","on-tertiary-fixed":"#2a1800","background":"#111318","tertiary-fixed-dim":"#ffb957","surface":"#111318","text-3":"#7C869C","tertiary-fixed":"#ffddb5","surface-container":"#1e1f25","on-tertiary-container":"#6e4600","on-primary-fixed":"#001f25","surface-variant":"#33353a","inverse-primary":"#006877","on-primary":"#00363e","on-error-container":"#ffdad6","node-service":"#8B5CF6","status-info":"#60A5FA","error-container":"#93000a","on-background":"#e2e2e9","primary-container":"#22d3ee","tertiary-container":"#ffb13b","node-external":"#94A3B8","bg-1":"#11141B","primary-fixed":"#a2eeff","on-secondary-fixed-variant":"#5516be","primary-fixed-dim":"#2fd9f4","on-primary-fixed-variant":"#004e5a","surface-dim":"#111318","bg-3":"#1E2330","secondary-container":"#571bc1","text-2":"#A3ACBF","surface-tint":"#2fd9f4","surface-container-high":"#282a2f","error":"#ffb4ab","inverse-on-surface":"#2e3036","surface-container-highest":"#33353a","status-discovered":"#F59E0B","secondary-fixed-dim":"#d0bcff","surface-container-lowest":"#0c0e13","on-primary-container":"#005763","surface-bright":"#37393f","status-warn":"#F59E0B","status-error":"#F43F5E","primary":"#8aebff","bg-0":"#0B0D12"},borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},spacing:{gutter:"1rem","margin-desktop":"1.5rem","space-md":"0.75rem","space-sm":"0.5rem","gutter-desktop":"1.5rem","space-lg":"1rem",margin:"1rem","space-xl":"1.5rem","space-xs":"0.25rem"},fontFamily:{"headline-sm":["Inter"],"display-mobile":["Inter"],"headline-lg":["Inter"],"code-block":["JetBrains Mono"],"body-node-label":["Inter"],"code-sm":["JetBrains Mono"],"headline-lg-mobile":["Inter"],"headline-md":["Inter"],"label-md":["Inter"],"label-uppercase":["Inter"],"body-md":["Inter"],"label-sm":["Inter"],"body-lg":["Inter"],"chip-metric":["Inter"],display:["Inter"]},fontSize:{"headline-sm":["20px",{lineHeight:"28px",fontWeight:"600"}],"display-mobile":["36px",{lineHeight:"42px",letterSpacing:"-0.01em",fontWeight:"600"}],"headline-lg":["32px",{lineHeight:"40px",letterSpacing:"-0.01em",fontWeight:"600"}],"code-block":["13px",{lineHeight:"20px",fontWeight:"400"}],"body-node-label":["14px",{lineHeight:"20px",fontWeight:"600"}],"code-sm":["12px",{lineHeight:"16px",fontWeight:"500"}],"headline-lg-mobile":["26px",{lineHeight:"32px",fontWeight:"600"}],"headline-md":["24px",{lineHeight:"32px",fontWeight:"600"}],"label-md":["13px",{lineHeight:"18px",fontWeight:"500"}],"label-uppercase":["12px",{lineHeight:"16px",letterSpacing:"0.08em",fontWeight:"500"}],"body-md":["14px",{lineHeight:"20px",fontWeight:"400"}],"label-sm":["12px",{lineHeight:"16px",fontWeight:"400"}],"body-lg":["16px",{lineHeight:"24px",fontWeight:"400"}],"chip-metric":["11px",{lineHeight:"14px",fontWeight:"500"}],display:["48px",{lineHeight:"52px",letterSpacing:"-0.02em",fontWeight:"600"}]}}}};</script></head><body class="bg-bg-0 font-body-md text-text-1 min-h-screen flex flex-col selection:bg-primary selection:text-on-primary-fixed"><header class="fixed top-0 left-0 right-0 z-50 bg-bg-1/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.4)]"><div class="h-14 w-full px-gutter-desktop flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm"><div class="w-7 h-7 rounded bg-bg-3 flex items-center justify-center"><span class="material-symbols-outlined text-primary text-[18px]">polyline</span></div><span class="font-headline-sm text-text-1 tracking-tight">FlowTrace</span></div><span class="text-text-3 font-code-sm">/</span><span class="font-label-md text-text-2">Setup</span><span class="px-space-sm py-0.5 rounded-full bg-bg-3 font-label-uppercase text-status-warn text-[10px] tracking-wider">ONBOARDING MODE</span></div><div class="hidden md:flex items-center gap-space-md"><div class="flex items-center gap-space-xs font-chip-metric text-text-2 bg-bg-2 px-space-md py-1 rounded-full"><span class="text-primary font-medium">Step 3 of 3</span><span class="text-text-3">•</span><span>Verify Live Stream</span></div><div class="flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-status-ok"></div><div class="w-1.5 h-1.5 rounded-full bg-status-ok"></div><div class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></div></div></div><div class="flex items-center gap-space-md"><nav class="flex items-center gap-space-md" data-active-classes="text-primary font-bold"><a class="font-label-md text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-1" data-path="documentation" href="#">Documentation</a><a class="font-label-md text-on-surface-variant hover:text-on-surface transition-colors hidden sm:inline" data-path="quickstart-guide" href="#">Quickstart</a></nav><a class="px-space-md py-1.5 rounded bg-bg-3 font-label-md text-text-2 hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center gap-1" data-path="exit-setup" href="#"><span class="material-symbols-outlined text-[16px]">close</span><span>Exit</span></a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-14 bg-bg-0 flex-1 flex flex-col"><div class="flex flex-col w-full">
-<div class="w-full max-w-[1440px] mx-auto px-gutter-desktop py-space-xl flex flex-col gap-space-xl">
-<!-- Top Progress & Context Hero -->
-<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-lg">
-<div class="flex flex-col gap-space-xs max-w-3xl">
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_standard" name="shell-type"/>
+<title>FlowTrace - Step 3: Temporal Live Stream Verification</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "node-queue": "#22D3EE",
+            "node-datastore": "#34D399",
+            "surface-container-low": "#1a1b21",
+            "on-error": "#690005",
+            "on-secondary-container": "#c4abff",
+            "secondary": "#d0bcff",
+            "on-tertiary-fixed-variant": "#643f00",
+            "node-source": "#60A5FA",
+            "border-strong": "#343C4F",
+            "outline-variant": "#3c494c",
+            "on-secondary": "#3c0091",
+            "outline": "#859397",
+            "on-surface-variant": "#bbc9cd",
+            "border-structural": "#262C3A",
+            "inverse-surface": "#e2e2e9",
+            "bg-2": "#171B24",
+            "node-decision": "#F59E0B",
+            "text-1": "#E8ECF4",
+            "status-ok": "#34D399",
+            "secondary-fixed": "#e9ddff",
+            "on-secondary-fixed": "#23005c",
+            "on-surface": "#e2e2e9",
+            "node-end": "#F472B6",
+            "tertiary": "#ffd6a3",
+            "on-tertiary": "#462b00",
+            "on-tertiary-fixed": "#2a1800",
+            "background": "#111318",
+            "tertiary-fixed-dim": "#ffb957",
+            "surface": "#111318",
+            "text-3": "#7C869C",
+            "tertiary-fixed": "#ffddb5",
+            "surface-container": "#1e1f25",
+            "on-tertiary-container": "#6e4600",
+            "on-primary-fixed": "#001f25",
+            "surface-variant": "#33353a",
+            "inverse-primary": "#006877",
+            "on-primary": "#00363e",
+            "on-error-container": "#ffdad6",
+            "node-service": "#8B5CF6",
+            "status-info": "#60A5FA",
+            "error-container": "#93000a",
+            "on-background": "#e2e2e9",
+            "primary-container": "#22d3ee",
+            "tertiary-container": "#ffb13b",
+            "node-external": "#94A3B8",
+            "bg-1": "#11141B",
+            "primary-fixed": "#a2eeff",
+            "on-secondary-fixed-variant": "#5516be",
+            "primary-fixed-dim": "#2fd9f4",
+            "on-primary-fixed-variant": "#004e5a",
+            "surface-dim": "#111318",
+            "bg-3": "#1E2330",
+            "secondary-container": "#571bc1",
+            "text-2": "#A3ACBF",
+            "surface-tint": "#2fd9f4",
+            "surface-container-high": "#282a2f",
+            "error": "#ffb4ab",
+            "inverse-on-surface": "#2e3036",
+            "surface-container-highest": "#33353a",
+            "status-discovered": "#F59E0B",
+            "secondary-fixed-dim": "#d0bcff",
+            "surface-container-lowest": "#0c0e13",
+            "on-primary-container": "#005763",
+            "surface-bright": "#37393f",
+            "status-warn": "#F59E0B",
+            "status-error": "#F43F5E",
+            "primary": "#8aebff",
+            "bg-0": "#0B0D12"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          spacing: {
+            gutter: "1rem",
+            "margin-desktop": "1.5rem",
+            "space-md": "0.75rem",
+            "space-sm": "0.5rem",
+            "gutter-desktop": "1.5rem",
+            "space-lg": "1rem",
+            margin: "1rem",
+            "space-xl": "1.5rem",
+            "space-xs": "0.25rem"
+          },
+          fontFamily: {
+            "headline-sm": ["Inter"],
+            "display-mobile": ["Inter"],
+            "headline-lg": ["Inter"],
+            "code-block": ["JetBrains Mono"],
+            "body-node-label": ["Inter"],
+            "code-sm": ["JetBrains Mono"],
+            "headline-lg-mobile": ["Inter"],
+            "headline-md": ["Inter"],
+            "label-md": ["Inter"],
+            "label-uppercase": ["Inter"],
+            "body-md": ["Inter"],
+            "label-sm": ["Inter"],
+            "body-lg": ["Inter"],
+            "chip-metric": ["Inter"],
+            display: ["Inter"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-bg-0 font-body-md text-text-1 min-h-screen flex flex-col selection:bg-primary selection:text-on-primary-fixed">
+<!-- Header Navigation Bar -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-bg-1/90 backdrop-blur-xl border-b border-border-structural">
+<div class="h-14 w-full px-gutter-desktop flex items-center justify-between gap-space-lg">
+<div class="flex items-center gap-space-md">
 <div class="flex items-center gap-space-sm">
-<span class="px-space-sm py-0.5 rounded bg-bg-2 font-label-uppercase text-text-3 tracking-widest text-[10px]">STEP 3 OF 3</span>
+<div class="w-7 h-7 rounded bg-bg-3 flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-primary text-[18px]">polyline</span>
+</div>
+<span class="font-headline-sm text-text-1 tracking-tight">FlowTrace</span>
+</div>
+<span class="text-text-3 font-code-sm">/</span>
+<span class="font-label-md text-text-2">Setup</span>
+<span class="px-space-sm py-0.5 rounded-full bg-status-warn/15 border border-status-warn/30 font-label-uppercase text-status-warn text-[10px] tracking-wider font-semibold">ONBOARDING MODE</span>
+</div>
+<!-- Linear Stepper Pills -->
+<div class="hidden lg:flex items-center gap-space-sm bg-bg-2/80 border border-border-structural p-1 rounded-xl">
+<div class="flex items-center gap-1.5 px-space-md py-1 rounded-lg text-text-2 text-xs font-label-md">
+<span class="material-symbols-outlined text-status-ok text-[16px]">check_circle</span>
+<span>1. Template</span>
+</div>
+<div class="w-3 h-[1px] bg-border-strong"></div>
+<div class="flex items-center gap-1.5 px-space-md py-1 rounded-lg text-text-2 text-xs font-label-md">
+<span class="material-symbols-outlined text-status-ok text-[16px]">check_circle</span>
+<span>2. Telemetry SDK</span>
+</div>
+<div class="w-3 h-[1px] bg-border-strong"></div>
+<div class="flex items-center gap-1.5 px-space-md py-1 rounded-lg bg-bg-3 border border-primary/30 shadow-[0_0_12px_rgba(34,211,238,0.2)] text-primary text-xs font-label-md font-semibold">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span>3. Verify Stream</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<nav class="flex items-center gap-space-md" data-active-classes="text-primary font-bold">
+<a class="font-label-md text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-1 text-xs" data-path="documentation" href="#">
+<span class="material-symbols-outlined text-[16px]">menu_book</span>
+<span>Documentation</span>
+</a>
+<a class="font-label-md text-on-surface-variant hover:text-on-surface transition-colors hidden sm:flex items-center gap-1 text-xs" data-path="quickstart-guide" href="#">
+<span class="material-symbols-outlined text-[16px]">bolt</span>
+<span>Quickstart</span>
+</a>
+</nav>
+<a class="px-space-md py-1.5 rounded-lg bg-bg-3 border border-border-structural font-label-md text-text-2 hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center gap-1 text-xs" data-path="exit-setup" href="#">
+<span class="material-symbols-outlined text-[16px]">close</span>
+<span>Exit</span>
+</a>
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center font-bold text-on-primary text-xs shadow-sm">
+          FT
+        </div>
+</div>
+</div>
+</header>
+<!-- Main Full-Canvas Temporal Workspace -->
+<main class="w-full pt-14 bg-bg-0 flex-1 flex flex-col relative overflow-hidden">
+<div class="w-full max-w-[1600px] mx-auto px-gutter-desktop py-space-lg flex flex-col gap-space-lg flex-1">
+<!-- Top Title & Interactive Time-Lapse Temporal Controller -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md bg-bg-1/80 border border-border-structural rounded-2xl p-space-lg backdrop-blur-md">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-sm">
+<span class="px-space-sm py-0.5 rounded bg-bg-3 font-label-uppercase text-text-3 tracking-widest text-[10px] font-semibold">TEMPORAL REPLAY</span>
 <span class="text-text-3 font-code-sm">/</span>
 <span class="font-label-uppercase text-primary tracking-wider text-[11px] font-semibold">VERIFICATION &amp; ACTIVATION</span>
 </div>
-<h1 class="font-headline-lg text-text-1 tracking-tight">Verify live stream connection</h1>
-<p class="font-body-lg text-text-2">
-          See your architecture awaken the moment the first checkpoint arrives from your telemetry SDK or test probe.
-        </p>
-</div>
-<!-- Linear Stepper Pills -->
-<div class="flex items-center gap-space-sm bg-bg-1 p-1.5 rounded-xl shadow-sm self-start lg:self-auto">
-<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-bg-2">
-<span class="material-symbols-outlined text-status-ok text-[18px]">check_circle</span>
-<span class="font-label-md text-text-1">1. Template</span>
-</div>
-<div class="w-4 h-0.5 bg-bg-3"></div>
-<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-bg-2">
-<span class="material-symbols-outlined text-status-ok text-[18px]">check_circle</span>
-<span class="font-label-md text-text-1">2. Telemetry SDK</span>
-</div>
-<div class="w-4 h-0.5 bg-bg-3"></div>
-<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-bg-3 shadow-[0_0_12px_rgba(34,211,238,0.15)]">
-<span class="w-2.5 h-2.5 rounded-full bg-primary animate-pulse"></span>
-<span class="font-label-md text-primary font-semibold">3. Verify Stream</span>
-</div>
-</div>
-</div>
-<!-- Side-by-Side Dual State Arena -->
-<div class="grid grid-cols-1 xl:grid-cols-2 gap-space-xl items-stretch">
-<!-- LEFT: STATE A (Awaiting Ingestion) -->
-<div class="flex flex-col rounded-xl bg-bg-1 overflow-hidden shadow-lg hover:shadow-xl transition-all">
-<!-- Card Header Strip -->
-<div class="p-space-lg bg-bg-2/80 flex items-center justify-between gap-space-md flex-wrap">
-<div class="flex items-center gap-space-sm">
-<span class="px-space-sm py-1 rounded bg-bg-3 text-status-warn font-label-uppercase text-[11px] font-semibold tracking-wider flex items-center gap-1.5">
-<span class="w-1.5 h-1.5 rounded-full bg-status-warn animate-ping"></span>
-              STATE A: AWAITING INGESTION
+<h1 class="font-headline-md lg:font-headline-lg text-text-1 tracking-tight flex items-center gap-3">
+<span>Verify Live Stream Connection</span>
+<span class="text-xs font-code-sm font-semibold px-2.5 py-1 rounded-full bg-status-ok/20 text-status-ok border border-status-ok/30 flex items-center gap-1.5" id="state-badge-header">
+<span class="w-2 h-2 rounded-full bg-status-ok animate-pulse"></span>
+              LIVE TOPOLOGY AWAKENED
             </span>
+</h1>
+<p class="font-body-md text-text-2 text-xs sm:text-sm">
+            Watch the system transition dynamically from listening probe state to instant full-mesh verification.
+          </p>
 </div>
-<div class="flex items-center gap-space-xs px-space-md py-1 rounded-full bg-bg-3/90 text-text-2 font-code-sm">
-<span class="material-symbols-outlined text-status-warn text-[16px] animate-spin">progress_activity</span>
-<span>Listening on port 443 · Waiting for first event…</span>
-</div>
-</div>
-<!-- Canvas Simulated Viewport -->
-<div class="relative w-full h-[400px] bg-bg-0 overflow-hidden flex items-center justify-center p-space-lg select-none">
-<!-- Dot Grid Background -->
-<div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: radial-gradient(circle, #E8ECF4 1px, transparent 1px); background-size: 24px 24px;"></div>
-<!-- Subtle Amber Radar Ambient Glow from Source Node -->
-<div class="absolute left-[16%] top-[42%] -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-status-warn/5 pointer-events-none animate-pulse"></div>
-<!-- Microservices SVG Topology Lines (Muted) -->
-<svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
-<defs>
-<lineargradient id="edge-dim" x1="0%" x2="100%" y1="0%" y2="0%">
-<stop offset="0%" stop-color="#343C4F" stop-opacity="0.4"></stop>
-<stop offset="100%" stop-color="#343C4F" stop-opacity="0.2"></stop>
-</lineargradient>
-</defs>
-<!-- Website Edge -> Envoy Ingress -->
-<path d="M 175 190 C 220 190, 230 190, 275 190" fill="none" stroke="url(#edge-dim)" stroke-dasharray="4 4" stroke-width="2"></path>
-<!-- Envoy Ingress -> Orders Service -->
-<path d="M 370 180 C 405 180, 415 130, 455 130" fill="none" stroke="url(#edge-dim)" stroke-dasharray="4 4" stroke-width="2"></path>
-<!-- Envoy Ingress -> Billing Service -->
-<path d="M 370 200 C 405 200, 415 255, 455 255" fill="none" stroke="url(#edge-dim)" stroke-dasharray="4 4" stroke-width="2"></path>
-<!-- Orders/Billing -> Primary Store -->
-<path d="M 545 130 C 575 130, 580 190, 605 190" fill="none" stroke="url(#edge-dim)" stroke-dasharray="4 4" stroke-width="2"></path>
-<path d="M 545 255 C 575 255, 580 190, 605 190" fill="none" stroke="url(#edge-dim)" stroke-dasharray="4 4" stroke-width="2"></path>
-</svg>
-<!-- Nodes Layout (Absolute Layout inside canvas) -->
-<div class="relative w-full h-full max-w-[620px] max-h-[340px]">
-<!-- Source Node: Website Edge (ACTIVE AWAITING TARGET) -->
-<div class="absolute left-0 top-[145px] w-[175px] rounded-xl bg-bg-2 p-space-md shadow-xl flex flex-col gap-space-xs transition-transform">
-<!-- Radar Ping Effect around this node -->
-<span class="absolute -inset-1 rounded-2xl bg-status-warn/20 animate-ping pointer-events-none"></span>
-<div class="flex items-center justify-between">
-<div class="w-8 h-8 rounded-lg bg-node-source/15 flex items-center justify-center">
-<span class="material-symbols-outlined text-node-source text-[18px]">language</span>
-</div>
-<span class="px-1.5 py-0.5 rounded-full bg-status-warn/15 font-chip-metric text-status-warn font-semibold">AWAITING</span>
-</div>
-<div>
-<p class="font-body-node-label text-text-1 text-xs">Website Edge</p>
-<p class="font-code-sm text-text-3 text-[10px]">web_ingress_01</p>
-</div>
-</div>
-<!-- Envoy Ingress Node (Dimmed) -->
-<div class="absolute left-[265px] top-[152px] w-[105px] rounded-xl bg-bg-2/45 p-space-sm flex flex-col gap-1 opacity-50">
-<div class="flex items-center justify-between">
-<div class="w-6 h-6 rounded-md bg-node-queue/15 flex items-center justify-center">
-<span class="material-symbols-outlined text-node-queue text-[14px]">alt_route</span>
-</div>
-<span class="font-code-sm text-text-3 text-[9px]">IDLE</span>
-</div>
-<p class="font-body-node-label text-text-2 text-[11px] truncate">Envoy Ingress</p>
-</div>
-<!-- Orders Service (Dimmed) -->
-<div class="absolute left-[450px] top-[95px] w-[95px] rounded-xl bg-bg-2/45 p-space-sm flex flex-col gap-1 opacity-45">
-<div class="w-6 h-6 rounded-md bg-node-service/15 flex items-center justify-center">
-<span class="material-symbols-outlined text-node-service text-[14px]">hub</span>
-</div>
-<p class="font-body-node-label text-text-2 text-[11px]">Orders Svc</p>
-</div>
-<!-- Billing Service (Dimmed) -->
-<div class="absolute left-[450px] top-[220px] w-[95px] rounded-xl bg-bg-2/45 p-space-sm flex flex-col gap-1 opacity-45">
-<div class="w-6 h-6 rounded-md bg-node-service/15 flex items-center justify-center">
-<span class="material-symbols-outlined text-node-service text-[14px]">payments</span>
-</div>
-<p class="font-body-node-label text-text-2 text-[11px]">Billing Svc</p>
-</div>
-<!-- Primary Datastore (Dimmed) -->
-<div class="absolute left-[595px] top-[155px] w-[95px] rounded-xl bg-bg-2/45 p-space-sm flex flex-col gap-1 opacity-40">
-<div class="w-6 h-6 rounded-md bg-node-datastore/15 flex items-center justify-center">
-<span class="material-symbols-outlined text-node-datastore text-[14px]">database</span>
-</div>
-<p class="font-body-node-label text-text-2 text-[11px]">Primary DB</p>
-</div>
-</div>
-<!-- Bottom Floating Status Banner inside Canvas -->
-<div class="absolute bottom-space-md left-space-md right-space-md flex items-center justify-between px-space-md py-1.5 rounded-lg bg-bg-1/90 backdrop-blur-md text-text-3 font-code-sm text-[11px]">
-<span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-status-warn animate-pulse"></span>Zero traces buffered</span>
-<span>Polling frequency: 100ms</span>
-</div>
-</div>
-<!-- State A Bottom Helper & Action Zone -->
-<div class="p-space-lg bg-bg-1 flex flex-col justify-between flex-1 gap-space-lg">
-<div class="flex flex-col gap-space-sm">
-<p class="font-body-md text-text-2">
-              No telemetry received yet. Fire a synthetic test payload to verify the websocket channel immediately.
-            </p>
-<div class="flex items-center justify-between p-space-sm rounded-lg bg-bg-0 text-text-3 font-code-sm text-xs">
-<div class="flex items-center gap-2 truncate">
-<span class="text-text-3">INGEST URL:</span>
-<span class="text-primary truncate">https://ingest.flowtrace.live:443/v1/traces</span>
-</div>
-<span class="px-2 py-0.5 rounded bg-bg-3 text-status-warn text-[10px]">SOCKET IDLE</span>
-</div>
-</div>
-<div class="flex items-center justify-between pt-space-xs gap-space-md">
-<button class="px-space-lg py-2.5 rounded-xl bg-bg-3 hover:bg-surface-container-high text-text-1 font-label-md flex items-center gap-2 transition-transform hover:-translate-y-0.5 active:translate-y-0 shadow-sm cursor-pointer" id="send-test-btn" type="button">
-<span class="material-symbols-outlined text-status-warn text-[18px]">bolt</span>
-<span>Send a test event</span>
+<!-- Temporal Slider / Mode Toggle Control Center -->
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-bg-2 border border-border-strong p-2 rounded-xl shadow-lg">
+<div class="flex items-center gap-1 bg-bg-0 p-1 rounded-lg border border-border-structural" id="temporal-mode-buttons">
+<button class="px-3 py-1.5 rounded text-xs font-label-md flex items-center gap-1.5 transition-all text-text-3 hover:text-text-1" id="btn-mode-a" type="button">
+<span class="w-2 h-2 rounded-full bg-status-warn"></span>
+<span>State A: Awaiting Signal</span>
 </button>
-<span class="font-label-sm text-text-3 hidden sm:inline">Emulates SDK node ping</span>
+<button class="px-3 py-1.5 rounded text-xs font-label-md flex items-center gap-1.5 transition-all bg-bg-3 text-primary font-semibold shadow-sm border border-primary/30" id="btn-mode-b" type="button">
+<span class="w-2 h-2 rounded-full bg-status-ok animate-pulse"></span>
+<span>State B: Awakened</span>
+</button>
+</div>
+<!-- Quick Interactive Slider Scrub -->
+<div class="flex items-center gap-2 px-2 py-1">
+<span class="font-code-sm text-[11px] text-text-3">Scrub:</span>
+<input class="w-28 h-1.5 bg-bg-3 rounded-lg appearance-none cursor-pointer accent-primary" id="state-scrubber" max="100" min="0" type="range" value="100"/>
+<span class="font-code-sm text-xs text-primary font-bold w-12 text-right" id="scrub-label">T+14ms</span>
+</div>
+<!-- Replay Button -->
+<button class="px-2.5 py-1.5 rounded-lg bg-bg-3 hover:bg-border-strong text-text-2 hover:text-text-1 border border-border-structural text-xs flex items-center gap-1 transition-all" id="btn-replay" title="Replay Activation Sequence" type="button">
+<span class="material-symbols-outlined text-[16px] text-primary">replay</span>
+<span class="hidden xl:inline">Replay</span>
+</button>
+</div>
+</div>
+<!-- Real-Time Ingestion Telemetry Ticker Strip -->
+<div class="w-full bg-bg-1 border border-border-structural rounded-xl px-space-lg py-2.5 flex flex-wrap items-center justify-between gap-y-2 gap-x-4 text-xs font-code-sm shadow-md">
+<div class="flex items-center gap-4 flex-wrap">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-status-ok animate-ping"></span>
+<span class="text-text-1 font-semibold" id="ticker-trace-status">Ingested first trace in 14.8ms</span>
+</div>
+<span class="text-border-strong">|</span>
+<div class="flex items-center gap-1.5 text-text-2">
+<span class="text-text-3">Ingest rate:</span>
+<span class="text-primary font-semibold" id="ticker-eps">1.0 eps</span>
+</div>
+<span class="text-border-strong">|</span>
+<div class="flex items-center gap-1.5 text-text-2">
+<span class="text-text-3">Hop latency:</span>
+<span class="text-text-1" id="ticker-latency">0.42ms</span>
+</div>
+<span class="text-border-strong">|</span>
+<div class="flex items-center gap-1.5 text-text-2">
+<span class="text-text-3">WS Socket:</span>
+<span class="text-status-ok font-semibold" id="ticker-socket">OK 200 (Active)</span>
+</div>
+</div>
+<div class="flex items-center gap-3 text-text-3">
+<span class="flex items-center gap-1 text-[11px]">
+<span class="material-symbols-outlined text-primary text-[14px]">sensors</span>
+<span>Port 443 TLS 1.3 Strict</span>
+</span>
+<span class="text-border-strong">|</span>
+<span class="text-text-2 text-[11px] font-mono">Trace: <strong class="text-text-1 font-normal" id="trace-indicator">0194fe26_x7</strong></span>
+</div>
+</div>
+<!-- Central Full-Canvas Interactive Graph Topology -->
+<div class="relative w-full rounded-2xl bg-bg-1 border border-border-structural overflow-hidden shadow-2xl flex-1 min-h-[500px] flex flex-col justify-between">
+<!-- Canvas Background Dotted Grid -->
+<div class="absolute inset-0 opacity-25 pointer-events-none" style="background-image: radial-gradient(circle, #8aebff 1px, transparent 1px); background-size: 26px 26px;"></div>
+<!-- Ambient Light Gradients (Active Glow vs Radar Pulse) -->
+<div class="absolute left-[15%] top-[50%] -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-status-warn/5 pointer-events-none transition-opacity duration-700 opacity-0" id="ambient-radar"></div>
+<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,rgba(34,211,238,0.12),rgba(139,92,246,0.06),transparent_70%)] pointer-events-none transition-opacity duration-700 opacity-100" id="ambient-verified"></div>
+<!-- Floating Top Canvas Controls & HUD -->
+<div class="relative z-20 p-space-md sm:p-space-lg flex items-center justify-between gap-space-md pointer-events-none">
+<div class="flex items-center gap-2 pointer-events-auto">
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-2/95 border border-primary/30 backdrop-blur-md text-xs font-code-sm shadow-md" id="canvas-status-pill">
+<span class="w-2 h-2 rounded-full bg-status-ok animate-pulse" id="canvas-pulse-dot"></span>
+<span class="text-text-1 font-medium" id="canvas-status-text">All 5 microservices awakened &amp; streaming</span>
+</div>
+<div class="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-bg-2/80 border border-border-structural text-text-3 font-code-sm text-[11px]">
+<span class="material-symbols-outlined text-[14px]">tune</span>
+<span>Zoom 100%</span>
+</div>
+</div>
+<div class="flex items-center gap-2 pointer-events-auto">
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-0/90 border border-border-structural text-text-3 font-code-sm text-[11px]">
+<span class="text-text-3">Ingest Probe:</span>
+<code class="text-primary font-semibold">https://ingest.flowtrace.live:443</code>
 </div>
 </div>
 </div>
-<!-- RIGHT: STATE B (Stream Verified & Alive) -->
-<div class="flex flex-col rounded-xl bg-bg-1 overflow-hidden shadow-2xl relative">
-<!-- Ambient Neon Glow Layer -->
-<div class="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-primary/10 blur-3xl pointer-events-none"></div>
-<!-- Card Header Strip -->
-<div class="p-space-lg bg-bg-2 flex items-center justify-between gap-space-md flex-wrap relative z-10">
-<div class="flex items-center gap-space-sm">
-<span class="px-space-sm py-1 rounded bg-gradient-to-r from-primary/20 to-node-service/20 text-primary font-label-uppercase text-[11px] font-semibold tracking-wider flex items-center gap-1.5 shadow-[0_0_12px_rgba(34,211,238,0.2)]">
-<span class="w-1.5 h-1.5 rounded-full bg-status-ok animate-pulse"></span>
-              STATE B: STREAM VERIFIED
-            </span>
-</div>
-<div class="flex items-center gap-space-xs px-space-md py-1 rounded-full bg-status-ok/15 text-status-ok font-code-sm font-semibold">
-<span class="material-symbols-outlined text-[16px]">check</span>
-<span>Ingested 1st trace in 14.8ms · Active</span>
-</div>
-</div>
-<!-- Canvas Simulated Viewport: Alive & Animated -->
-<div class="relative w-full h-[400px] bg-bg-0 overflow-hidden flex items-center justify-center p-space-lg select-none">
-<!-- Dot Grid Background -->
-<div class="absolute inset-0 opacity-25 pointer-events-none" style="background-image: radial-gradient(circle, #22D3EE 1px, transparent 1px); background-size: 24px 24px;"></div>
-<!-- Luminous Confetti & Energy Particles celebrating first arrival -->
-<div class="absolute left-[18%] top-[25%] w-1.5 h-1.5 rounded-full bg-primary animate-ping"></div>
-<div class="absolute left-[24%] top-[15%] w-1 h-1 rounded-full bg-node-service"></div>
-<div class="absolute left-[12%] top-[35%] w-2 h-2 rounded-full bg-primary-container opacity-60"></div>
-<div class="absolute left-[28%] top-[40%] w-1.5 h-1.5 rounded-full bg-secondary"></div>
-<div class="absolute left-[30%] top-[20%] w-1 h-1 rounded-full bg-status-ok"></div>
-<!-- Active Bézier Paths & Moving Packets -->
-<svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+<!-- Dynamic SVG Connector Web (Paths, Particles, Signals) -->
+<div class="relative w-full h-[380px] sm:h-[420px] flex items-center justify-center my-auto">
+<svg class="absolute inset-0 w-full h-full pointer-events-none" preserveaspectratio="none" viewbox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg">
 <defs>
-<lineargradient id="edge-active" x1="0%" x2="100%" y1="0%" y2="0%">
-<stop offset="0%" stop-color="#22D3EE"></stop>
-<stop offset="100%" stop-color="#8B5CF6"></stop>
+<lineargradient id="stream-cyan-purple" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#22D3EE" stop-opacity="0.9"></stop>
+<stop offset="50%" stop-color="#60A5FA" stop-opacity="0.8"></stop>
+<stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.9"></stop>
 </lineargradient>
-<filter height="140%" id="glow" width="140%" x="-20%" y="-20%">
-<fegaussianblur result="blur" stddeviation="3"></fegaussianblur>
+<lineargradient id="stream-dimmed" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#343C4F" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#343C4F" stop-opacity="0.15"></stop>
+</lineargradient>
+<filter height="140%" id="neon-glow" width="140%" x="-20%" y="-20%">
+<fegaussianblur result="blur" stddeviation="3.5"></fegaussianblur>
 <fecomposite in="SourceGraphic" in2="blur" operator="over"></fecomposite>
 </filter>
 </defs>
-<!-- Glowing Bézier Trajectories -->
-<path d="M 175 190 C 220 190, 230 190, 275 190" fill="none" filter="url(#glow)" id="path-edge-envoy" stroke="url(#edge-active)" stroke-width="2.5"></path>
-<path d="M 370 180 C 405 180, 415 130, 455 130" fill="none" id="path-envoy-orders" stroke="url(#edge-active)" stroke-width="2.5"></path>
-<path d="M 370 200 C 405 200, 415 255, 455 255" fill="none" id="path-envoy-billing" stroke="url(#edge-active)" stroke-width="2"></path>
-<path d="M 545 130 C 575 130, 580 190, 605 190" fill="none" id="path-orders-db" stroke="url(#edge-active)" stroke-width="2"></path>
-<path d="M 545 255 C 575 255, 580 190, 605 190" fill="none" id="path-billing-db" stroke="url(#edge-active)" stroke-width="2"></path>
-<!-- Traveling Tokens (Live Telemetry Packets) -->
-<circle fill="#8aebff" r="4">
-<animatemotion dur="2s" path="M 175 190 C 220 190, 230 190, 275 190" repeatcount="indefinite"></animatemotion>
+<!-- Dimmed Structural Baseline Edges -->
+<g class="transition-opacity duration-700 opacity-20" id="edges-dimmed">
+<path d="M 230 200 C 310 200, 340 200, 420 200" fill="none" stroke="#343C4F" stroke-dasharray="4 4" stroke-width="2"></path>
+<path d="M 540 200 C 600 200, 620 120, 680 120" fill="none" stroke="#343C4F" stroke-dasharray="4 4" stroke-width="2"></path>
+<path d="M 540 200 C 600 200, 620 280, 680 280" fill="none" stroke="#343C4F" stroke-dasharray="4 4" stroke-width="2"></path>
+<path d="M 800 120 C 870 120, 890 200, 960 200" fill="none" stroke="#343C4F" stroke-dasharray="4 4" stroke-width="2"></path>
+<path d="M 800 280 C 870 280, 890 200, 960 200" fill="none" stroke="#343C4F" stroke-dasharray="4 4" stroke-width="2"></path>
+</g>
+<!-- Active Glowing Awakened Edges -->
+<g class="transition-opacity duration-700 opacity-100" id="edges-active">
+<path d="M 230 200 C 310 200, 340 200, 420 200" fill="none" filter="url(#neon-glow)" stroke="url(#stream-cyan-purple)" stroke-width="2.5"></path>
+<path d="M 540 200 C 600 200, 620 120, 680 120" fill="none" filter="url(#neon-glow)" stroke="url(#stream-cyan-purple)" stroke-width="2.5"></path>
+<path d="M 540 200 C 600 200, 620 280, 680 280" fill="none" filter="url(#neon-glow)" stroke="url(#stream-cyan-purple)" stroke-width="2.5"></path>
+<path d="M 800 120 C 870 120, 890 200, 960 200" fill="none" filter="url(#neon-glow)" stroke="url(#stream-cyan-purple)" stroke-width="2.5"></path>
+<path d="M 800 280 C 870 280, 890 200, 960 200" fill="none" filter="url(#neon-glow)" stroke="url(#stream-cyan-purple)" stroke-width="2.5"></path>
+<!-- Real-time traveling packet tokens -->
+<circle fill="#22D3EE" r="4.5">
+<animatemotion dur="1.8s" path="M 230 200 C 310 200, 340 200, 420 200" repeatcount="indefinite"></animatemotion>
 </circle>
-<circle fill="#ffd6a3" r="3.5">
-<animatemotion begin="0.6s" dur="1.8s" path="M 370 180 C 405 180, 415 130, 455 130" repeatcount="indefinite"></animatemotion>
+<circle fill="#8B5CF6" r="4">
+<animatemotion begin="0.4s" dur="1.6s" path="M 540 200 C 600 200, 620 120, 680 120" repeatcount="indefinite"></animatemotion>
 </circle>
-<circle fill="#c4abff" r="3.5">
-<animatemotion begin="0.3s" dur="2.2s" path="M 370 200 C 405 200, 415 255, 455 255" repeatcount="indefinite"></animatemotion>
+<circle fill="#34D399" r="4">
+<animatemotion begin="0.8s" dur="2.1s" path="M 540 200 C 600 200, 620 280, 680 280" repeatcount="indefinite"></animatemotion>
 </circle>
-<circle fill="#34D399" r="3">
-<animatemotion begin="1s" dur="1.6s" path="M 545 130 C 575 130, 580 190, 605 190" repeatcount="indefinite"></animatemotion>
+<circle fill="#8aebff" r="4.5">
+<animatemotion begin="0.2s" dur="1.5s" path="M 800 120 C 870 120, 890 200, 960 200" repeatcount="indefinite"></animatemotion>
 </circle>
+<circle fill="#d0bcff" r="4">
+<animatemotion begin="1.1s" dur="1.9s" path="M 800 280 C 870 280, 890 200, 960 200" repeatcount="indefinite"></animatemotion>
+</circle>
+</g>
 </svg>
-<!-- Fully Awakened Microservices Nodes -->
-<div class="relative w-full h-full max-w-[620px] max-h-[340px]">
-<!-- Awakened Source Node -->
-<div class="absolute left-0 top-[145px] w-[175px] rounded-xl bg-bg-2 p-space-md shadow-[0_0_24px_rgba(34,211,238,0.25)] flex flex-col gap-space-xs transition-transform">
+<!-- Interactive Node Containers Overlaid on Topology Grid -->
+<div class="relative w-full h-full max-w-[1200px] flex items-center justify-between px-6 pointer-events-auto">
+<!-- Node 1: Website Edge (Origin Target) -->
+<div class="z-20 w-[180px] rounded-xl bg-bg-2 border border-primary/50 p-space-md shadow-[0_0_28px_rgba(34,211,238,0.25)] flex flex-col gap-2 transition-all duration-500" id="node-edge">
 <div class="flex items-center justify-between">
-<div class="w-8 h-8 rounded-lg bg-node-source/25 flex items-center justify-center shadow-[0_0_12px_rgba(96,165,250,0.4)]">
+<div class="w-8 h-8 rounded-lg bg-node-source/20 border border-node-source/40 flex items-center justify-center">
 <span class="material-symbols-outlined text-node-source text-[18px]">language</span>
 </div>
-<span class="px-1.5 py-0.5 rounded-full bg-status-ok/20 font-chip-metric text-status-ok font-semibold flex items-center gap-1">
-<span class="material-symbols-outlined text-[12px]">check</span> ACTIVE
+<span class="px-2 py-0.5 rounded-full bg-status-ok/20 border border-status-ok/40 font-chip-metric text-status-ok font-semibold text-[10px] flex items-center gap-1" id="node-edge-tag">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span> ACTIVE
                 </span>
 </div>
 <div>
-<p class="font-body-node-label text-text-1 text-xs">Website Edge</p>
-<p class="font-code-sm text-primary text-[10px]">web_ingress_01</p>
+<p class="font-body-node-label text-text-1 text-sm font-semibold">Website Edge</p>
+<p class="font-code-sm text-primary text-[10px]" id="node-edge-sub">web_ingress_01</p>
+</div>
+<div class="flex items-center justify-between pt-1 border-t border-border-structural/60 font-code-sm text-[10px] text-text-3">
+<span>p95 Latency</span>
+<span class="text-text-1 font-semibold" id="node-edge-metric">0.14ms</span>
 </div>
 </div>
-<!-- Awakened Envoy Ingress -->
-<div class="absolute left-[265px] top-[152px] w-[105px] rounded-xl bg-bg-2 p-space-sm flex flex-col gap-1 shadow-[0_0_20px_rgba(34,211,238,0.2)]">
+<!-- Node 2: Ingress Gateway / Envoy -->
+<div class="z-20 w-[150px] rounded-xl bg-bg-2 border border-border-strong p-space-sm shadow-[0_0_20px_rgba(34,211,238,0.15)] flex flex-col gap-1.5 transition-all duration-500" id="node-envoy">
 <div class="flex items-center justify-between">
-<div class="w-6 h-6 rounded-md bg-node-queue/20 flex items-center justify-center">
-<span class="material-symbols-outlined text-node-queue text-[14px]">alt_route</span>
+<div class="w-7 h-7 rounded-md bg-node-queue/20 border border-node-queue/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-node-queue text-[16px]">alt_route</span>
 </div>
-<span class="font-code-sm text-status-ok text-[9px] font-bold">12 eps</span>
+<span class="font-code-sm text-status-ok text-[10px] font-bold" id="node-envoy-tag">12 eps</span>
 </div>
-<p class="font-body-node-label text-text-1 text-[11px] truncate">Envoy Ingress</p>
+<div>
+<p class="font-body-node-label text-text-1 text-xs font-semibold">Ingress Gateway</p>
+<p class="font-code-sm text-text-3 text-[10px]">envoy_edge_proxy</p>
 </div>
-<!-- Awakened Orders Service -->
-<div class="absolute left-[450px] top-[95px] w-[95px] rounded-xl bg-bg-2 p-space-sm flex flex-col gap-1 shadow-md">
+<div class="flex items-center justify-between pt-1 border-t border-border-structural/60 font-code-sm text-[10px] text-text-3">
+<span>Drop Rate</span>
+<span class="text-status-ok font-semibold" id="node-envoy-metric">0.00%</span>
+</div>
+</div>
+<!-- Node 3 & 4 Stack: Service Tier (Orders Svc & Billing Svc) -->
+<div class="z-20 flex flex-col gap-6">
+<!-- Orders Service -->
+<div class="w-[140px] rounded-xl bg-bg-2 border border-border-strong p-space-sm shadow-md flex flex-col gap-1.5 transition-all duration-500" id="node-orders">
 <div class="flex items-center justify-between">
-<div class="w-6 h-6 rounded-md bg-node-service/20 flex items-center justify-center">
-<span class="material-symbols-outlined text-node-service text-[14px]">hub</span>
+<div class="w-7 h-7 rounded-md bg-node-service/20 border border-node-service/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-node-service text-[16px]">hub</span>
 </div>
-<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+<span class="w-2 h-2 rounded-full bg-status-ok" id="node-orders-dot"></span>
 </div>
-<p class="font-body-node-label text-text-1 text-[11px]">Orders Svc</p>
+<div>
+<p class="font-body-node-label text-text-1 text-xs font-semibold">Orders Svc</p>
+<p class="font-code-sm text-text-3 text-[10px]">svc_orders_v2</p>
 </div>
-<!-- Awakened Billing Service -->
-<div class="absolute left-[450px] top-[220px] w-[95px] rounded-xl bg-bg-2 p-space-sm flex flex-col gap-1 shadow-md">
+<div class="flex items-center justify-between pt-1 border-t border-border-structural/60 font-code-sm text-[10px] text-text-3">
+<span>Throughput</span>
+<span class="text-text-1 font-semibold" id="node-orders-metric">8.4 eps</span>
+</div>
+</div>
+<!-- Billing Service -->
+<div class="w-[140px] rounded-xl bg-bg-2 border border-border-strong p-space-sm shadow-md flex flex-col gap-1.5 transition-all duration-500" id="node-billing">
 <div class="flex items-center justify-between">
-<div class="w-6 h-6 rounded-md bg-node-service/20 flex items-center justify-center">
-<span class="material-symbols-outlined text-node-service text-[14px]">payments</span>
+<div class="w-7 h-7 rounded-md bg-node-service/20 border border-node-service/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-node-service text-[16px]">payments</span>
 </div>
-<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+<span class="w-2 h-2 rounded-full bg-status-ok" id="node-billing-dot"></span>
 </div>
-<p class="font-body-node-label text-text-1 text-[11px]">Billing Svc</p>
+<div>
+<p class="font-body-node-label text-text-1 text-xs font-semibold">Billing Svc</p>
+<p class="font-code-sm text-text-3 text-[10px]">svc_billing_v1</p>
 </div>
-<!-- Awakened Primary Store -->
-<div class="absolute left-[595px] top-[155px] w-[95px] rounded-xl bg-bg-2 p-space-sm flex flex-col gap-1 shadow-md">
+<div class="flex items-center justify-between pt-1 border-t border-border-structural/60 font-code-sm text-[10px] text-text-3">
+<span>Throughput</span>
+<span class="text-text-1 font-semibold" id="node-billing-metric">3.6 eps</span>
+</div>
+</div>
+</div>
+<!-- Node 5: Primary Datastore -->
+<div class="z-20 w-[150px] rounded-xl bg-bg-2 border border-border-strong p-space-sm shadow-md flex flex-col gap-1.5 transition-all duration-500" id="node-db">
 <div class="flex items-center justify-between">
-<div class="w-6 h-6 rounded-md bg-node-datastore/20 flex items-center justify-center">
-<span class="material-symbols-outlined text-node-datastore text-[14px]">database</span>
+<div class="w-7 h-7 rounded-md bg-node-datastore/20 border border-node-datastore/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-node-datastore text-[16px]">database</span>
 </div>
-<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span>
+<span class="w-2 h-2 rounded-full bg-status-ok" id="node-db-dot"></span>
 </div>
-<p class="font-body-node-label text-text-1 text-[11px]">Primary DB</p>
+<div>
+<p class="font-body-node-label text-text-1 text-xs font-semibold">Primary Datastore</p>
+<p class="font-code-sm text-text-3 text-[10px]">db_mesh_cluster</p>
 </div>
-</div>
-<!-- Bottom Telemetry Counters Strip Overlay -->
-<div class="absolute bottom-space-md left-space-md right-space-md flex items-center justify-between px-space-md py-1.5 rounded-lg bg-bg-1/95 backdrop-blur-md shadow-md text-text-2 font-code-sm text-[11px]">
-<div class="flex items-center gap-space-sm">
-<span class="text-text-1 font-semibold">1 event received</span>
-<span class="text-text-3">•</span>
-<span class="text-primary">Rate: 1.0 eps</span>
-<span class="text-text-3">•</span>
-<span>Hop latency: <strong class="text-text-1 font-normal">0.42ms</strong></span>
-</div>
-<div class="flex items-center gap-1 text-status-ok">
-<span class="material-symbols-outlined text-[14px]">verified</span>
-<span>OK 200</span>
+<div class="flex items-center justify-between pt-1 border-t border-border-structural/60 font-code-sm text-[10px] text-text-3">
+<span>Commit Lag</span>
+<span class="text-status-ok font-semibold" id="node-db-metric">0.2ms</span>
 </div>
 </div>
 </div>
-<!-- State B Bottom Verified Payload & Final CTA Zone -->
-<div class="p-space-lg bg-bg-1 flex flex-col justify-between flex-1 gap-space-lg">
-<div class="flex flex-col gap-space-sm">
-<div class="flex items-center justify-between p-space-sm rounded-lg bg-status-ok/10 text-text-1 font-code-sm text-xs">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-status-ok text-[16px]">check_circle</span>
-<span>Payload verified from <strong class="text-status-ok font-normal">web_ingress_01</strong></span>
 </div>
-<span class="text-text-3 font-mono text-[10px]">trace_id: 0194fe26_x7</span>
+<!-- Bottom Integrated Control & Verified Telemetry Inspector -->
+<div class="relative z-20 p-space-md sm:p-space-lg bg-bg-2/90 border-t border-border-structural backdrop-blur-xl flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-lg">
+<!-- Trace Payload Verified Card (Collapsible Details) -->
+<div class="flex-1 bg-bg-0 border border-border-structural rounded-xl p-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-inner">
+<div class="flex items-start sm:items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-status-ok/20 border border-status-ok/40 flex items-center justify-center shrink-0" id="verify-icon-box">
+<span class="material-symbols-outlined text-status-ok text-[20px]" id="verify-icon">check_circle</span>
 </div>
-<p class="font-body-md text-text-2">
-              Streaming pipeline activated. Live telemetry graphs and dependency topologies are now processing in real time.
-            </p>
+<div class="flex flex-col gap-0.5">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-label-md text-text-1 font-semibold text-xs sm:text-sm" id="verify-card-title">Trace Payload Verified</span>
+<span class="px-2 py-0.5 rounded bg-bg-3 font-code-sm text-[10px] text-text-3 border border-border-structural">
+                    source: <strong class="text-primary font-normal" id="verify-source-tag">web_ingress_01</strong>
+</span>
 </div>
-<div class="flex flex-col sm:flex-row items-center justify-between pt-space-xs gap-space-md">
-<a class="w-full sm:w-auto px-space-xl py-3 rounded-xl bg-gradient-to-r from-primary-container via-primary to-node-service text-bg-0 font-label-md font-bold tracking-tight shadow-[0_4px_24px_rgba(34,211,238,0.4)] hover:shadow-[0_6px_32px_rgba(139,92,246,0.5)] hover:scale-[1.02] active:scale-[0.99] transition-all flex items-center justify-center gap-2" data-path="dashboard" href="#">
+<div class="flex items-center gap-2 font-code-sm text-[11px] text-text-3">
+<span>span.kind: <code class="text-text-2">SERVER</code></span>
+<span>•</span>
+<span>status: <code class="text-status-ok font-bold">200 OK</code></span>
+<span>•</span>
+<span>sampled: <code class="text-primary">true</code></span>
+</div>
+</div>
+</div>
+<!-- Trace ID Pill -->
+<div class="flex items-center gap-2 self-start sm:self-auto bg-bg-2 px-3 py-1.5 rounded-lg border border-border-structural text-xs font-code-sm">
+<span class="text-text-3">trace_id:</span>
+<span class="text-text-1 font-semibold select-all font-mono" id="sample-trace-id">0194fe26_x7</span>
+<button class="text-text-3 hover:text-text-1 transition-colors flex items-center" onclick="navigator.clipboard?.writeText('0194fe26_x7')" title="Copy Trace ID" type="button">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+</button>
+</div>
+</div>
+<!-- Prominent Action Controls Zone -->
+<div class="flex flex-wrap items-center justify-end gap-space-md shrink-0">
+<!-- Test Payload Simulator Button -->
+<button class="px-4 py-2.5 rounded-xl bg-bg-3 hover:bg-border-strong border border-border-strong text-text-1 font-label-md text-xs sm:text-sm flex items-center gap-2 transition-all hover:-translate-y-0.5 active:translate-y-0 shadow-sm cursor-pointer" id="send-test-btn" type="button">
+<span class="material-symbols-outlined text-status-warn text-[18px]">bolt</span>
+<span>Send test payload</span>
+</button>
+<!-- Configure Dashboard Settings Secondary Action -->
+<a class="px-3 py-2.5 rounded-xl bg-transparent hover:bg-bg-3 border border-transparent hover:border-border-structural font-label-md text-xs sm:text-sm text-text-2 hover:text-text-1 transition-colors flex items-center gap-1.5" data-path="settings" href="#">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+<span class="hidden sm:inline">Configure settings</span>
+</a>
+<!-- Primary Gradient Activation Button -->
+<a class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary-container via-primary to-node-service text-bg-0 font-label-md text-xs sm:text-sm font-bold tracking-tight shadow-[0_4px_24px_rgba(34,211,238,0.4)] hover:shadow-[0_6px_32px_rgba(139,92,246,0.5)] hover:scale-[1.02] active:scale-[0.99] transition-all flex items-center justify-center gap-2" data-path="dashboard" href="#" id="btn-open-live-view">
 <span>Open live view</span>
 <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-</a>
-<a class="font-label-md text-text-2 hover:text-text-1 transition-colors flex items-center gap-1" data-path="settings" href="#">
-<span class="material-symbols-outlined text-[16px]">tune</span>
-<span>Configure dashboard settings</span>
+<kbd class="hidden sm:inline ml-1 px-1.5 py-0.5 rounded bg-bg-0/30 text-[10px] font-mono text-bg-0 font-normal">↵ Enter</kbd>
 </a>
 </div>
 </div>
 </div>
-</div>
-<!-- Micro Diagnostic Footer Detail Bar -->
-<div class="w-full rounded-xl bg-bg-1 p-space-md flex flex-col sm:flex-row items-center justify-between gap-space-md text-text-3 font-code-sm text-xs">
+<!-- Micro Diagnostic Status & Quick Curl Sample Footer Strip -->
+<div class="w-full rounded-xl bg-bg-1 border border-border-structural p-space-md flex flex-col md:flex-row items-center justify-between gap-space-md text-text-3 font-code-sm text-xs shadow-sm">
 <div class="flex items-center gap-space-md flex-wrap">
-<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-status-ok"></span>Engine: WebSocket Edge Worker</span>
-<span class="text-text-3">•</span>
+<span class="flex items-center gap-1.5 text-text-2">
+<span class="w-2 h-2 rounded-full bg-status-ok"></span>
+<span>Engine: WebSocket Edge Worker</span>
+</span>
+<span class="text-border-strong">•</span>
 <span>TLS 1.3 Strict</span>
-<span class="text-text-3">•</span>
-<span>Mesh discovery mode: Auto-trace</span>
+<span class="text-border-strong">•</span>
+<span>Mesh mode: Auto-trace</span>
+<span class="text-border-strong">•</span>
+<span class="text-text-2">Zero packet drop detected</span>
 </div>
-<div class="flex items-center gap-space-sm text-text-2">
-<span class="material-symbols-outlined text-[16px] text-primary">info</span>
-<span>Need a cURL sample? Run: <code class="text-text-1 bg-bg-2 px-1 py-0.5 rounded">curl -X POST ingest.flowtrace.live/probe</code></span>
+<div class="flex items-center gap-space-sm text-text-2 self-start md:self-auto">
+<span class="material-symbols-outlined text-[16px] text-primary">terminal</span>
+<span>Run cURL probe:</span>
+<code class="text-text-1 bg-bg-2 border border-border-structural px-2 py-0.5 rounded font-mono text-[11px]">curl -X POST ingest.flowtrace.live/probe</code>
 </div>
 </div>
 </div>
+</main>
+<!-- Global Diagnostic Bottom Footer -->
+<footer class="w-full bg-bg-1 border-t border-border-structural py-2.5">
+<div class="w-full px-gutter-desktop flex flex-col sm:flex-row items-center justify-between gap-space-sm text-text-3 font-code-sm text-xs">
+<div class="flex items-center gap-space-lg flex-wrap">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-status-ok inline-block"></span>
+<span class="text-text-2 font-label-sm">Daemon:</span>
+<span class="text-status-ok">Active (v0.14.2-preview)</span>
 </div>
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-status-ok inline-block"></span>
+<span class="text-text-2 font-label-sm">Pipeline Telemetry:</span>
+<span class="text-text-1">0 err / sec</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-text-3 text-[14px]">sync</span>
+<span class="text-text-3">Buffer latency 4ms</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="text-text-3 font-label-sm">FlowTrace Distributed Mesh Engine</span>
+<span class="w-1 h-1 rounded-full bg-text-3"></span>
+<span class="text-text-2 font-label-sm">Production Ready</span>
+</div>
+</div>
+</footer>
+<!-- Interactive Temporal State Controller Script -->
 <script>
-  (function() {
-    const testBtn = document.getElementById('send-test-btn');
-    if (testBtn) {
-      testBtn.addEventListener('click', function() {
-        const originalContent = this.innerHTML;
-        this.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span><span>Emulating 1 event...</span>';
-        this.classList.add('opacity-75');
-        setTimeout(() => {
-          this.innerHTML = '<span class="material-symbols-outlined text-status-ok text-[18px]">done</span><span>Dispatched! Check State B</span>';
-          this.classList.remove('opacity-75');
-          setTimeout(() => {
-            this.innerHTML = originalContent;
-          }, 2400);
-        }, 900);
+    (function() {
+      // Elements
+      const btnModeA = document.getElementById('btn-mode-a');
+      const btnModeB = document.getElementById('btn-mode-b');
+      const scrubber = document.getElementById('state-scrubber');
+      const scrubLabel = document.getElementById('scrub-label');
+      const btnReplay = document.getElementById('btn-replay');
+      const sendTestBtn = document.getElementById('send-test-btn');
+      const btnOpenLive = document.getElementById('btn-open-live-view');
+
+      // State dynamic DOM targets
+      const stateBadgeHeader = document.getElementById('state-badge-header');
+      const ambientRadar = document.getElementById('ambient-radar');
+      const ambientVerified = document.getElementById('ambient-verified');
+      const edgesDimmed = document.getElementById('edges-dimmed');
+      const edgesActive = document.getElementById('edges-active');
+      const canvasPulseDot = document.getElementById('canvas-pulse-dot');
+      const canvasStatusText = document.getElementById('canvas-status-text');
+
+      const tickerTraceStatus = document.getElementById('ticker-trace-status');
+      const tickerEps = document.getElementById('ticker-eps');
+      const tickerLatency = document.getElementById('ticker-latency');
+      const tickerSocket = document.getElementById('ticker-socket');
+
+      const nodeEdge = document.getElementById('node-edge');
+      const nodeEdgeTag = document.getElementById('node-edge-tag');
+      const nodeEdgeSub = document.getElementById('node-edge-sub');
+      const nodeEdgeMetric = document.getElementById('node-edge-metric');
+
+      const nodeEnvoy = document.getElementById('node-envoy');
+      const nodeEnvoyTag = document.getElementById('node-envoy-tag');
+      const nodeEnvoyMetric = document.getElementById('node-envoy-metric');
+
+      const nodeOrders = document.getElementById('node-orders');
+      const nodeOrdersDot = document.getElementById('node-orders-dot');
+      const nodeOrdersMetric = document.getElementById('node-orders-metric');
+
+      const nodeBilling = document.getElementById('node-billing');
+      const nodeBillingDot = document.getElementById('node-billing-dot');
+      const nodeBillingMetric = document.getElementById('node-billing-metric');
+
+      const nodeDb = document.getElementById('node-db');
+      const nodeDbDot = document.getElementById('node-db-dot');
+      const nodeDbMetric = document.getElementById('node-db-metric');
+
+      const verifyIconBox = document.getElementById('verify-icon-box');
+      const verifyIcon = document.getElementById('verify-icon');
+      const verifyCardTitle = document.getElementById('verify-card-title');
+      const verifySourceTag = document.getElementById('verify-source-tag');
+
+      let currentState = 'B'; // 'A' or 'B'
+
+      function applyState(mode) {
+        currentState = mode;
+        if (mode === 'A') {
+          // Switch UI buttons
+          btnModeA.className = "px-3 py-1.5 rounded text-xs font-label-md flex items-center gap-1.5 transition-all bg-bg-3 text-status-warn font-semibold shadow-sm border border-status-warn/40";
+          btnModeB.className = "px-3 py-1.5 rounded text-xs font-label-md flex items-center gap-1.5 transition-all text-text-3 hover:text-text-1";
+          scrubber.value = 0;
+          scrubLabel.innerText = "T-0ms";
+          scrubLabel.className = "font-code-sm text-xs text-status-warn font-bold w-12 text-right";
+
+          // Header badge
+          stateBadgeHeader.innerHTML = '<span class="w-2 h-2 rounded-full bg-status-warn animate-ping"></span>STATE A: LISTENING ON PORT 443';
+          stateBadgeHeader.className = "text-xs font-code-sm font-semibold px-2.5 py-1 rounded-full bg-status-warn/15 text-status-warn border border-status-warn/30 flex items-center gap-1.5";
+
+          // Canvas Ambiance
+          ambientRadar.classList.remove('opacity-0');
+          ambientRadar.classList.add('opacity-100');
+          ambientVerified.classList.remove('opacity-100');
+          ambientVerified.classList.add('opacity-10');
+
+          // SVG Edges
+          edgesDimmed.classList.remove('opacity-20');
+          edgesDimmed.classList.add('opacity-90');
+          edgesActive.classList.remove('opacity-100');
+          edgesActive.classList.add('opacity-0');
+
+          // Canvas status pill
+          canvasPulseDot.className = "w-2 h-2 rounded-full bg-status-warn animate-ping";
+          canvasStatusText.innerText = "Listening on port 443 · Waiting for first telemetry packet…";
+
+          // Ticker
+          tickerTraceStatus.innerText = "Zero traces received yet";
+          tickerEps.innerText = "0.0 eps";
+          tickerLatency.innerText = "--";
+          tickerSocket.innerText = "Idle (Listening)";
+          tickerSocket.className = "text-status-warn font-semibold";
+
+          // Nodes: Source Node awaiting
+          nodeEdge.className = "z-20 w-[180px] rounded-xl bg-bg-2 border-2 border-status-warn/60 p-space-md shadow-[0_0_24px_rgba(245,158,11,0.25)] flex flex-col gap-2 transition-all duration-500 scale-[1.02]";
+          nodeEdgeTag.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-status-warn animate-pulse"></span> AWAITING';
+          nodeEdgeTag.className = "px-2 py-0.5 rounded-full bg-status-warn/20 border border-status-warn/40 font-chip-metric text-status-warn font-semibold text-[10px] flex items-center gap-1";
+          nodeEdgeSub.innerText = "Listening probe";
+          nodeEdgeSub.className = "font-code-sm text-status-warn text-[10px]";
+          nodeEdgeMetric.innerText = "Idle";
+
+          // Dimmed downstream nodes
+          [nodeEnvoy, nodeOrders, nodeBilling, nodeDb].forEach(el => {
+            el.classList.add('opacity-40');
+          });
+          nodeEnvoyTag.innerText = "IDLE";
+          nodeEnvoyTag.className = "font-code-sm text-text-3 text-[10px]";
+          nodeEnvoyMetric.innerText = "--";
+
+          nodeOrdersDot.className = "w-2 h-2 rounded-full bg-text-3";
+          nodeOrdersMetric.innerText = "Idle";
+          nodeBillingDot.className = "w-2 h-2 rounded-full bg-text-3";
+          nodeBillingMetric.innerText = "Idle";
+          nodeDbDot.className = "w-2 h-2 rounded-full bg-text-3";
+          nodeDbMetric.innerText = "Idle";
+
+          // Verification bottom card
+          verifyIconBox.className = "w-9 h-9 rounded-lg bg-status-warn/20 border border-status-warn/40 flex items-center justify-center shrink-0";
+          verifyIcon.innerText = "hourglass_empty";
+          verifyIcon.className = "material-symbols-outlined text-status-warn text-[20px] animate-spin";
+          verifyCardTitle.innerText = "Awaiting First Checkpoint Payload";
+          verifySourceTag.innerText = "listening...";
+
+        } else {
+          // Switch to Awakened State B
+          btnModeB.className = "px-3 py-1.5 rounded text-xs font-label-md flex items-center gap-1.5 transition-all bg-bg-3 text-primary font-semibold shadow-sm border border-primary/30";
+          btnModeA.className = "px-3 py-1.5 rounded text-xs font-label-md flex items-center gap-1.5 transition-all text-text-3 hover:text-text-1";
+          scrubber.value = 100;
+          scrubLabel.innerText = "T+14ms";
+          scrubLabel.className = "font-code-sm text-xs text-primary font-bold w-12 text-right";
+
+          // Header badge
+          stateBadgeHeader.innerHTML = '<span class="w-2 h-2 rounded-full bg-status-ok animate-pulse"></span>LIVE TOPOLOGY AWAKENED';
+          stateBadgeHeader.className = "text-xs font-code-sm font-semibold px-2.5 py-1 rounded-full bg-status-ok/20 text-status-ok border border-status-ok/30 flex items-center gap-1.5";
+
+          // Canvas Ambiance
+          ambientRadar.classList.remove('opacity-100');
+          ambientRadar.classList.add('opacity-0');
+          ambientVerified.classList.remove('opacity-10');
+          ambientVerified.classList.add('opacity-100');
+
+          // SVG Edges
+          edgesDimmed.classList.remove('opacity-90');
+          edgesDimmed.classList.add('opacity-20');
+          edgesActive.classList.remove('opacity-0');
+          edgesActive.classList.add('opacity-100');
+
+          // Canvas status pill
+          canvasPulseDot.className = "w-2 h-2 rounded-full bg-status-ok animate-pulse";
+          canvasStatusText.innerText = "All 5 microservices awakened & streaming";
+
+          // Ticker
+          tickerTraceStatus.innerText = "Ingested first trace in 14.8ms";
+          tickerEps.innerText = "1.0 eps";
+          tickerLatency.innerText = "0.42ms";
+          tickerSocket.innerText = "OK 200 (Active)";
+          tickerSocket.className = "text-status-ok font-semibold";
+
+          // Nodes: Source Active
+          nodeEdge.className = "z-20 w-[180px] rounded-xl bg-bg-2 border border-primary/50 p-space-md shadow-[0_0_28px_rgba(34,211,238,0.25)] flex flex-col gap-2 transition-all duration-500";
+          nodeEdgeTag.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-status-ok"></span> ACTIVE';
+          nodeEdgeTag.className = "px-2 py-0.5 rounded-full bg-status-ok/20 border border-status-ok/40 font-chip-metric text-status-ok font-semibold text-[10px] flex items-center gap-1";
+          nodeEdgeSub.innerText = "web_ingress_01";
+          nodeEdgeSub.className = "font-code-sm text-primary text-[10px]";
+          nodeEdgeMetric.innerText = "0.14ms";
+
+          // Restore downstream nodes
+          [nodeEnvoy, nodeOrders, nodeBilling, nodeDb].forEach(el => {
+            el.classList.remove('opacity-40');
+          });
+          nodeEnvoyTag.innerText = "12 eps";
+          nodeEnvoyTag.className = "font-code-sm text-status-ok text-[10px] font-bold";
+          nodeEnvoyMetric.innerText = "0.00%";
+
+          nodeOrdersDot.className = "w-2 h-2 rounded-full bg-status-ok";
+          nodeOrdersMetric.innerText = "8.4 eps";
+          nodeBillingDot.className = "w-2 h-2 rounded-full bg-status-ok";
+          nodeBillingMetric.innerText = "3.6 eps";
+          nodeDbDot.className = "w-2 h-2 rounded-full bg-status-ok";
+          nodeDbMetric.innerText = "0.2ms";
+
+          // Verification bottom card
+          verifyIconBox.className = "w-9 h-9 rounded-lg bg-status-ok/20 border border-status-ok/40 flex items-center justify-center shrink-0";
+          verifyIcon.innerText = "check_circle";
+          verifyIcon.className = "material-symbols-outlined text-status-ok text-[20px]";
+          verifyCardTitle.innerText = "Trace Payload Verified";
+          verifySourceTag.innerText = "web_ingress_01";
+        }
+      }
+
+      // Event Listeners for State Controls
+      btnModeA.addEventListener('click', () => applyState('A'));
+      btnModeB.addEventListener('click', () => applyState('B'));
+
+      scrubber.addEventListener('input', function() {
+        if (this.value < 50) {
+          if (currentState !== 'A') applyState('A');
+        } else {
+          if (currentState !== 'B') applyState('B');
+        }
       });
-    }
-  })();
-</script></main><footer class="w-full bg-bg-1 py-space-sm shadow-[0_-1px_8px_rgba(0,0,0,0.2)]"><div class="w-full px-gutter-desktop flex flex-col sm:flex-row items-center justify-between gap-space-sm text-text-3 font-code-sm"><div class="flex items-center gap-space-lg flex-wrap"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-status-ok inline-block"></span><span class="text-text-2 font-label-sm">Daemon:</span><span class="text-status-ok">Active (v0.14.2-preview)</span></div><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-status-ok inline-block"></span><span class="text-text-2 font-label-sm">Pipeline Telemetry:</span><span class="text-text-1">0 err / sec</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-text-3 text-[14px]">sync</span><span class="text-text-3">Buffer latency 4ms</span></div></div><div class="flex items-center gap-space-md"><span class="text-text-3 font-label-sm">FlowTrace Distributed Mesh Engine</span><span class="w-1 h-1 rounded-full bg-text-3"></span><span class="text-text-2 font-label-sm">Production Ready</span></div></div></footer></body></html>
+
+      // Replay Sequence Button
+      btnReplay.addEventListener('click', function() {
+        applyState('A');
+        setTimeout(() => {
+          applyState('B');
+        }, 1100);
+      });
+
+      // Send Test Payload simulator
+      if (sendTestBtn) {
+        sendTestBtn.addEventListener('click', function() {
+          const originalContent = this.innerHTML;
+          this.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span><span>Emulating 1 event...</span>';
+          this.classList.add('opacity-75');
+          applyState('A');
+          setTimeout(() => {
+            applyState('B');
+            this.innerHTML = '<span class="material-symbols-outlined text-status-ok text-[18px]">verified</span><span>Event Verified!</span>';
+            this.classList.remove('opacity-75');
+            setTimeout(() => {
+              this.innerHTML = originalContent;
+            }, 2500);
+          }, 900);
+        });
+      }
+
+      // Keyboard Shortcut 'Enter' triggers Live View CTA
+      window.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.target.matches('input, textarea')) {
+          e.preventDefault();
+          if (btnOpenLive) {
+            btnOpenLive.classList.add('scale-95');
+            setTimeout(() => {
+              btnOpenLive.classList.remove('scale-95');
+              btnOpenLive.click();
+            }, 150);
+          }
+        }
+      });
+    })();
+  </script>
+</body></html>
