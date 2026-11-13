@@ -55,6 +55,23 @@ git push origin main
 
 ## История сессий (Trace Log)
 
+### Сессия #014 — 2026-11-13 (Environment: `cloud-vm`, Branch: `feat/stitch-design`)
+- **Автор / Агент:** Antigravity (Cloud)
+- **Цель:** Переход на новый дизайн из `docs/design/stitch_requestflowproject`, удаление старого монолитного UI, модульное разделение фронтенда и реализация Шага 1 (Live View + все вариации + шаблоно-зависимая визуализация блоков + привязка к бэкенду).
+- **Что сделано:**
+  - Создана ветка `feat/stitch-design`.
+  - Удалены старые `app.component.html` и `app.component.css`, монолитный `app.component.ts` заменён на тонкую оболочку (`TopHeaderComponent` + `RouterOutlet`).
+  - Настроен Tailwind CSS (`tailwind.config.js`, `styles.css`, `index.html` со шрифтами `Inter`, `JetBrains Mono`, `Material Symbols Outlined` и токенами из `design.md`).
+  - Создана модульная структура:
+    - `core/template-visuals.ts` — профили визуализации блоков для шаблонов (`microservices`, `online-shop`, `queue-worker`, `ai-rag`) и метаданные 4 вариаций экрана Live View (`v1`, `v2`, `v3`, `minimalist`).
+    - `core/flow-session.store.ts` — центральный Signal-store с привязкой к Quarkus REST API (`/api/v1/projects`, `/diagram`, `/templates`, `/traces`, `/demo`) и WebSocket (`/ws/v1/projects/{id}/stream`).
+    - `shared/components/top-header.component.ts` — адаптивная верхняя панель с переключателем проектов, тем, демо-симулятора и **кнопкой смены темплейта/вариации**.
+    - `features/live-view/` (`live-view.page.ts`, `flow-canvas.component.ts`, `node-inspector-drawer.component.ts`, `live-toolbar.component.ts`, `canvas-minimap.component.ts`).
+- **Тесты и сборка:**
+  - `npm --prefix frontend test` — **7/7 PASS**.
+  - `npm --prefix frontend run build` — **PASS** (3.815s).
+- **Следующий шаг:** Шаг 2 — экран `Node Details Deep Dive` / `Traces Replay Studio` или следующий выбранный экран из плана.
+
 ### Сессия #013 — 2026-11-11 (Environment: `local`)
 - **Автор / Агент:** Antigravity (Local)
 - **Цель:** Реализация **Варианта 3: E-Commerce коннекторы для Live Shop (Gate G1-E / Эпик E20 — No-Code Webhooks & Storefront JS Tracker)**.
