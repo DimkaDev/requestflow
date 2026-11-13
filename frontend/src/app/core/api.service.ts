@@ -503,4 +503,81 @@ export class FlowTraceApiService {
     if (!res.ok) throw new Error(`Failed to test connector: ${res.status}`);
     return res.json();
   }
+
+  public async sendTestEvents(
+    apiKey: string,
+    events: Array<Record<string, unknown>>
+  ): Promise<{ accepted: number; rejected?: Array<{ index: number; reason: string }> }> {
+    const res = await fetch(`${this.apiBaseUrl}/events`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': apiKey,
+      },
+      body: JSON.stringify(events),
+    });
+    if (!res.ok) throw new Error(`Failed to send test event: ${res.status}`);
+    return res.json();
+  }
+
+  public async listAlerts(projectId: string): Promise<any[]> {
+    const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/alerts`, {
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to list alerts: ${res.status}`);
+    return res.json();
+  }
+
+  public async createAlert(
+    projectId: string,
+    payload: {
+      name: string;
+      severity: string;
+      metric: string;
+      threshold: number;
+      windowSeconds: number;
+      targetNode?: string;
+      channelType: string;
+      channelTarget: string;
+    }
+  ): Promise<any> {
+    const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/alerts`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error(`Failed to create alert: ${res.status}`);
+    return res.json();
+  }
+
+  public async updateAlert(
+    projectId: string,
+    alertId: string,
+    patch: { enabled?: boolean; muteMinutes?: number }
+  ): Promise<any> {
+    const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/alerts/${alertId}`, {
+      method: 'PATCH',
+      headers: this.headers(),
+      body: JSON.stringify(patch),
+    });
+    if (!res.ok) throw new Error(`Failed to update alert: ${res.status}`);
+    return res.json();
+  }
+
+  public async testAlert(projectId: string, alertId: string): Promise<any> {
+    const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/alerts/${alertId}/test`, {
+      method: 'POST',
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to test alert: ${res.status}`);
+    return res.json();
+  }
+
+  public async deleteAlert(projectId: string, alertId: string): Promise<void> {
+    const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/alerts/${alertId}`, {
+      method: 'DELETE',
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to delete alert: ${res.status}`);
+  }
 }

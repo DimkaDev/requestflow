@@ -435,3 +435,21 @@ export interface CreatedConnectorResponse {
   mapping: WebhookMapping;
   status: ConnectorStatus;
 }
+
+export interface AlertRule {
+  id: string;
+  projectId: string;
+  name: string;
+  severity: 'CRITICAL' | 'WARNING' | 'INFO' | string;
+  metric: 'error_rate' | 'latency_p95' | 'rps_drop' | string;
+  threshold: number;
+  windowSeconds: number;
+  targetNode?: string | null;
+  channelType: 'SLACK' | 'PAGERDUTY' | 'WEBHOOK' | string;
+  channelTarget: string;
+  enabled: boolean;
+  mutedUntil?: string | null;
+  lastFiredAt?: string | null;
+  fireCount: number;
+  createdAt: string;
+}

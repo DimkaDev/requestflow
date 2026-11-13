@@ -55,6 +55,42 @@ git push origin main
 
 ## История сессий (Trace Log)
 
+### Сессия #015 — 2026-11-13 (Environment: `cloud-vm`, Branch: `feat/stitch-design`)
+- **Автор / Агент:** Antigravity (Cloud)
+- **Цель:** Реализация полного набора экранов нового дизайна Stitch из `docs/design/stitch_requestflowproject` с модульным разделением, привязкой к бэкенду и созданием недостающих бэкенд-сущностей (Alert Rules & Webhooks).
+- **Что сделано:**
+  - **Бэкенд (Hexagonal Architecture, 100% clean domain):**
+    - Доменная сущность `dev.flowtrace.domain.AlertRule` (чистый Java 21 record).
+    - Порт `dev.flowtrace.application.port.out.AlertRuleRepository`.
+    - Адаптер `dev.flowtrace.adapter.out.pg.JdbcAlertRuleRepository` (поддержка tenant isolation и scoped queries).
+    - Flyway миграция `backend/src/main/resources/db/migration/V6__alert_rules.sql` (таблица `alert_rules`, индексы, совместимость с PostgreSQL 16 и H2).
+    - REST-контроллер `dev.flowtrace.adapter.in.http.AlertResource` (`/api/v1/projects/{projectId}/alerts` — list, create, patch, test fire, delete).
+    - Обновлён тест `TenantIsolationGuardTest` (проверка 7 JDBC-репозиториев с обязательными `WHERE`-клаузами).
+  - **Фронтенд (Модульная архитектура экранов Angular 22 standalone):**
+    - `features/traces/traces-replay.page.ts` — Traces & Replay Studio с фильтрами, списком трасс, инспектором спанов и анимированным пошаговым воспроизведением токена по графу (`AnimationEngine`).
+    - `features/projects/projects-home.page.ts` — Projects Home со списком проектов, анимированными SVG-миниатюрами топологии, созданием/удалением и виджетом бюджета инжеста.
+    - `features/templates/template-gallery.page.ts` — Архитектурная галерея шаблонов с категориями, поиском, живыми мини-превью и применением к бэкенду.
+    - `features/onboarding/onboarding-wizard.page.ts` — 3-шаговый Onboarding Wizard (выбор шаблона, генерация SDK-сниппетов на 5 языках, тестовая отправка события в `/api/v1/events` и слушание WebSocket).
+    - `features/alerts/alerts.page.ts` — Alert Rules & Webhook stream со статусами, конструктором правил, Mute и тестовой отправкой.
+    - `features/shop/shop-live.page.ts` — Live Shop со всеми 4 вариациями Stitch (`cozy-light`, `dark-neon`, `cro-funnel`, `tv-showroom`), кнопкой смены темплейта и CRO-воронкой.
+    - `features/connectors/connectors.page.ts` — 2-шаговый визард подключения вебхуков (Shopify, Stripe, WooCommerce, Generic JSON) с маппингом полей.
+    - `features/settings/settings.page.ts` — Настройки проекта и управление API-ключами (создание, ротация 24h, отзыв).
+    - `features/team/team.page.ts` — Управление участниками организации и приглашениями.
+    - `features/billing/billing.page.ts` — Управление тарифами, квотами и биллингом.
+    - `features/auth/login.page.ts` — Sign in / Sign up экран.
+    - `features/docs/docs.page.ts` — Документация и Quickstart Guide.
+    - `features/wallboard/wallboard.page.ts` — 1080p TV Showroom режим в теме Cozy Light.
+    - `features/mobile/mobile-view.page.ts` — Owner Mobile View PWA с мобильной навигацией.
+    - `shared/components/share-embed-modal.component.ts` — модальное окно шеринга и iframe-встраивания.
+    - `shared/components/quota-upgrade-modal.component.ts` — модальное окно превышения лимита квоты.
+    - Обновлён `TopHeaderComponent` (навигационные ссылки + выпадающее меню пользователя со всеми страницами).
+    - Обновлён `app.routes.ts` (зарегистрированы все 15 маршрутов).
+- **Тесты и сборка:**
+  - `npm --prefix frontend test`: **7/7 PASS**.
+  - `npm --prefix frontend run build`: **PASS** (production bundle собран успешно).
+  - `JAVA_HOME=/home/antigravity/.local/jdk21 mvn -B test`: **BUILD SUCCESS (38/38 tests PASS)** (включая миграцию V6 и TenantIsolationGuardTest).
+- **Следующий шаг:** Проверка UI на локальном сервере / dev-окружении, подключение E2E тестов.
+
 ### Сессия #014 — 2026-11-13 (Environment: `cloud-vm`, Branch: `feat/stitch-design`)
 - **Автор / Агент:** Antigravity (Cloud)
 - **Цель:** Переход на новый дизайн из `docs/design/stitch_requestflowproject`, удаление старого монолитного UI, модульное разделение фронтенда и реализация Шага 1 (Live View + все вариации + шаблоно-зависимая визуализация блоков + привязка к бэкенду).

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FlowSessionStore } from '../../core/flow-session.store';
@@ -165,33 +165,41 @@ import { FlowTemplateId } from '../../core/template-visuals';
               >
                 Live Topology
               </a>
-              <button
-                type="button"
-                (click)="store.setLiveVariant('v2')"
+              <a
+                routerLink="/traces"
+                routerLinkActive="bg-bg-3 text-text-1 font-semibold"
                 class="px-space-sm py-1 rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 transition-colors font-label-md text-label-md"
-                [class.bg-bg-3]="store.liveVariant() === 'v2'"
-                [class.text-text-1]="store.liveVariant() === 'v2'"
               >
                 Traces
-              </button>
-              <button
-                type="button"
-                (click)="store.setLiveVariant('v3')"
+              </a>
+              <a
+                routerLink="/projects"
+                routerLinkActive="bg-bg-3 text-text-1 font-semibold"
                 class="px-space-sm py-1 rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 transition-colors font-label-md text-label-md"
-                [class.bg-bg-3]="store.liveVariant() === 'v3'"
-                [class.text-text-1]="store.liveVariant() === 'v3'"
               >
-                Service Mesh
-              </button>
-              <button
-                type="button"
-                (click)="store.setLiveVariant('minimalist')"
+                Projects
+              </a>
+              <a
+                routerLink="/templates"
+                routerLinkActive="bg-bg-3 text-text-1 font-semibold"
                 class="px-space-sm py-1 rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 transition-colors font-label-md text-label-md"
-                [class.bg-bg-3]="store.liveVariant() === 'minimalist'"
-                [class.text-text-1]="store.liveVariant() === 'minimalist'"
               >
-                Studio
-              </button>
+                Templates
+              </a>
+              <a
+                routerLink="/alerts"
+                routerLinkActive="bg-bg-3 text-text-1 font-semibold"
+                class="px-space-sm py-1 rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 transition-colors font-label-md text-label-md"
+              >
+                Alerts
+              </a>
+              <a
+                routerLink="/shop"
+                routerLinkActive="bg-bg-3 text-text-1 font-semibold"
+                class="px-space-sm py-1 rounded-lg text-text-2 hover:bg-bg-2 hover:text-text-1 transition-colors font-label-md text-label-md"
+              >
+                Shop
+              </a>
             </nav>
           </div>
 
@@ -253,8 +261,115 @@ import { FlowTemplateId } from '../../core/template-visuals';
               <span>{{ store.demoRunning() ? 'Demo On' : 'Start Demo' }}</span>
             </button>
 
-            <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+            <a
+              routerLink="/onboarding"
+              class="hidden xl:flex items-center gap-1 px-2.5 h-8 rounded-lg bg-bg-2 border border-border-structural text-text-2 hover:text-text-1 text-xs font-medium transition-colors"
+              title="Onboarding Setup Wizard"
+            >
+              <span class="material-symbols-outlined text-[15px] text-node-queue">rocket_launch</span>
+              <span>Setup</span>
+            </a>
+
+            <button
+              type="button"
+              (click)="store.shareModalOpen.set(true)"
+              class="flex items-center justify-center w-8 h-8 rounded-lg bg-bg-2 border border-border-structural text-text-2 hover:text-text-1 hover:border-border-strong transition-all"
+              title="Share & Embed Live View"
+            >
+              <span class="material-symbols-outlined text-[17px]">share</span>
+            </button>
+
+            <div class="relative">
+              <button
+                type="button"
+                (click)="toggleUserMenu()"
+                class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 hover:ring-2 hover:ring-node-queue transition-all"
+                title="Account, Settings & Views"
+              >
+                <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+              </button>
+
+              @if (userMenuOpen()) {
+                <div class="absolute right-0 mt-2 w-56 rounded-xl bg-bg-1 border border-border-strong shadow-2xl p-1.5 z-50 divide-y divide-border-structural">
+                  <div class="px-3 py-2">
+                    <div class="text-xs font-semibold text-text-1">Developer User</div>
+                    <div class="text-[10px] font-code-sm text-text-3 truncate">dev@flowtrace.local</div>
+                  </div>
+
+                  <div class="py-1">
+                    <a
+                      routerLink="/settings"
+                      (click)="userMenuOpen.set(false)"
+                      class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-text-2 hover:text-text-1 hover:bg-bg-3"
+                    >
+                      <span class="material-symbols-outlined text-[16px] text-node-queue">key</span>
+                      <span>API Keys & Settings</span>
+                    </a>
+                    <a
+                      routerLink="/connectors"
+                      (click)="userMenuOpen.set(false)"
+                      class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-text-2 hover:text-text-1 hover:bg-bg-3"
+                    >
+                      <span class="material-symbols-outlined text-[16px] text-node-service">webhook</span>
+                      <span>Shop Connectors</span>
+                    </a>
+                    <a
+                      routerLink="/team"
+                      (click)="userMenuOpen.set(false)"
+                      class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-text-2 hover:text-text-1 hover:bg-bg-3"
+                    >
+                      <span class="material-symbols-outlined text-[16px] text-node-source">group</span>
+                      <span>Team Members</span>
+                    </a>
+                    <a
+                      routerLink="/billing"
+                      (click)="userMenuOpen.set(false)"
+                      class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-text-2 hover:text-text-1 hover:bg-bg-3"
+                    >
+                      <span class="material-symbols-outlined text-[16px] text-status-ok">credit_card</span>
+                      <span>Billing & Plans</span>
+                    </a>
+                  </div>
+
+                  <div class="py-1">
+                    <a
+                      routerLink="/wallboard"
+                      (click)="userMenuOpen.set(false)"
+                      class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-text-2 hover:text-text-1 hover:bg-bg-3"
+                    >
+                      <span class="material-symbols-outlined text-[16px]">tv</span>
+                      <span>TV Showroom Mode</span>
+                    </a>
+                    <a
+                      routerLink="/mobile"
+                      (click)="userMenuOpen.set(false)"
+                      class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-text-2 hover:text-text-1 hover:bg-bg-3"
+                    >
+                      <span class="material-symbols-outlined text-[16px]">smartphone</span>
+                      <span>Mobile PWA View</span>
+                    </a>
+                    <a
+                      routerLink="/docs"
+                      (click)="userMenuOpen.set(false)"
+                      class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-text-2 hover:text-text-1 hover:bg-bg-3"
+                    >
+                      <span class="material-symbols-outlined text-[16px]">menu_book</span>
+                      <span>Quickstart Docs</span>
+                    </a>
+                  </div>
+
+                  <div class="py-1">
+                    <a
+                      routerLink="/login"
+                      (click)="userMenuOpen.set(false)"
+                      class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-status-warn hover:bg-bg-3"
+                    >
+                      <span class="material-symbols-outlined text-[16px]">logout</span>
+                      <span>Switch Account</span>
+                    </a>
+                  </div>
+                </div>
+              }
             </div>
           </div>
         </div>
@@ -330,6 +445,7 @@ import { FlowTemplateId } from '../../core/template-visuals';
 })
 export class TopHeaderComponent {
   public readonly store = inject(FlowSessionStore);
+  public readonly userMenuOpen = signal<boolean>(false);
 
   public readonly activeVariantLabel = computed(() => {
     const found = this.store.variants.find((v) => v.id === this.store.liveVariant());
@@ -344,13 +460,21 @@ export class TopHeaderComponent {
   ];
 
   public toggleVariantMenu(): void {
+    this.userMenuOpen.set(false);
     this.store.projectMenuOpen.set(false);
     this.store.variantMenuOpen.set(!this.store.variantMenuOpen());
   }
 
   public toggleProjectMenu(): void {
+    this.userMenuOpen.set(false);
     this.store.variantMenuOpen.set(false);
     this.store.projectMenuOpen.set(!this.store.projectMenuOpen());
+  }
+
+  public toggleUserMenu(): void {
+    this.store.variantMenuOpen.set(false);
+    this.store.projectMenuOpen.set(false);
+    this.userMenuOpen.set(!this.userMenuOpen());
   }
 
   public async applyFlowTemplate(id: FlowTemplateId): Promise<void> {

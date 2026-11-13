@@ -49,7 +49,7 @@ class TenantIsolationGuardTest {
 
         try (Stream<Path> files = Files.walk(pgDir)) {
             List<Path> repoFiles = files.filter(p -> p.toString().endsWith("Repository.java")).toList();
-            assertEquals(6, repoFiles.size(), "Expected 6 JDBC repositories");
+            assertEquals(7, repoFiles.size(), "Expected 7 JDBC repositories");
 
             for (Path repoFile : repoFiles) {
                 String source = Files.readString(repoFile);

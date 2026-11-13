@@ -33,6 +33,8 @@ export class FlowSessionStore {
   public readonly variantMenuOpen = signal<boolean>(false);
   public readonly templateMenuOpen = signal<boolean>(false);
   public readonly projectMenuOpen = signal<boolean>(false);
+  public readonly shareModalOpen = signal<boolean>(false);
+  public readonly quotaModalOpen = signal<boolean>(false);
 
   // Backend data state
   public readonly projects = signal<Project[]>([]);
@@ -260,6 +262,31 @@ export class FlowSessionStore {
       this.selectedTraceDetail.set(detail);
     } catch (err) {
       this.errorMessage.set(err instanceof Error ? err.message : 'Failed to load trace detail');
+    }
+  }
+
+  public async createProject(name: string, autoDiscover = true, retentionDays = 7): Promise<Project | null> {
+    try {
+      const created = await this.api.createProject(name, autoDiscover, retentionDays);
+      this.projects.update((list) => [...list, created]);
+      await this.selectProject(created.id);
+      return created;
+    } catch (err) {
+      this.errorMessage.set(err instanceof Error ? err.message : 'Failed to create project');
+      return null;
+    }
+  }
+
+  public async deleteProject(projectId: string): Promise<void> {
+    try {
+      await this.api.deleteProject(projectId);
+      const remaining = this.projects().filter((p) => p.id !== projectId);
+      this.projects.set(remaining);
+      if (this.selectedProjectId() === projectId && remaining.length > 0) {
+        await this.selectProject(remaining[0].id);
+      }
+    } catch (err) {
+      this.errorMessage.set(err instanceof Error ? err.message : 'Failed to delete project');
     }
   }
 

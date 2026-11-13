@@ -1,7 +1,35 @@
 import { Routes } from '@angular/router';
+import { AlertsPageComponent } from './features/alerts/alerts.page';
+import { LoginPageComponent } from './features/auth/login.page';
+import { BillingPageComponent } from './features/billing/billing.page';
+import { ConnectorsPageComponent } from './features/connectors/connectors.page';
+import { DocsPageComponent } from './features/docs/docs.page';
 import { LiveViewPageComponent } from './features/live-view/live-view.page';
+import { MobileViewPageComponent } from './features/mobile/mobile-view.page';
+import { OnboardingWizardPageComponent } from './features/onboarding/onboarding-wizard.page';
+import { ProjectsHomePageComponent } from './features/projects/projects-home.page';
+import { SettingsPageComponent } from './features/settings/settings.page';
+import { ShopLivePageComponent } from './features/shop/shop-live.page';
+import { TeamPageComponent } from './features/team/team.page';
+import { TemplateGalleryPageComponent } from './features/templates/template-gallery.page';
+import { TracesReplayPageComponent } from './features/traces/traces-replay.page';
+import { WallboardPageComponent } from './features/wallboard/wallboard.page';
 
 export const routes: Routes = [
   { path: '', component: LiveViewPageComponent },
+  { path: 'traces', component: TracesReplayPageComponent },
+  { path: 'projects', component: ProjectsHomePageComponent },
+  { path: 'templates', component: TemplateGalleryPageComponent },
+  { path: 'onboarding', component: OnboardingWizardPageComponent },
+  { path: 'alerts', component: AlertsPageComponent },
+  { path: 'shop', component: ShopLivePageComponent },
+  { path: 'connectors', component: ConnectorsPageComponent },
+  { path: 'settings', component: SettingsPageComponent },
+  { path: 'team', component: TeamPageComponent },
+  { path: 'billing', component: BillingPageComponent },
+  { path: 'login', component: LoginPageComponent },
+  { path: 'docs', component: DocsPageComponent },
+  { path: 'wallboard', component: WallboardPageComponent },
+  { path: 'mobile', component: MobileViewPageComponent },
   { path: '**', redirectTo: '' },
 ];
