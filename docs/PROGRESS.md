@@ -117,6 +117,20 @@
   - [x] Lightweight Storefront JavaScript tracker `flowtrace.js` (`GET /flowtrace.js`, < 3KB, zero cookies, non-blocking beacon, session-scoped anonymous ID)
   - [x] Angular Frontend: E-Commerce Connectors card in Settings with one-click embed tag, presets for Shopify/WooCommerce/Stripe/Custom JSON, and interactive Webhook Test Bench
   - [x] Automated unit tests (`WebhookPayloadParserTest` 3/3, `TenantIsolationGuardTest` 3/3, 22/22 backend tests passing; 7/7 frontend tests passing)
-- [ ] **S2 — Scale & Ecosystem (OpenTelemetry, Multi-SDK, Alerts, Partitioning)**
+- [x] **Stitch UI Redesign & Alert Rules Backend (Gate G1-UI / S2-Alerts)**
+  - [x] Complete modular migration to Stitch design system (`docs/design/stitch_requestflowproject`):
+    - [x] Clean architecture UI: 15 modular standalone feature pages (`live-view`, `traces`, `projects`, `templates`, `onboarding`, `alerts`, `shop`, `connectors`, `settings`, `team`, `billing`, `login`, `docs`, `wallboard`, `mobile`).
+    - [x] Template-driven block visualizer with custom profiles (`microservices`, `online-shop`, `queue-worker`, `ai-rag`).
+    - [x] Multi-variation screens with dedicated switchers (Live View 4 variants: `v1`, `v2`, `v3`, `minimalist`; Live Shop 4 variants: `cozy-light`, `dark-neon`, `cro-funnel`, `tv-showroom`).
+    - [x] Modals for Live View sharing/iframe embed (`ShareEmbedModalComponent`) and quota limit upgrade (`QuotaUpgradeModalComponent`).
+    - [x] Fully integrated Signal-store (`FlowSessionStore`) connected to Quarkus REST API and WebSocket stream.
+  - [x] Alert Rules & Webhook dispatch backend:
+    - [x] Flyway migration `V6__alert_rules.sql` (compatible with PostgreSQL 16 & H2).
+    - [x] Framework-free domain `AlertRule` (Java 21 record).
+    - [x] Outbound port `AlertRuleRepository` & PostgreSQL adapter `JdbcAlertRuleRepository` with tenant isolation.
+    - [x] REST controller `AlertResource` (`/api/v1/projects/{projectId}/alerts`).
+    - [x] All unit & integration tests passing (`BUILD SUCCESS` 38/38 backend tests, 7/7 frontend tests, `ng build` 0 errors).
+- [ ] **S2 — Scale & Ecosystem (OpenTelemetry, Multi-SDK, Partitioning)**
 - [ ] **S3 — Enterprise Ready (SAML SSO, SCIM, PII Masking, Audit Logs, Trace Diff)**
+
 
