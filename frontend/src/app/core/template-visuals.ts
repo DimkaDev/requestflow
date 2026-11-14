@@ -70,6 +70,37 @@ const DEFAULT_TYPE_ICONS: Record<NodeType, string> = {
   end: 'flag',
 };
 
+const MATERIAL_ICON_MAP: Record<string, string> = {
+  'git-branch': 'alt_route',
+  'git-merge': 'call_merge',
+  'git-commit': 'commit',
+  globe: 'language',
+  server: 'dns',
+  cpu: 'memory',
+  database: 'database',
+  layers: 'layers',
+  shield: 'security',
+  lock: 'lock',
+  zap: 'bolt',
+  activity: 'monitoring',
+  box: 'inventory_2',
+  users: 'group',
+  user: 'person',
+  'shopping-cart': 'shopping_cart',
+  'credit-card': 'credit_card',
+  'check-circle': 'check_circle',
+  'x-circle': 'cancel',
+  'alert-triangle': 'warning',
+  'alert-circle': 'error',
+  'message-square': 'chat',
+  mail: 'mail',
+  cloud: 'cloud',
+  webhook: 'webhook',
+  flag: 'flag',
+  play: 'play_arrow',
+  'arrow-right': 'arrow_forward',
+};
+
 export function resolveTemplateProfile(templateId: string | null | undefined): FlowTemplateVisualProfile {
   switch (templateId) {
     case 'online-shop':
@@ -118,7 +149,13 @@ export function resolveNodeIcon(
     if (key.includes('resp')) return 'auto_awesome';
   }
   if (explicitIcon && !/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/u.test(explicitIcon)) {
-    return explicitIcon;
+    const normalized = explicitIcon.trim().toLowerCase();
+    if (MATERIAL_ICON_MAP[normalized]) {
+      return MATERIAL_ICON_MAP[normalized];
+    }
+    if (/^[a-z0-9_]+$/.test(normalized)) {
+      return normalized;
+    }
   }
   const profile = resolveTemplateProfile(templateId);
   return profile.nodeTypeVisuals[nodeType]?.defaultIcon ?? DEFAULT_TYPE_ICONS[nodeType] ?? 'memory';

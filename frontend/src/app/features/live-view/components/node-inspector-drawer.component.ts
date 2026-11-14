@@ -303,13 +303,13 @@ import { TraceSummary } from '../../../core/models';
                 </span>
               </div>
               <div class="p-2.5 rounded-xl bg-bg-2 border border-border-structural flex flex-col">
-                <span class="font-label-sm text-label-sm text-text-3">Errors</span>
+                <span class="font-label-sm text-label-sm text-text-3">Error Rate</span>
                 <span
                   class="font-headline-sm text-headline-sm tabular-nums mt-0.5"
                   [class.text-status-ok]="nodeMetric().errors === 0"
                   [class.text-status-error]="nodeMetric().errors > 0"
                 >
-                  {{ nodeMetric().errors }}
+                  {{ nodeErrorRate() }} <span class="font-body-md text-xs text-text-3 font-normal">%</span>
                 </span>
               </div>
             </div>
@@ -423,6 +423,12 @@ export class NodeInspectorDrawerComponent {
   public readonly nodeMetric = computed(() => {
     const key = this.store.selectedNode()?.key;
     return key ? this.store.getNodeMetric(key) : { in: 0, errors: 0 };
+  });
+
+  public readonly nodeErrorRate = computed(() => {
+    const m = this.nodeMetric();
+    if (!m.in || m.in <= 0) return '0.00';
+    return ((m.errors / m.in) * 100).toFixed(2);
   });
 
   public readonly traceEvents = computed(() => this.store.selectedTraceDetail()?.events ?? []);

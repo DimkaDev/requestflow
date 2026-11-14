@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { FlowTraceApiService } from '../../core/api.service';
 import { ActiveToken, AnimationEngine } from '../../core/animation-engine';
 import { FlowSessionStore } from '../../core/flow-session.store';
 import { DiagramEdge, DiagramNode, TraceEventRecord, TraceSummary } from '../../core/models';
@@ -21,9 +22,19 @@ import { resolveNodeIcon, resolveTemplateProfile } from '../../core/template-vis
               <span class="material-symbols-outlined text-node-queue text-[18px]">route</span>
               <h1 class="font-headline-sm text-[15px] text-text-1">Traces &amp; Replay</h1>
             </div>
-            <span class="px-2 py-0.5 rounded-full bg-bg-3 text-text-2 font-code-sm text-[11px]">
-              {{ visibleTraces().length }} traces
-            </span>
+            <div class="flex items-center gap-1.5">
+              <span class="px-2 py-0.5 rounded-full bg-bg-3 text-text-2 font-code-sm text-[11px]">
+                {{ visibleTraces().length }}
+              </span>
+              <button
+                type="button"
+                (click)="loadAllTraces()"
+                class="w-7 h-7 rounded-lg bg-bg-2 border border-border-structural text-text-2 hover:text-text-1 flex items-center justify-center transition-colors"
+                title="Refresh traces"
+              >
+                <span class="material-symbols-outlined text-[15px]" [class.animate-spin]="loadingTraces()">refresh</span>
+              </button>
+            </div>
           </div>
 
           <div class="relative flex items-center">
@@ -39,19 +50,32 @@ import { resolveNodeIcon, resolveTemplateProfile } from '../../core/template-vis
             />
           </div>
 
-          <div class="flex items-center gap-1 p-0.5 rounded-lg bg-bg-2 border border-border-structural">
-            @for (tab of statusTabs; track tab.id) {
-              <button
-                type="button"
-                (click)="statusFilter.set(tab.id)"
-                class="flex-1 py-1 rounded-md text-[11px] font-medium transition-colors"
-                [class.bg-bg-3]="statusFilter() === tab.id"
-                [class.text-text-1]="statusFilter() === tab.id"
-                [class.text-text-3]="statusFilter() !== tab.id"
-              >
-                {{ tab.label }}
-              </button>
-            }
+          <div class="flex items-center gap-1.5">
+            <div class="flex-1 flex items-center gap-1 p-0.5 rounded-lg bg-bg-2 border border-border-structural">
+              @for (tab of statusTabs; track tab.id) {
+                <button
+                  type="button"
+                  (click)="setStatusFilter(tab.id)"
+                  class="flex-1 py-1 rounded-md text-[11px] font-medium transition-colors"
+                  [class.bg-bg-3]="statusFilter() === tab.id"
+                  [class.text-text-1]="statusFilter() === tab.id"
+                  [class.text-text-3]="statusFilter() !== tab.id"
+                >
+                  {{ tab.label }}
+                </button>
+              }
+            </div>
+            <select
+              [ngModel]="nodeFilter()"
+              (ngModelChange)="setNodeFilter($event)"
+              class="h-7 px-2 rounded-lg bg-bg-2 border border-border-structural text-[11px] font-code-sm text-text-2 focus:outline-none focus:border-node-queue max-w-[115px]"
+              aria-label="Filter by node"
+            >
+              <option value="">All Nodes</option>
+              @for (n of store.diagram().nodes; track n.key) {
+                <option [value]="n.key">{{ n.label }}</option>
+              }
+            </select>
           </div>
         </div>
 
@@ -106,7 +130,14 @@ import { resolveNodeIcon, resolveTemplateProfile } from '../../core/template-vis
 
               <div class="flex items-center justify-between text-[11px] font-code-sm text-text-3">
                 <span class="truncate">{{ trace.lastNode || 'ingress' }}</span>
-                <span>{{ formatTime(trace.lastEventAt) }}</span>
+                <div class="flex items-center gap-1.5 shrink-0">
+                  @if (selectedTraceId() === trace.id && playing()) {
+                    <span class="px-1.5 py-0.5 rounded bg-node-queue/15 text-node-queue text-[9px] font-bold tracking-wider">
+                      REPLAYING
+                    </span>
+                  }
+                  <span>{{ formatTime(trace.lastEventAt) }}</span>
+                </div>
               </div>
             </button>
           }
@@ -151,6 +182,16 @@ import { resolveNodeIcon, resolveTemplateProfile } from '../../core/template-vis
                   </span>
                 }
               </div>
+              <div class="h-3.5 w-px bg-border-structural"></div>
+              <button
+                type="button"
+                (click)="replayFromStart()"
+                class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-node-queue/15 border border-node-queue/40 text-node-queue hover:bg-node-queue/25 text-xs font-medium transition-colors"
+                title="Replay this request from Hop 1"
+              >
+                <span class="material-symbols-outlined text-[14px]">play_arrow</span>
+                <span>Replay</span>
+              </button>
             }
           </div>
 
@@ -198,10 +239,16 @@ import { resolveNodeIcon, resolveTemplateProfile } from '../../core/template-vis
               [attr.viewBox]="'0 0 ' + stageBounds().width + ' ' + stageBounds().height"
             >
               <defs>
-                <linearGradient id="replayConduitGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <linearGradient id="replayConduitGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="900">
                   <stop offset="0%" stop-color="#22D3EE" />
                   <stop offset="100%" stop-color="#8B5CF6" />
                 </linearGradient>
+                <marker id="replayArrow" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                  <polygon fill="#343C4F" points="0 1.5, 7 4, 0 6.5" />
+                </marker>
+                <marker id="replayArrowActive" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                  <polygon fill="#8B5CF6" points="0 1.5, 7 4, 0 6.5" />
+                </marker>
                 <filter id="replayGlow" x="-30%" y="-30%" width="160%" height="160%">
                   <feGaussianBlur stdDeviation="3.5" result="blur" />
                   <feComposite in="SourceGraphic" in2="blur" operator="over" />
@@ -215,7 +262,8 @@ import { resolveNodeIcon, resolveTemplateProfile } from '../../core/template-vis
                   [attr.stroke]="isEdgeTraversed(edge) ? 'url(#replayConduitGrad)' : '#343C4F'"
                   [attr.stroke-width]="isEdgeTraversed(edge) ? 3 : 2"
                   [attr.stroke-dasharray]="isEdgeTraversed(edge) ? null : '5 4'"
-                  [attr.opacity]="isEdgeTraversed(edge) ? 1 : 0.4"
+                  [attr.opacity]="isEdgeTraversed(edge) ? 1 : 0.45"
+                  [attr.marker-end]="isEdgeTraversed(edge) ? 'url(#replayArrowActive)' : 'url(#replayArrow)'"
                   [attr.filter]="isEdgeTraversed(edge) ? 'url(#replayGlow)' : null"
                 />
               }
@@ -263,10 +311,10 @@ import { resolveNodeIcon, resolveTemplateProfile } from '../../core/template-vis
                 [class.shadow-[0_0_24px_rgba(244,63,94,0.32)]="isErrorNode"
               >
                 <div
-                  class="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0"
+                  class="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0 overflow-hidden select-none"
                   [style.background]="vis.accentBg"
                 >
-                  <span class="material-symbols-outlined text-[21px]" [style.color]="vis.accentColor">
+                  <span class="material-symbols-outlined text-[21px] leading-none" [style.color]="vis.accentColor">
                     {{ vis.icon }}
                   </span>
                 </div>
@@ -539,14 +587,18 @@ import { resolveNodeIcon, resolveTemplateProfile } from '../../core/template-vis
 })
 export class TracesReplayPageComponent implements OnInit, OnDestroy {
   public readonly store = inject(FlowSessionStore);
+  private readonly api = inject(FlowTraceApiService);
   protected readonly Math = Math;
 
   public readonly localSearch = signal('');
   public readonly statusFilter = signal<'all' | 'ok' | 'error'>('all');
+  public readonly nodeFilter = signal<string>('');
+  public readonly allTraces = signal<TraceSummary[]>([]);
+  public readonly loadingTraces = signal<boolean>(false);
   public readonly selectedTraceId = signal<string | null>(null);
   public readonly activeHopIndex = signal(0);
   public readonly playing = signal(true);
-  public readonly replaySpeed = signal(1);
+  public readonly replaySpeed = signal(0.5);
   public readonly loopReplay = signal(true);
   public readonly zoom = signal(1);
   public readonly copiedId = signal(false);
@@ -569,9 +621,12 @@ export class TracesReplayPageComponent implements OnInit, OnDestroy {
   public readonly visibleTraces = computed(() => {
     const q = this.localSearch().trim().toLowerCase();
     const status = this.statusFilter();
-    return this.store.recentTraces().filter((t) => {
+    const node = this.nodeFilter();
+    const source = this.allTraces().length > 0 ? this.allTraces() : this.store.recentTraces();
+    return source.filter((t) => {
       if (status === 'error' && t.status !== 'error') return false;
       if (status === 'ok' && t.status === 'error') return false;
+      if (node && t.lastNode !== node) return false;
       if (!q) return true;
       return (
         t.id.toLowerCase().includes(q) ||
@@ -647,10 +702,66 @@ export class TracesReplayPageComponent implements OnInit, OnDestroy {
         this.selectedTraceId.set(detail.summary.id);
       }
     });
+
+    effect(() => {
+      const pid = this.store.selectedProjectId();
+      if (pid) {
+        void this.loadAllTraces();
+      }
+    });
   }
 
   public ngOnInit(): void {
+    this.replayEngine.speedMultiplier = this.replaySpeed();
+    this.replayEngine.mode = 'smooth';
     this.startReplayLoop();
+    this.restartStepTimer();
+    void this.initPage();
+  }
+
+  private async initPage(): Promise<void> {
+    await this.store.init();
+    await this.loadAllTraces();
+  }
+
+  public async loadAllTraces(): Promise<void> {
+    const projectId = this.store.selectedProjectId();
+    if (!projectId) return;
+    this.loadingTraces.set(true);
+    try {
+      const status = this.statusFilter() === 'all' ? undefined : this.statusFilter();
+      const node = this.nodeFilter() || undefined;
+      const list = await this.api.searchTraces(projectId, {
+        status,
+        node,
+        limit: 200,
+      });
+      this.allTraces.set(list);
+      if (!this.selectedTraceId() && list.length > 0) {
+        await this.selectTrace(list[0]);
+      }
+    } catch {
+      // Fallback to store.recentTraces()
+    } finally {
+      this.loadingTraces.set(false);
+    }
+  }
+
+  public setStatusFilter(status: 'all' | 'ok' | 'error'): void {
+    this.statusFilter.set(status);
+    void this.loadAllTraces();
+  }
+
+  public setNodeFilter(node: string): void {
+    this.nodeFilter.set(node);
+    void this.loadAllTraces();
+  }
+
+  public replayFromStart(): void {
+    this.activeHopIndex.set(0);
+    this.playing.set(true);
+    this.replayEngine.clearAll();
+    this.emitHopAnimation(0);
     this.restartStepTimer();
   }
 
@@ -666,9 +777,11 @@ export class TracesReplayPageComponent implements OnInit, OnDestroy {
   public async selectTrace(trace: TraceSummary): Promise<void> {
     this.selectedTraceId.set(trace.id);
     this.activeHopIndex.set(0);
+    this.playing.set(true);
     this.replayEngine.clearAll();
     await this.store.inspectTrace(trace.id);
     this.emitHopAnimation(0);
+    this.restartStepTimer();
   }
 
   public resolveVisual(node: DiagramNode) {

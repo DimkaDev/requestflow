@@ -133,9 +133,9 @@ import { LiveToolbarComponent } from './live-toolbar.component';
       } @else {
         <div class="absolute top-space-md left-space-lg flex items-center gap-space-md z-20 pointer-events-auto">
           <div class="flex items-center gap-space-sm px-space-md py-1.5 rounded-lg bg-bg-1/90 border border-border-structural backdrop-blur-md shadow-sm">
-            <span class="font-code-sm text-code-sm text-text-3">TEMPLATE:</span>
+            <span class="font-code-sm text-code-sm text-text-3">MESH:</span>
             <span class="font-label-md text-label-md text-text-1 font-semibold">
-              {{ store.templateProfile().displayName }}
+              {{ store.activeProject()?.name || 'us-east-cluster-prod' }}
             </span>
             <span class="w-1 h-1 rounded-full bg-border-strong"></span>
             <span class="font-code-sm text-code-sm text-node-queue">
@@ -144,11 +144,11 @@ import { LiveToolbarComponent } from './live-toolbar.component';
           </div>
           <div class="hidden md:flex items-center gap-space-sm px-space-md py-1.5 rounded-lg bg-bg-1/90 border border-border-structural backdrop-blur-md shadow-sm">
             <span class="flex h-2 w-2 rounded-full" [class.bg-status-ok]="store.wsConnected()" [class.bg-status-warn]="!store.wsConnected()"></span>
-            <span class="font-label-md text-label-md text-text-2">Ingress:</span>
+            <span class="font-label-md text-label-md text-text-2">Mesh Ingress:</span>
             <span class="font-code-sm text-code-sm text-text-1 font-medium tabular-nums">{{ store.totalRps() }} req/s</span>
             <span class="text-border-strong">|</span>
             <span class="font-label-md text-label-md text-text-2">Active Tokens:</span>
-            <span class="font-code-sm text-code-sm text-node-queue font-medium tabular-nums">{{ store.activeTokens().length }}</span>
+            <span class="font-code-sm text-code-sm text-status-warn font-medium tabular-nums">{{ store.activeTokens().length }}</span>
           </div>
         </div>
       }
@@ -161,7 +161,7 @@ import { LiveToolbarComponent } from './live-toolbar.component';
         <!-- SVG Graph Connections & Animated Flow Particles -->
         <svg class="absolute inset-0 w-[2400px] h-[1800px] pointer-events-none z-0 overflow-visible">
           <defs>
-            <linearGradient id="edge-active-gradient" x1="0%" x2="0%" y1="0%" y2="100%">
+            <linearGradient id="edge-active-gradient" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="0" y2="900">
               <stop offset="0%" stop-color="#22D3EE"></stop>
               <stop offset="100%" stop-color="#8B5CF6"></stop>
             </linearGradient>
@@ -175,14 +175,14 @@ import { LiveToolbarComponent } from './live-toolbar.component';
               <stop offset="55%" stop-color="#F43F5E" stop-opacity="0.75"></stop>
               <stop offset="100%" stop-color="#F43F5E" stop-opacity="0"></stop>
             </radialGradient>
-            <marker id="arrowhead" markerHeight="6" markerWidth="8" orient="auto" refX="7" refY="3">
-              <polygon fill="#343C4F" points="0 0, 8 3, 0 6"></polygon>
+            <marker id="arrowhead" markerUnits="userSpaceOnUse" markerHeight="8" markerWidth="8" orient="auto" refX="7" refY="4">
+              <polygon fill="#343C4F" points="0 1.5, 7 4, 0 6.5"></polygon>
             </marker>
-            <marker id="arrowhead-active" markerHeight="6" markerWidth="8" orient="auto" refX="7" refY="3">
-              <polygon fill="#8B5CF6" points="0 0, 8 3, 0 6"></polygon>
+            <marker id="arrowhead-active" markerUnits="userSpaceOnUse" markerHeight="8" markerWidth="8" orient="auto" refX="7" refY="4">
+              <polygon fill="#8B5CF6" points="0 1.5, 7 4, 0 6.5"></polygon>
             </marker>
-            <marker id="arrowhead-error" markerHeight="6" markerWidth="8" orient="auto" refX="7" refY="3">
-              <polygon fill="#F43F5E" points="0 0, 8 3, 0 6"></polygon>
+            <marker id="arrowhead-error" markerUnits="userSpaceOnUse" markerHeight="8" markerWidth="8" orient="auto" refX="7" refY="4">
+              <polygon fill="#F43F5E" points="0 1.5, 7 4, 0 6.5"></polygon>
             </marker>
           </defs>
 
@@ -225,40 +225,111 @@ import { LiveToolbarComponent } from './live-toolbar.component';
                   [attr.opacity]="Math.max(0.1, 0.55 - $index * 0.08)"
                 />
               }
-              <circle
-                [attr.cx]="tok.x"
-                [attr.cy]="tok.y"
-                [attr.r]="13 * tok.scale"
-                [attr.fill]="tok.status === 'error' ? 'url(#particle-error-glow)' : 'url(#particle-cyan-glow)'"
-              />
-              <circle
-                [attr.cx]="tok.x"
-                [attr.cy]="tok.y"
-                [attr.r]="5 * tok.scale"
-                [attr.fill]="tok.status === 'error' ? '#F43F5E' : '#22D3EE'"
-              />
-              @if (store.showLabels()) {
-                <g [attr.transform]="'translate(' + (tok.x + 10) + ',' + (tok.y - 10) + ')'">
-                  <rect
-                    x="0"
-                    y="-10"
-                    [attr.width]="tok.avatarIcon || (tok.carriedIcons && tok.carriedIcons.length) ? 84 : 58"
-                    height="18"
-                    rx="9"
-                    fill="#11141B"
-                    stroke="#262C3A"
-                    stroke-width="1"
+              @if (isShopTemplate()) {
+                <!-- Shop Live Demo: Animal Avatar Badge -->
+                <circle
+                  [attr.cx]="tok.x"
+                  [attr.cy]="tok.y"
+                  [attr.r]="18 * tok.scale"
+                  [attr.fill]="tok.status === 'error' ? 'rgba(225, 29, 72, 0.16)' : 'rgba(157, 67, 0, 0.14)'"
+                />
+                <circle
+                  [attr.cx]="tok.x"
+                  [attr.cy]="tok.y"
+                  [attr.r]="14 * tok.scale"
+                  [attr.fill]="store.theme() === 'cozy-light' ? '#FFF8F5' : '#151B28'"
+                  [attr.stroke]="tok.status === 'error' ? '#E11D48' : tok.toNode === 'paid' ? '#059669' : '#9D4300'"
+                  stroke-width="2"
+                />
+                <text
+                  [attr.x]="tok.x"
+                  [attr.y]="tok.y + 5"
+                  text-anchor="middle"
+                  font-size="15"
+                  class="select-none"
+                >
+                  {{ resolveShopAnimal(tok.id, tok.avatarIcon) }}
+                </text>
+                @if (tok.carriedIcons && tok.carriedIcons.length > 0) {
+                  <circle
+                    [attr.cx]="tok.x + 11"
+                    [attr.cy]="tok.y - 11"
+                    r="6.5"
+                    fill="#9D4300"
+                    stroke="#FFF8F5"
+                    stroke-width="1.2"
                   />
                   <text
-                    x="7"
-                    y="2"
-                    fill="#E8ECF4"
-                    font-size="10"
+                    [attr.x]="tok.x + 11"
+                    [attr.y]="tok.y - 8"
+                    text-anchor="middle"
+                    fill="#FFFFFF"
+                    font-size="8"
+                    font-weight="700"
                     font-family="JetBrains Mono, monospace"
                   >
-                    {{ tok.avatarIcon ? tok.avatarIcon + ' ' : '' }}{{ tok.shortTag }}
+                    {{ tok.carriedIcons.length }}
                   </text>
-                </g>
+                }
+                @if (store.showLabels() && tok.shortTag) {
+                  <g [attr.transform]="'translate(' + tok.x + ',' + (tok.y + 24) + ')'">
+                    <rect
+                      x="-26"
+                      y="-9"
+                      width="52"
+                      height="15"
+                      rx="7.5"
+                      [attr.fill]="tok.status === 'error' ? '#E11D48' : tok.toNode === 'paid' ? '#059669' : '#201B16'"
+                    />
+                    <text
+                      x="0"
+                      y="2"
+                      text-anchor="middle"
+                      fill="#FFFFFF"
+                      font-size="9"
+                      font-weight="600"
+                      font-family="JetBrains Mono, monospace"
+                    >
+                      {{ tok.shortTag }}
+                    </text>
+                  </g>
+                }
+              } @else {
+                <circle
+                  [attr.cx]="tok.x"
+                  [attr.cy]="tok.y"
+                  [attr.r]="13 * tok.scale"
+                  [attr.fill]="tok.status === 'error' ? 'url(#particle-error-glow)' : 'url(#particle-cyan-glow)'"
+                />
+                <circle
+                  [attr.cx]="tok.x"
+                  [attr.cy]="tok.y"
+                  [attr.r]="5 * tok.scale"
+                  [attr.fill]="tok.status === 'error' ? '#F43F5E' : '#22D3EE'"
+                />
+                @if (store.showLabels()) {
+                  <g [attr.transform]="'translate(' + (tok.x + 10) + ',' + (tok.y - 10) + ')'">
+                    <rect
+                      x="0"
+                      y="-10"
+                      [attr.width]="tok.avatarIcon || (tok.carriedIcons && tok.carriedIcons.length) ? 84 : 58"
+                      height="18"
+                      rx="9"
+                      fill="#11141B"
+                      stroke="#262C3A"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="7"
+                      y="2"
+                      fill="#E8ECF4"
+                      font-size="10"
+                      font-family="JetBrains Mono, monospace"
+                    >
+                      {{ tok.avatarIcon ? tok.avatarIcon + ' ' : '' }}{{ tok.shortTag }}
+                    </text>
+                  </g>
+                }
               }
             </g>
           }
@@ -267,14 +338,14 @@ import { LiveToolbarComponent } from './live-toolbar.component';
         <!-- Edge Label Pills -->
         @if (store.showLabels()) {
           @for (edge of store.diagram().edges; track edge.id) {
-            @if (edge.label) {
+            @if (edge.label || getEdgePercentage(edge) !== null) {
               <div
                 class="absolute z-10 pointer-events-none -translate-x-1/2 -translate-y-1/2"
                 [style.left.px]="getEdgeMidpoint(edge).x"
                 [style.top.px]="getEdgeMidpoint(edge).y"
               >
                 <span
-                  class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-bg-2 border text-chip-metric font-chip-metric shadow-sm"
+                  class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-bg-2/95 border text-chip-metric font-chip-metric shadow-sm backdrop-blur-sm"
                   [class.border-status-error/40]="edgeErrors(edge) > 0"
                   [class.text-status-error]="edgeErrors(edge) > 0"
                   [class.border-border-structural]="edgeErrors(edge) === 0"
@@ -285,9 +356,21 @@ import { LiveToolbarComponent } from './live-toolbar.component';
                     [class.bg-status-error]="edgeErrors(edge) > 0"
                     [class.bg-node-queue]="edgeErrors(edge) === 0"
                   ></span>
-                  <span>{{ edge.label }}</span>
-                  @if (store.getEdgeMetric(edge.id).hops > 0) {
-                    <span class="text-text-3 font-code-sm">{{ store.getEdgeMetric(edge.id).hops }}</span>
+                  @if (edge.label) {
+                    <span>{{ edge.label }}</span>
+                  }
+                  @if (getEdgePercentage(edge); as pct) {
+                    <span
+                      class="font-code-sm font-semibold tabular-nums"
+                      [class.text-status-error]="edgeErrors(edge) > 0"
+                      [class.text-text-3]="edgeErrors(edge) === 0"
+                    >
+                      {{ pct }}%
+                    </span>
+                  } @else if (getEdgePercentage(edge) === 0) {
+                    <span class="font-code-sm text-text-3 tabular-nums">0%</span>
+                  } @else if (store.getEdgeMetric(edge.id).hops > 0) {
+                    <span class="text-text-3 font-code-sm tabular-nums">{{ store.getEdgeMetric(edge.id).hops }}</span>
                   }
                 </span>
               </div>
@@ -299,12 +382,14 @@ import { LiveToolbarComponent } from './live-toolbar.component';
         <div class="absolute inset-0 z-10 pointer-events-none">
           @for (node of visibleNodes(); track node.key) {
             <div
-              class="absolute pointer-events-auto cursor-pointer transition-transform"
+              class="absolute pointer-events-auto cursor-grab active:cursor-grabbing"
+              [class.transition-transform]="draggingNodeKey() !== node.key"
               [style.left.px]="node.x"
               [style.top.px]="node.y"
               [style.width.px]="cardWidth()"
               [style.height.px]="cardHeight()"
               [style.transform]="nodeTransform(node.key)"
+              (mousedown)="onNodeMouseDown(node, $event)"
               (click)="onNodeClick(node, $event)"
             >
               @if (store.liveVariant() === 'minimalist') {
@@ -324,10 +409,10 @@ import { LiveToolbarComponent } from './live-toolbar.component';
                   <div class="flex items-center justify-between gap-2">
                     <div class="flex items-center gap-2 min-w-0">
                       <div
-                        class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+                        class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 overflow-hidden select-none"
                         [ngClass]="typeVisual(node).accentBgClass + ' ' + typeVisual(node).accentTextClass"
                       >
-                        <span class="material-symbols-outlined text-[17px]">{{ nodeIcon(node) }}</span>
+                        <span class="material-symbols-outlined text-[17px] leading-none">{{ nodeIcon(node) }}</span>
                       </div>
                       <div class="min-w-0">
                         <div class="text-xs font-semibold text-text-1 truncate">{{ node.label }}</div>
@@ -371,10 +456,10 @@ import { LiveToolbarComponent } from './live-toolbar.component';
 
                   <div class="flex items-center gap-3 min-w-0">
                     <div
-                      class="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0"
+                      class="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0 overflow-hidden select-none"
                       [ngClass]="typeVisual(node).accentBgClass + ' ' + typeVisual(node).accentTextClass"
                     >
-                      <span class="material-symbols-outlined text-[22px]">{{ nodeIcon(node) }}</span>
+                      <span class="material-symbols-outlined text-[22px] leading-none">{{ nodeIcon(node) }}</span>
                     </div>
                     <div class="flex flex-col min-w-0">
                       <span class="font-body-node-label text-body-node-label text-text-1 truncate">
@@ -429,8 +514,14 @@ export class FlowCanvasComponent {
   public readonly Math = Math;
 
   private readonly dragging = signal<boolean>(false);
+  public readonly draggingNodeKey = signal<string | null>(null);
   private lastX = 0;
   private lastY = 0;
+  private nodeDragStartClientX = 0;
+  private nodeDragStartClientY = 0;
+  private nodeDragStartX = 0;
+  private nodeDragStartY = 0;
+  private nodeMoved = false;
 
   public readonly cardWidth = computed(() => this.store.templateProfile().cardWidth);
   public readonly cardHeight = computed(() => this.store.templateProfile().cardHeight);
@@ -484,6 +575,28 @@ export class FlowCanvasComponent {
     return this.store.engine.interpolateEdgePosition(edge.from, edge.to, 0.5, 0);
   }
 
+  public isShopTemplate(): boolean {
+    return this.store.activeTemplateId() === 'online-shop';
+  }
+
+  public resolveShopAnimal(seed: string, avatarIcon?: string | null): string {
+    if (avatarIcon && avatarIcon !== '👤') return avatarIcon;
+    const animals = ['🐼', '🦊', '🐱', '🐰', '🦁', '🐨', '🐸', '🦉'];
+    let hash = 0;
+    for (let i = 0; i < seed.length; i += 1) {
+      hash = (hash * 31 + seed.charCodeAt(i)) | 0;
+    }
+    return animals[Math.abs(hash) % animals.length];
+  }
+
+  public getEdgePercentage(edge: DiagramEdge): number | null {
+    const outgoing = this.store.diagram().edges.filter((e) => e.from === edge.from);
+    if (outgoing.length <= 1) return null;
+    const totalHops = outgoing.reduce((sum, e) => sum + this.store.getEdgeMetric(e.id).hops, 0);
+    if (totalHops <= 0) return 0;
+    return Math.round((this.store.getEdgeMetric(edge.id).hops / totalHops) * 100);
+  }
+
   public edgeErrors(edge: DiagramEdge): number {
     return this.store.getEdgeMetric(edge.id).errors;
   }
@@ -508,9 +621,23 @@ export class FlowCanvasComponent {
     return 'url(#arrowhead)';
   }
 
+  public onNodeMouseDown(node: DiagramNode, event: MouseEvent): void {
+    if (event.button !== 0) return;
+    event.stopPropagation();
+    this.draggingNodeKey.set(node.key);
+    this.nodeDragStartClientX = event.clientX;
+    this.nodeDragStartClientY = event.clientY;
+    this.nodeDragStartX = node.x;
+    this.nodeDragStartY = node.y;
+    this.nodeMoved = false;
+  }
+
   public onNodeClick(node: DiagramNode, event: MouseEvent): void {
     event.stopPropagation();
-    this.store.selectNode(node.key);
+    if (!this.nodeMoved) {
+      this.store.selectNode(node.key);
+    }
+    this.nodeMoved = false;
   }
 
   public onCanvasMouseDown(event: MouseEvent): void {
@@ -521,6 +648,23 @@ export class FlowCanvasComponent {
   }
 
   public onCanvasMouseMove(event: MouseEvent): void {
+    const nodeKey = this.draggingNodeKey();
+    if (nodeKey) {
+      const dx = (event.clientX - this.nodeDragStartClientX) / this.store.zoom();
+      const dy = (event.clientY - this.nodeDragStartClientY) / this.store.zoom();
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+        this.nodeMoved = true;
+      }
+      if (this.nodeMoved) {
+        this.store.updateNodePosition(
+          nodeKey,
+          Math.round(this.nodeDragStartX + dx),
+          Math.round(this.nodeDragStartY + dy)
+        );
+      }
+      return;
+    }
+
     if (!this.dragging()) return;
     const dx = event.clientX - this.lastX;
     const dy = event.clientY - this.lastY;
@@ -531,6 +675,13 @@ export class FlowCanvasComponent {
   }
 
   public onCanvasMouseUp(): void {
+    if (this.draggingNodeKey()) {
+      const moved = this.nodeMoved;
+      this.draggingNodeKey.set(null);
+      if (moved) {
+        void this.store.persistDiagramPositions();
+      }
+    }
     this.dragging.set(false);
   }
 

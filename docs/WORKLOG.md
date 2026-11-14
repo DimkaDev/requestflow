@@ -55,6 +55,41 @@ git push origin main
 
 ## История сессий (Trace Log)
 
+### Сессия #016 — 2026-11-14 (Environment: `local`, Branch: `feat/stitch-design`)
+- **Автор / Агент:** Antigravity (Local)
+- **Цель:** Реализация и доводка Stitch-экранов (`Live View`, `Traces & Replay Studio`, `Architecture Template Gallery`, `Projects Home`, `Onboarding Steps 1–3`, `Shop Live Demo`), а также исправление критических проблем загрузки `/traces`, `/templates` и `/shop`.
+- **Что сделано:**
+  - **Live Topology (`flow-canvas.component.ts`, `template-visuals.ts`, `flow-session.store.ts`, `node-inspector-drawer.component.ts`):**
+    - Исправлен маппинг иконок (`MATERIAL_ICON_MAP`, включая `git-branch` -> `alt_route`) в `template-visuals.ts`.
+    - Исправлена видимость связей (`gradientUnits="userSpaceOnUse"` на `#edge-active-gradient`), уменьшены наконечники стрелок (`markerUnits="userSpaceOnUse"`), добавлена процентовка переходов после `decision`-узлов (`getEdgePercentage`), реализован drag-and-drop отдельных узлов с пересчётом связей и сохранением координат, а также более плавная скорость передачи по умолчанию (`speedMultiplier = 0.5`, `streamMode = 'smooth'`).
+  - **Traces & Replay Studio (`traces-replay.page.ts`):**
+    - Полная загрузка истории трейсов (`limit: 200`), фильтры по ноде, статусу и поиску, кнопка обновления, пошаговый replay с Hop 1, бейдж `REPLAYING` и `gradientUnits="userSpaceOnUse"` для `#replayConduitGrad`.
+  - **Architecture Template Gallery (`template-gallery.page.ts`):**
+    - Реализована левая панель Workspace, hero-баннер `Online shop — watch customers fill their carts, live` с анимированной SVG-схемой и переходами `/` и `/shop`, вкладки категорий со счётчиками, поиск, сортировка и 3-колоночная сетка карточек с Безье мини-топологиями.
+  - **Projects Home & Onboarding Steps 1–3 (`projects-home.page.ts`, `onboarding-wizard.page.ts`):**
+    - Обновлён экран `Projects Home` (левая панель Workspace, фильтрация/сортировка, мини-топологии, правая панель Ingestion Budget и Quickstart SDKs); создание нового проекта перенаправляет на `/onboarding`.
+    - Реализован 3-шаговый мастер онбординга по Stitch-макетам: Step 1 (выбор шаблона + `Blank canvas`), Step 2 (SDK-сниппеты, тест из браузера и Topology Live Preview), Step 3 (Waiting State -> Zen Celebration & Activation Hub).
+  - **Shop Live Demo (`shop-live.page.ts`, `flow-canvas.component.ts`):**
+    - Вёрстка `Cozy Light Edition` (5 KPI-карточек, зоны Store / Checkout, Live Sale Ticker, переключатель 4 режимов: `Cozy Light`, `Dark Neon`, `CRO Funnel`, `TV Showroom`), фиксированная высота контейнера `h-[560px]` для `app-flow-canvas`, автоцентрирование графа `online-shop` (`centerShopCanvas`) и круглые бейджи запросов в виде животных только для `online-shop`.
+  - **Исправление загрузки данных (`flow-session.store.ts`, `traces-replay.page.ts`):**
+    - Устранена гонка инициализации `FlowSessionStore.init()` (общий `initPromise` вместо синхронного флага `initialized`), добавлен `BUILTIN_FALLBACK_TEMPLATES` для `/templates` и `effect()` по `selectedProjectId()` для автозагрузки `/traces`.
+- **Изменённые файлы:**
+  - `frontend/src/app/core/flow-session.store.ts`
+  - `frontend/src/app/core/template-visuals.ts`
+  - `frontend/src/app/features/live-view/components/flow-canvas.component.ts`
+  - `frontend/src/app/features/live-view/components/node-inspector-drawer.component.ts`
+  - `frontend/src/app/features/traces/traces-replay.page.ts`
+  - `frontend/src/app/features/templates/template-gallery.page.ts`
+  - `frontend/src/app/features/projects/projects-home.page.ts`
+  - `frontend/src/app/features/onboarding/onboarding-wizard.page.ts`
+  - `frontend/src/app/features/shop/shop-live.page.ts`
+  - `docs/WORKLOG.md`
+- **Проверки:**
+  - `CI=true HOME=/tmp npm --prefix frontend test`: **7/7** тестов пройдено (`AnimationEngine (spec section 10.3)`).
+  - `cd frontend && CI=true HOME=/tmp npx ng build --configuration development`: **PASS** (0 ошибок, `main.js` 2.36 MB, `styles.css` 65.32 kB).
+- **Следующие шаги:**
+  - Доверстать остальные 3 варианта отображения `/shop` (`Dark Neon Ops Hub`, `High-Density CRO Funnel`, `TV Showroom Mode`) и подключить экран `Settings / API Keys / Connectors` по Stitch-макетам.
+
 ### Сессия #015 — 2026-11-13 (Environment: `cloud-vm`, Branch: `feat/stitch-design`)
 - **Автор / Агент:** Antigravity (Cloud)
 - **Цель:** Реализация полного набора экранов нового дизайна Stitch из `docs/design/stitch_requestflowproject` с модульным разделением, привязкой к бэкенду и созданием недостающих бэкенд-сущностей (Alert Rules & Webhooks).

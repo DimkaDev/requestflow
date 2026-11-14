@@ -23,6 +23,129 @@ import {
   resolveTemplateProfile,
 } from './template-visuals';
 
+const BUILTIN_FALLBACK_TEMPLATES: TemplateDefinition[] = [
+  {
+    id: 'online-shop',
+    name: 'Online Shop (B2C Live Commerce)',
+    category: 'commerce',
+    description: 'Storefront funnel: Visit -> Browse -> Product -> Cart -> Checkout -> Payment -> Paid / Abandoned',
+    theme: 'cozy-light',
+    defaultPersonas: ['browser', 'buyer', 'hesitant', 'abandoner'],
+    terminalNodes: ['paid', 'payment-failed', 'abandoned'],
+    diagram: {
+      schema: 1,
+      direction: 'LR',
+      nodes: [
+        { key: 'visit', label: 'Storefront', type: 'source', x: -340, y: 0, icon: 'store' },
+        { key: 'browse', label: 'Browse Catalog', type: 'service', x: -120, y: 0, icon: 'compass' },
+        { key: 'product', label: 'Product Detail', type: 'service', x: 120, y: 0, icon: 'tag' },
+        { key: 'cart', label: 'Cart & Bag', type: 'service', x: 340, y: 0, icon: 'shopping-cart' },
+        { key: 'checkout', label: 'Checkout', type: 'service', x: 340, y: 180, icon: 'user-check' },
+        { key: 'payment', label: 'Payment Gateway', type: 'decision', x: 120, y: 180, icon: 'credit-card' },
+        { key: 'paid', label: 'Order Paid', type: 'end', x: -120, y: 180, icon: 'check-circle' },
+        { key: 'payment-failed', label: 'Payment Failed', type: 'end', x: 120, y: 320, icon: 'alert-circle' },
+        { key: 'abandoned', label: 'Abandoned', type: 'end', x: -120, y: -140, icon: 'x-circle' },
+      ],
+      edges: [
+        { id: 'e_shop_1', from: 'visit', to: 'browse', label: 'visit' },
+        { id: 'e_shop_2', from: 'browse', to: 'product', label: 'view' },
+        { id: 'e_shop_3', from: 'browse', to: 'abandoned', label: 'bounce' },
+        { id: 'e_shop_4', from: 'product', to: 'cart', label: 'add to cart' },
+        { id: 'e_shop_6', from: 'cart', to: 'checkout', label: 'proceed' },
+        { id: 'e_shop_8', from: 'checkout', to: 'payment', label: 'pay' },
+        { id: 'e_shop_10', from: 'payment', to: 'paid', label: 'success' },
+        { id: 'e_shop_11', from: 'payment', to: 'payment-failed', label: 'declined' },
+      ],
+    },
+  },
+  {
+    id: 'microservices',
+    name: 'Cloud & Microservices (Technical)',
+    category: 'engineering',
+    description: 'Technical architecture: Website -> Load Balancer -> Decision -> Services -> DB',
+    theme: 'dark-neon',
+    defaultPersonas: ['standard-request', 'pro-request', 'batch-job'],
+    terminalNodes: ['db'],
+    diagram: {
+      schema: 1,
+      direction: 'TB',
+      nodes: [
+        { key: 'website', label: 'Website', type: 'source', x: 0, y: 0, icon: 'globe' },
+        { key: 'lb', label: 'Load Balancer', type: 'service', x: 0, y: 160, icon: 'server' },
+        { key: 'if-premium', label: 'Premium?', type: 'decision', x: 0, y: 320, icon: 'git-branch' },
+        { key: 'service-a', label: 'Service A', type: 'service', x: -200, y: 480, icon: 'cpu' },
+        { key: 'service-b', label: 'Service B', type: 'service', x: 200, y: 480, icon: 'cpu' },
+        { key: 'db', label: 'Database', type: 'datastore', x: 0, y: 640, icon: 'database' },
+      ],
+      edges: [
+        { id: 'e1', from: 'website', to: 'lb' },
+        { id: 'e2', from: 'lb', to: 'if-premium' },
+        { id: 'e3', from: 'if-premium', to: 'service-a', label: 'yes' },
+        { id: 'e4', from: 'if-premium', to: 'service-b', label: 'no' },
+        { id: 'e5', from: 'service-a', to: 'db' },
+        { id: 'e6', from: 'service-b', to: 'db' },
+      ],
+    },
+  },
+  {
+    id: 'queue-worker',
+    name: 'Async Queue & Event Bus',
+    category: 'backend',
+    description: 'Asynchronous pipeline: Webhooks -> Ingest API -> Kafka Queue -> Worker Pool -> Postgres / DLQ',
+    theme: 'dark-neon',
+    defaultPersonas: ['webhook-event', 'batch-task', 'retry-task'],
+    terminalNodes: ['db', 'dlq'],
+    diagram: {
+      schema: 1,
+      direction: 'LR',
+      nodes: [
+        { key: 'client', label: 'Webhooks / Clients', type: 'source', x: -320, y: 0, icon: 'globe' },
+        { key: 'ingest-api', label: 'Ingest API', type: 'service', x: -100, y: 0, icon: 'server' },
+        { key: 'queue', label: 'Kafka / SQS Buffer', type: 'queue', x: 120, y: 0, icon: 'layers' },
+        { key: 'worker', label: 'Worker Pool', type: 'service', x: 340, y: 0, icon: 'cpu' },
+        { key: 'db', label: 'Postgres Primary', type: 'datastore', x: 340, y: 180, icon: 'database' },
+        { key: 'dlq', label: 'Dead Letter Queue', type: 'end', x: 120, y: 180, icon: 'alert-triangle' },
+      ],
+      edges: [
+        { id: 'e_qw_1', from: 'client', to: 'ingest-api', label: 'submit' },
+        { id: 'e_qw_2', from: 'ingest-api', to: 'queue', label: 'publish' },
+        { id: 'e_qw_3', from: 'queue', to: 'worker', label: 'poll' },
+        { id: 'e_qw_4', from: 'worker', to: 'db', label: 'commit' },
+        { id: 'e_qw_5', from: 'worker', to: 'dlq', label: 'exhausted' },
+      ],
+    },
+  },
+  {
+    id: 'ai-rag',
+    name: 'AI Agent & RAG Pipeline',
+    category: 'ai',
+    description: 'LLM pipeline: User Prompt -> Embedding -> Vector Search -> LLM Orchestrator -> Tools -> Response',
+    theme: 'dark-neon',
+    defaultPersonas: ['search-prompt', 'agent-task', 'tool-call'],
+    terminalNodes: ['response'],
+    diagram: {
+      schema: 1,
+      direction: 'LR',
+      nodes: [
+        { key: 'user-prompt', label: 'User Prompt', type: 'source', x: -340, y: 0, icon: 'terminal' },
+        { key: 'embedding', label: 'Embedding Gen', type: 'service', x: -120, y: 0, icon: 'sparkles' },
+        { key: 'vector-db', label: 'Vector Database', type: 'datastore', x: -120, y: 180, icon: 'database' },
+        { key: 'llm-agent', label: 'LLM Orchestrator', type: 'service', x: 120, y: 0, icon: 'cpu' },
+        { key: 'tool-exec', label: 'Tool Execution', type: 'service', x: 120, y: 180, icon: 'tool' },
+        { key: 'response', label: 'Final Response', type: 'end', x: 340, y: 0, icon: 'check-circle' },
+      ],
+      edges: [
+        { id: 'e_ai_1', from: 'user-prompt', to: 'embedding', label: 'query' },
+        { id: 'e_ai_2', from: 'embedding', to: 'vector-db', label: 'similarity' },
+        { id: 'e_ai_3', from: 'vector-db', to: 'llm-agent', label: 'context' },
+        { id: 'e_ai_4', from: 'llm-agent', to: 'tool-exec', label: 'tool_call' },
+        { id: 'e_ai_5', from: 'tool-exec', to: 'llm-agent', label: 'tool_result' },
+        { id: 'e_ai_6', from: 'llm-agent', to: 'response', label: 'stream' },
+      ],
+    },
+  },
+];
+
 @Injectable({ providedIn: 'root' })
 export class FlowSessionStore {
   private readonly api = inject(FlowTraceApiService);
@@ -56,8 +179,8 @@ export class FlowSessionStore {
   public readonly inspectorOpen = signal<boolean>(true);
   public readonly showLabels = signal<boolean>(true);
   public readonly paused = signal<boolean>(false);
-  public readonly speedMultiplier = signal<number>(1.0);
-  public readonly streamMode = signal<'realtime' | 'smooth'>('realtime');
+  public readonly speedMultiplier = signal<number>(0.5);
+  public readonly streamMode = signal<'realtime' | 'smooth'>('smooth');
   public readonly activeFilterTier = signal<'all' | 'degraded' | 'edge' | 'data'>('all');
   public readonly zoom = signal<number>(1);
   public readonly panX = signal<number>(0);
@@ -117,11 +240,21 @@ export class FlowSessionStore {
   private rafId: number | null = null;
   private tracePollId: ReturnType<typeof setInterval> | null = null;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
-  private initialized = false;
+  private initPromise: Promise<void> | null = null;
 
-  public async init(): Promise<void> {
-    if (this.initialized) return;
-    this.initialized = true;
+  public init(): Promise<void> {
+    if (!this.initPromise) {
+      this.initPromise = this.runInit().catch((err) => {
+        this.initPromise = null;
+        throw err;
+      });
+    }
+    return this.initPromise;
+  }
+
+  private async runInit(): Promise<void> {
+    this.engine.speedMultiplier = this.speedMultiplier();
+    this.engine.mode = this.streamMode();
     this.applyThemeToDom(this.theme());
     this.startAnimationLoop();
     await Promise.all([this.loadTemplates(), this.loadProjectsAndConnect()]);
@@ -172,6 +305,26 @@ export class FlowSessionStore {
     this.selectedNodeKey.set(nodeKey);
     if (nodeKey) {
       this.inspectorOpen.set(true);
+    }
+  }
+
+  public updateNodePosition(nodeKey: string, x: number, y: number): void {
+    const current = this.diagram();
+    const updated: DiagramGraph = {
+      ...current,
+      nodes: current.nodes.map((n) => (n.key === nodeKey ? { ...n, x, y } : n)),
+    };
+    this.engine.setGraph(updated);
+    this.diagram.set(updated);
+  }
+
+  public async persistDiagramPositions(): Promise<void> {
+    const projectId = this.selectedProjectId();
+    if (!projectId || !this.backendOnline()) return;
+    try {
+      await this.api.saveDiagram(projectId, this.diagram());
+    } catch {
+      // Non-fatal: keep local dragged layout even if save fails
     }
   }
 
@@ -246,7 +399,7 @@ export class FlowSessionStore {
         await this.api.stopDemo(projectId);
         this.demoRunning.set(false);
       } else {
-        await this.api.startDemo(projectId, 2.5, 0.06);
+        await this.api.startDemo(projectId, 1.2, 0.06);
         this.demoRunning.set(true);
       }
     } catch (err) {
@@ -305,9 +458,11 @@ export class FlowSessionStore {
   private async loadTemplates(): Promise<void> {
     try {
       const list = await this.api.listTemplates();
-      this.templates.set(list);
+      this.templates.set(list.length > 0 ? list : BUILTIN_FALLBACK_TEMPLATES);
     } catch {
-      // Backend offline fallback handled by default profile
+      if (this.templates().length === 0) {
+        this.templates.set(BUILTIN_FALLBACK_TEMPLATES);
+      }
     }
   }
 
