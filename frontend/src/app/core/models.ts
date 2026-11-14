@@ -309,6 +309,88 @@ export interface OrganizationUsage {
   projectBreakdown: ProjectUsage[];
 }
 
+export type SubscriptionStatus = 'TRIALING' | 'ACTIVE' | 'PAST_DUE' | 'CANCELED';
+
+export type BillingInterval = 'MONTHLY' | 'ANNUAL';
+
+export interface PlanCatalogEntry {
+  tier: PlanTier;
+  displayName: string;
+  monthlyPriceUsd: number;
+  annualMonthlyPriceUsd: number;
+  monthlyEventQuota: number;
+  effectiveHardStopQuota: number;
+  softCapMultiplier: number;
+  maxRetentionDays: number;
+  maxProjects: number;
+  maxMembers: number;
+  maxBlocksPerDiagram: number;
+  maxEdgesPerDiagram: number;
+  allowedPacks: string[];
+}
+
+export interface Subscription {
+  organizationId: string;
+  provider: string;
+  providerCustomerId: string;
+  providerSubscriptionId: string;
+  planTier: PlanTier;
+  billingInterval: BillingInterval;
+  status: SubscriptionStatus;
+  currentPeriodStart: string;
+  currentPeriodEnd: string;
+  cancelAtPeriodEnd: boolean;
+  gracePeriodEndsAt?: string | null;
+  companyName?: string | null;
+  billingCountry?: string | null;
+  vatId?: string | null;
+  promoCode?: string | null;
+  discountPercent: number;
+  updatedAt: string;
+}
+
+export interface BillingInvoice {
+  id: string;
+  organizationId: string;
+  providerInvoiceId: string;
+  planTier: PlanTier;
+  billingInterval: BillingInterval;
+  amountCents: number;
+  currency: string;
+  status: string;
+  invoicePdfUrl: string;
+  createdAt: string;
+}
+
+export interface QuotaCheckResult {
+  tier: PlanTier;
+  monthlyQuota: number;
+  effectiveHardStopQuota: number;
+  currentEvents: number;
+  percentUsed: number;
+  warning80Reached: boolean;
+  softLimit100Reached: boolean;
+  hardStopExceeded: boolean;
+}
+
+export interface OrganizationBillingOverview {
+  organization: Organization;
+  subscription: Subscription;
+  usage: OrganizationUsage;
+  quotaCheck: QuotaCheckResult;
+  invoices: BillingInvoice[];
+  availablePlans: PlanCatalogEntry[];
+}
+
+export interface CheckoutSessionResult {
+  provider: string;
+  sessionId: string;
+  checkoutUrl: string;
+  sandboxImmediateApplied: boolean;
+  amountCents: number;
+  discountPercent: number;
+}
+
 export interface TraceSummary {
   id: string;
   projectId: string;

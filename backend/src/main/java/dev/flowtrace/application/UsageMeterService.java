@@ -59,21 +59,18 @@ public class UsageMeterService {
     }
 
     /**
-     * Fast in-memory quota guard.
-     * Free plan hard-caps at 100,000 events/month.
-     * Paid plans (Pro, Business, Enterprise) have soft quotas.
+     * Fast in-memory quota guard (ADR-0007 & ADR-0011).
+     * Free plan hard-caps at 100% (100,000 events/month).
+     * Paid plans (Pro, Business, Enterprise) allow a 120% soft-cap buffer before hard-stopping.
      */
     public boolean isIngestAllowed(UUID organizationId, PlanTier planTier) {
         if (organizationId == null) {
             return true;
         }
         PlanTier tier = planTier != null ? planTier : PlanTier.FREE;
-        if (tier.isSoftQuota()) {
-            return true;
-        }
-        long quota = tier.monthlyEventQuota();
+        long ceiling = tier.effectiveHardStopQuota();
         long currentUsed = getMonthlyUsage(organizationId);
-        return currentUsed < quota;
+        return currentUsed < ceiling;
     }
 
     public long getMonthlyUsage(UUID organizationId) {

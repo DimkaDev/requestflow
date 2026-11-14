@@ -45,6 +45,7 @@ public class OrganizationResource {
     private final OrganizationService organizationService;
     private final ProjectService projectService;
     private final UsageMeterService usageMeterService;
+    private final dev.flowtrace.application.BillingService billingService;
     private final ObjectMapper objectMapper;
     private final boolean mockAuthEnabled;
 
@@ -53,12 +54,14 @@ public class OrganizationResource {
             OrganizationService organizationService,
             ProjectService projectService,
             UsageMeterService usageMeterService,
+            dev.flowtrace.application.BillingService billingService,
             ObjectMapper objectMapper,
             @ConfigProperty(name = "flowtrace.auth.mock-enabled", defaultValue = "true") boolean mockAuthEnabled
     ) {
         this.organizationService = organizationService;
         this.projectService = projectService;
         this.usageMeterService = usageMeterService;
+        this.billingService = billingService;
         this.objectMapper = objectMapper;
         this.mockAuthEnabled = mockAuthEnabled;
     }
@@ -387,6 +390,100 @@ public class OrganizationResource {
             }
         }
         return usageMeterService.getOrganizationUsage(orgId, month, orgView.organization().planTier());
+    }
+
+    @GET
+    @Path("/{orgId}/billing")
+    public dev.flowtrace.application.BillingService.OrganizationBillingOverview getBillingOverview(
+            @HeaderParam("Authorization") String authHeader,
+            @HeaderParam("X-Debug-User-Id") String debugUserId,
+            @PathParam("orgId") UUID orgId
+    ) {
+        AuthenticatedUser user = resolveUser(authHeader, debugUserId);
+        return billingService.getBillingOverview(user.userId(), orgId);
+    }
+
+    @POST
+    @Path("/{orgId}/billing/checkout")
+    public dev.flowtrace.application.BillingService.CheckoutOutcome createCheckoutSession(
+            @HeaderParam("Authorization") String authHeader,
+            @HeaderParam("X-Debug-User-Id") String debugUserId,
+            @PathParam("orgId") UUID orgId,
+            BillingResource.CreateCheckoutRequest req
+    ) {
+        AuthenticatedUser user = resolveUser(authHeader, debugUserId);
+        return billingService.createCheckoutSession(
+                user.userId(),
+                orgId,
+                req != null ? req.planTier() : null,
+                req != null ? req.billingInterval() : null,
+                req != null ? req.promoCode() : null,
+                req != null ? req.returnUrl() : null
+        );
+    }
+
+    @POST
+    @Path("/{orgId}/billing/portal")
+    public dev.flowtrace.application.port.out.BillingProviderPort.PortalSessionResult createCustomerPortalSession(
+            @HeaderParam("Authorization") String authHeader,
+            @HeaderParam("X-Debug-User-Id") String debugUserId,
+            @PathParam("orgId") UUID orgId,
+            BillingResource.CreatePortalRequest req
+    ) {
+        AuthenticatedUser user = resolveUser(authHeader, debugUserId);
+        return billingService.createCustomerPortalSession(
+                user.userId(),
+                orgId,
+                req != null ? req.returnUrl() : null
+        );
+    }
+
+    @jakarta.ws.rs.PUT
+    @Path("/{orgId}/billing/profile")
+    public dev.flowtrace.application.BillingService.OrganizationBillingOverview updateBillingProfile(
+            @HeaderParam("Authorization") String authHeader,
+            @HeaderParam("X-Debug-User-Id") String debugUserId,
+            @PathParam("orgId") UUID orgId,
+            BillingResource.UpdateBillingProfileRequest req
+    ) {
+        AuthenticatedUser user = resolveUser(authHeader, debugUserId);
+        return billingService.updateBillingProfile(
+                user.userId(),
+                orgId,
+                req != null ? req.companyName() : null,
+                req != null ? req.billingEmail() : null,
+                req != null ? req.billingCountry() : null,
+                req != null ? req.vatId() : null
+        );
+    }
+
+    @POST
+    @Path("/{orgId}/billing/resync")
+    public dev.flowtrace.application.BillingService.OrganizationBillingOverview resyncSubscription(
+            @HeaderParam("Authorization") String authHeader,
+            @HeaderParam("X-Debug-User-Id") String debugUserId,
+            @PathParam("orgId") UUID orgId
+    ) {
+        AuthenticatedUser user = resolveUser(authHeader, debugUserId);
+        return billingService.resyncSubscription(user.userId(), orgId);
+    }
+
+    @POST
+    @Path("/{orgId}/billing/sandbox-webhook")
+    public dev.flowtrace.application.BillingService.OrganizationBillingOverview simulateSandboxWebhook(
+            @HeaderParam("Authorization") String authHeader,
+            @HeaderParam("X-Debug-User-Id") String debugUserId,
+            @PathParam("orgId") UUID orgId,
+            BillingResource.SimulateWebhookRequest req
+    ) {
+        AuthenticatedUser user = resolveUser(authHeader, debugUserId);
+        return billingService.simulateSandboxWebhook(
+                user.userId(),
+                orgId,
+                req != null ? req.eventType() : null,
+                req != null ? req.planTier() : null,
+                req != null ? req.billingInterval() : null
+        );
     }
 
     private record AuthenticatedUser(UUID userId, String email) {

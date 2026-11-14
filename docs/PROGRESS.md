@@ -78,7 +78,14 @@
     - [x] Immediate pre-flight "Send Test Ping" button to trigger instant live verification from the browser
     - [x] Interactive Activation Checklist (`.activation-checklist-dock`) tracking 5 onboarding milestones with persistence in `localStorage`
     - [x] Topbar "Quick Start" trigger and Projects list setup integration
-  - [ ] **Epic 2: Stripe Billing & Quotas (`TASK-2.1` – `TASK-2.4`)**
+  - [x] **Epic E3 / Epic 2: Commercial Billing, Declarative Entitlements, Subscriptions & EU B2B VAT (`TASK-2.1` – `TASK-2.4`)**
+    - [x] ADR-0011 (`docs/adr/0011-billing-provider-stripe-and-entitlements.md`)
+    - [x] Flyway `V8__billing_subscriptions_and_invoices.sql` (`organization_subscriptions`, `billing_invoices`, `billing_webhook_events`)
+    - [x] Pure Java 21 Domain (`SubscriptionStatus`, `BillingInterval`, `PlanCatalogEntry`, `Subscription`, `BillingInvoice`, `PlanTier` 120% soft-cap quota ceiling)
+    - [x] Declarative `EntitlementsService` + Dual-mode `BillingProviderPort` / `StripeAndSandboxBillingAdapter` (HMAC-SHA256 `Stripe-Signature` verification)
+    - [x] `BillingService` & REST API (`GET /api/v1/billing/plans`, `GET/POST/PUT /api/v1/organizations/{orgId}/billing/**`, `POST /api/v1/webhooks/billing`) with 7-day dunning grace period (`expirePastDueSubscriptions`) and EU B2B VAT ID validation
+    - [x] Angular `/billing` Page (`billing.page.ts`): subscription status badge, 7-day grace banner, 120% soft-cap progress bar, promo codes (`LAUNCH20`, `FLOW50`), EU B2B VAT profile form, invoices table, and signed webhook simulator
+    - [x] Automated unit & integration tests (`BillingAndEntitlementsTest` 3/3, `FlowTraceIntegrationTest` end-to-end checkout/webhook/idempotency/dunning/VAT test; 43/43 backend tests passing)
   - [ ] **Epic 3: Distributed Cluster (`TASK-3.1` – `TASK-3.4`)**
 - [x] **G1-S — Public Shop Demo (Business Flows / Live Shop)**
   - [x] **Epic E17 (Core Engine): Entity Tokens & Carried Payloads (`E17-Step-1` – `E17-Step-3`)**

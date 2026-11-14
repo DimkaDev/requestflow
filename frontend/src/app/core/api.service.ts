@@ -516,6 +516,113 @@ export class FlowTraceApiService {
     return res.json();
   }
 
+  public async getBillingPlans(): Promise<import('./models').PlanCatalogEntry[]> {
+    const res = await fetch(`${this.apiBaseUrl}/billing/plans`, {
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to load billing plans: ${res.status}`);
+    return res.json();
+  }
+
+  public async getOrganizationBilling(
+    orgId: string
+  ): Promise<import('./models').OrganizationBillingOverview> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}/billing`, {
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to load organization billing: ${res.status}`);
+    return res.json();
+  }
+
+  public async createCheckoutSession(
+    orgId: string,
+    payload: {
+      planTier: PlanTier;
+      billingInterval: import('./models').BillingInterval;
+      promoCode?: string;
+      returnUrl?: string;
+    }
+  ): Promise<{
+    checkout: import('./models').CheckoutSessionResult;
+    overview: import('./models').OrganizationBillingOverview;
+  }> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}/billing/checkout`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error(`Failed to create checkout session: ${res.status}`);
+    return res.json();
+  }
+
+  public async createCustomerPortalSession(
+    orgId: string,
+    returnUrl?: string
+  ): Promise<{ provider: string; portalUrl: string }> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}/billing/portal`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify({ returnUrl }),
+    });
+    if (!res.ok) throw new Error(`Failed to open customer portal: ${res.status}`);
+    return res.json();
+  }
+
+  public async updateBillingProfile(
+    orgId: string,
+    payload: {
+      companyName?: string;
+      billingEmail?: string;
+      billingCountry?: string;
+      vatId?: string;
+    }
+  ): Promise<import('./models').OrganizationBillingOverview> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}/billing/profile`, {
+      method: 'PUT',
+      headers: this.headers(),
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      let msg = `Failed to update billing profile (${res.status})`;
+      try {
+        const err = await res.json();
+        if (err?.message) msg = err.message;
+      } catch {
+        // ignore JSON parse error
+      }
+      throw new Error(msg);
+    }
+    return res.json();
+  }
+
+  public async resyncSubscription(
+    orgId: string
+  ): Promise<import('./models').OrganizationBillingOverview> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}/billing/resync`, {
+      method: 'POST',
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to resync subscription: ${res.status}`);
+    return res.json();
+  }
+
+  public async simulateBillingWebhook(
+    orgId: string,
+    payload: {
+      eventType: string;
+      planTier?: PlanTier;
+      billingInterval?: import('./models').BillingInterval;
+    }
+  ): Promise<import('./models').OrganizationBillingOverview> {
+    const res = await fetch(`${this.apiBaseUrl}/organizations/${orgId}/billing/sandbox-webhook`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error(`Failed to simulate billing webhook: ${res.status}`);
+    return res.json();
+  }
+
   public async searchTraces(
     projectId: string,
     params: { status?: string; node?: string; cursor?: string; limit?: number } = {}

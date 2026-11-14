@@ -99,4 +99,16 @@ public interface OrganizationRepository {
     void markInvitationAccepted(UUID invitationId);
 
     boolean revokeInvitation(UUID organizationId, UUID invitationId);
+
+    Optional<dev.flowtrace.domain.Subscription> findSubscription(UUID organizationId);
+
+    dev.flowtrace.domain.Subscription upsertSubscription(dev.flowtrace.domain.Subscription subscription);
+
+    List<dev.flowtrace.domain.Subscription> findPastDueSubscriptionsExpiredBefore(Instant cutoff);
+
+    List<dev.flowtrace.domain.BillingInvoice> listInvoices(UUID organizationId);
+
+    dev.flowtrace.domain.BillingInvoice createInvoice(dev.flowtrace.domain.BillingInvoice invoice);
+
+    boolean tryRecordWebhookEvent(String eventId, UUID organizationId, String eventType, Instant processedAt);
 }

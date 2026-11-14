@@ -31,28 +31,61 @@ git push origin main
 ## Текущее состояние проекта (Snapshot)
 
 - **Активная ветка:** `feat/stitch-design`
-- **Последний завершённый этап:** `M0` – `M8` + `G1-UI / Stitch` + **E26 Advanced Diagram Editor (Phases P1–P5)**.
+- **Последний завершённый этап:** `M0` – `M8` + `G1-UI / Stitch` + **E26 Advanced Diagram Editor (Phases P1–P5)** + **Epic E3 Commercial Billing, Declarative Entitlements & EU B2B VAT**.
 - **Статус сборки и тестов:**
-  - `mvn test` (`parent`, `client-java`, `simulator`, `backend`, `infra`): **BUILD SUCCESS (100% PASS)** (включая E26 end-to-end интеграционный тест черновиков, 409 конфликтов, публикации Schema v2, 7-дневных алиасов ключей и кастомных блоков организации).
+  - `mvn test` (`parent`, `client-java`, `simulator`, `backend`, `infra`): **BUILD SUCCESS (43/43 PASS)** (включая E26 end-to-end интеграционный тест и E3 end-to-end тест биллинга, идемпотентности вебхуков, 7-дневного грейс-периода и валидации EU VAT ID).
   - `cd frontend && npm test && npm run build`: **PASS** (14/14 юнит-тестов в `animation-engine.spec.ts` и `editor-engine.spec.ts`, production bundle собирается без ошибок).
 - **Сидированные данные по умолчанию (при старте бэкенда):**
   - Проект: `E-Commerce Checkout Flow` (`0194f1c0-0000-7000-8000-000000000001`)
   - Инжест API-ключ: `ft_live_demo0000000000000000000000000000`
   - Авто-запуск `DemoSimulator`: включён (`flowtrace.demo.auto-start=true`).
 - **Готовность к передаче в Cloud VM / Local:**
-  - Все миграции Flyway (`V1..V7`) проверены и совместимы как с PostgreSQL 16, так и с in-memory H2.
+  - Все миграции Flyway (`V1..V8`) проверены и совместимы как с PostgreSQL 16, так и с in-memory H2.
   - Добавлено свойство `quarkus.flyway.repair-at-start=true` для автоматического устранения расхождений контрольных сумм при переносе между окружениями.
 
 ---
 
 ## Открытые задачи / Бэклог для следующих сессий (Next Up)
 
-- [ ] **Gate G1:** Реализация Stripe Billing & Subscriptions (Эпик E2-Step-1..E2-Step-4): сессии оформления заказа, Customer Portal и вебхуки изменения подписки.
-- [ ] Добавить E2E-тесты Playwright поверх контейнеризованного окружения (включая сценарий Blank Canvas -> Publish в `/projects/:projectId/editor`).
+- [ ] **Epic 3 (S1):** Distributed Cluster & Redis Pub/Sub Fanout (`TASK-3.1` – `TASK-3.4`).
+- [ ] Добавить E2E-тесты Playwright поверх контейнеризованного окружения (включая сценарий Blank Canvas -> Publish в `/projects/:projectId/editor` и `/billing`).
 
 ---
 
 ## История сессий (Trace Log)
+
+### Сессия #018 — 2026-11-14 (Environment: `cloud-vm`, Branch: `feat/stitch-design`)
+- **Автор / Агент:** Antigravity (Cloud VM)
+- **Цель:** Полная реализация **Epic E3 / TASK-2.1..2.4 - Commercial Billing, Declarative Entitlements Engine, Subscriptions, 7-Day Dunning Grace Period, EU B2B VAT & Invoices** после согласования архитектурного плана в `/grill-me`.
+- **Что сделано:**
+  - **ADR и Миграция (`docs/adr/0011-billing-provider-stripe-and-entitlements.md`, `V8__billing_subscriptions_and_invoices.sql`):**
+    - Зафиксированы архитектурные решения `DEC-02` (дуальный адаптер `StripeAndSandboxBillingAdapter` с проверкой `Stripe-Signature` `HMAC-SHA256`), единый 4-уровневый каталог тарифов (`FREE` \$0, `PRO` \$29/\$23, `BUSINESS` \$99/\$79, `ENTERPRISE` \$299/\$239), 120% soft-cap буфер для платных планов и 7-дневный грейс-период при ошибке оплаты (`PAST_DUE`).
+    - Добавлена миграция `V8__billing_subscriptions_and_invoices.sql` (`organization_subscriptions`, `billing_invoices`, `billing_webhook_events`).
+  - **Backend (Domain, Application, Outbound Billing Adapter, REST API):**
+    - Чистые доменные модели в `dev.flowtrace.domain`: `SubscriptionStatus`, `BillingInterval`, `PlanCatalogEntry`, `Subscription` (с проверкой EU VAT ID `^[A-Z]{2}[0-9A-Z]{8,12}$` и промокодами `LAUNCH20` / `FLOW50`), `BillingInvoice`, обновлённый `PlanTier` (`effectiveHardStopQuota()`, `toCatalogEntry()`).
+    - Реализованы `EntitlementsService`, `BillingProviderPort`, `StripeAndSandboxBillingAdapter` и `BillingService` (Checkout, Customer Portal, синхронизация подписки, идемпотентная обработка вебхуков через `billing_webhook_events`, планировщик `expirePastDueSubscriptions` для понижения до `FREE` по истечении 7 дней грейс-периода без удаления проектов и диаграмм).
+    - В `BillingResource` и `OrganizationResource` добавлены эндпоинты `GET /api/v1/billing/plans`, `GET/POST/PUT /api/v1/organizations/{orgId}/billing/**` и `POST /api/v1/webhooks/billing`.
+  - **Frontend (`/billing` UI, API Client & Models):**
+    - Обновлены `models.ts`, `api.service.ts` и компонент `BillingPageComponent` (`billing.page.ts`): бейдж статуса подписки (`ACTIVE`, `PAST_DUE`, `CANCELED`), баннер 7-дневного грейс-периода, шкала квоты с отметками 80% / 100% / 120% soft-cap, ввод промокода, переключение Monthly / Annual (`-20%`), форма EU B2B VAT профиля, таблица инвойсов и симулятор подписанных вебхуков.
+- **Изменённые и созданные файлы:**
+  - `docs/adr/0011-billing-provider-stripe-and-entitlements.md`
+  - `backend/src/main/resources/db/migration/V8__billing_subscriptions_and_invoices.sql`
+  - `backend/src/main/java/dev/flowtrace/domain/{SubscriptionStatus,BillingInterval,PlanCatalogEntry,Subscription,BillingInvoice,PlanTier}.java`
+  - `backend/src/main/java/dev/flowtrace/application/{EntitlementsService,BillingService,UsageMeterService}.java`
+  - `backend/src/main/java/dev/flowtrace/application/port/out/{BillingProviderPort,OrganizationRepository}.java`
+  - `backend/src/main/java/dev/flowtrace/adapter/out/billing/StripeAndSandboxBillingAdapter.java`
+  - `backend/src/main/java/dev/flowtrace/adapter/out/pg/JdbcOrganizationRepository.java`
+  - `backend/src/main/java/dev/flowtrace/adapter/in/http/{BillingResource,OrganizationResource}.java`
+  - `backend/src/test/java/dev/flowtrace/domain/BillingAndEntitlementsTest.java`
+  - `backend/src/test/java/dev/flowtrace/application/UsageMeterServiceTest.java`
+  - `backend/src/test/java/dev/flowtrace/FlowTraceIntegrationTest.java`
+  - `frontend/src/app/core/{models.ts,api.service.ts}`
+  - `frontend/src/app/features/billing/billing.page.ts`
+- **Тесты и проверки:**
+  - `mvn -B test` (в `backend`): `43/43` тестов зелёные (`BillingAndEntitlementsTest`, `UsageMeterServiceTest`, `TenantIsolationGuardTest`, `FlowTraceIntegrationTest`).
+  - `npm test && npm run build` (в `frontend`): `14/14` тестов зелёные, production-сборка успешна.
+- **Следующие шаги:**
+  - Реализовать Epic 3 (Redis Pub/Sub `EventFanout` для горизонтального масштабирования).
 
 ### Сессия #017 — 2026-11-14 (Environment: `cloud-vm`, Branch: `feat/stitch-design`)
 - **Автор / Агент:** Antigravity (Cloud VM)

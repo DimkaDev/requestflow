@@ -584,6 +584,250 @@ public class JdbcOrganizationRepository implements OrganizationRepository {
         }
     }
 
+    @Override
+    public Optional<dev.flowtrace.domain.Subscription> findSubscription(UUID organizationId) {
+        String sql = """
+                SELECT organization_id, provider, provider_customer_id, provider_subscription_id,
+                       plan_tier, billing_interval, status, current_period_start, current_period_end,
+                       cancel_at_period_end, grace_period_ends_at, company_name, billing_country,
+                       vat_id, promo_code, discount_percent, updated_at
+                FROM organization_subscriptions
+                WHERE organization_id = ?
+                """;
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setObject(1, organizationId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(mapSubscription(rs));
+                }
+            }
+            return Optional.empty();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to find subscription for organization " + organizationId, e);
+        }
+    }
+
+    @Override
+    public synchronized dev.flowtrace.domain.Subscription upsertSubscription(dev.flowtrace.domain.Subscription sub) {
+        Optional<dev.flowtrace.domain.Subscription> existing = findSubscription(sub.organizationId());
+        if (existing.isPresent()) {
+            String updateSql = """
+                    UPDATE organization_subscriptions
+                    SET provider = ?, provider_customer_id = ?, provider_subscription_id = ?,
+                        plan_tier = ?, billing_interval = ?, status = ?, current_period_start = ?,
+                        current_period_end = ?, cancel_at_period_end = ?, grace_period_ends_at = ?,
+                        company_name = ?, billing_country = ?, vat_id = ?, promo_code = ?,
+                        discount_percent = ?, updated_at = ?
+                    WHERE organization_id = ?
+                    """;
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(updateSql)) {
+                ps.setString(1, sub.provider());
+                ps.setString(2, sub.providerCustomerId());
+                ps.setString(3, sub.providerSubscriptionId());
+                ps.setString(4, sub.planTier().name());
+                ps.setString(5, sub.billingInterval().name());
+                ps.setString(6, sub.status().name());
+                ps.setTimestamp(7, Timestamp.from(sub.currentPeriodStart()));
+                ps.setTimestamp(8, Timestamp.from(sub.currentPeriodEnd()));
+                ps.setBoolean(9, sub.cancelAtPeriodEnd());
+                if (sub.gracePeriodEndsAt() != null) {
+                    ps.setTimestamp(10, Timestamp.from(sub.gracePeriodEndsAt()));
+                } else {
+                    ps.setNull(10, Types.TIMESTAMP);
+                }
+                ps.setString(11, sub.companyName());
+                ps.setString(12, sub.billingCountry());
+                ps.setString(13, sub.vatId());
+                ps.setString(14, sub.promoCode());
+                ps.setInt(15, sub.discountPercent());
+                ps.setTimestamp(16, Timestamp.from(sub.updatedAt()));
+                ps.setObject(17, sub.organizationId());
+                ps.executeUpdate();
+                return sub;
+            } catch (SQLException e) {
+                throw new IllegalStateException("Failed to update subscription for organization " + sub.organizationId(), e);
+            }
+        }
+
+        String insertSql = """
+                INSERT INTO organization_subscriptions (
+                    organization_id, provider, provider_customer_id, provider_subscription_id,
+                    plan_tier, billing_interval, status, current_period_start, current_period_end,
+                    cancel_at_period_end, grace_period_ends_at, company_name, billing_country,
+                    vat_id, promo_code, discount_percent, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """;
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(insertSql)) {
+            ps.setObject(1, sub.organizationId());
+            ps.setString(2, sub.provider());
+            ps.setString(3, sub.providerCustomerId());
+            ps.setString(4, sub.providerSubscriptionId());
+            ps.setString(5, sub.planTier().name());
+            ps.setString(6, sub.billingInterval().name());
+            ps.setString(7, sub.status().name());
+            ps.setTimestamp(8, Timestamp.from(sub.currentPeriodStart()));
+            ps.setTimestamp(9, Timestamp.from(sub.currentPeriodEnd()));
+            ps.setBoolean(10, sub.cancelAtPeriodEnd());
+            if (sub.gracePeriodEndsAt() != null) {
+                ps.setTimestamp(11, Timestamp.from(sub.gracePeriodEndsAt()));
+            } else {
+                ps.setNull(11, Types.TIMESTAMP);
+            }
+            ps.setString(12, sub.companyName());
+            ps.setString(13, sub.billingCountry());
+            ps.setString(14, sub.vatId());
+            ps.setString(15, sub.promoCode());
+            ps.setInt(16, sub.discountPercent());
+            ps.setTimestamp(17, Timestamp.from(sub.updatedAt()));
+            ps.executeUpdate();
+            return sub;
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to insert subscription for organization " + sub.organizationId(), e);
+        }
+    }
+
+    @Override
+    public List<dev.flowtrace.domain.Subscription> findPastDueSubscriptionsExpiredBefore(Instant cutoff) {
+        String sql = """
+                SELECT organization_id, provider, provider_customer_id, provider_subscription_id,
+                       plan_tier, billing_interval, status, current_period_start, current_period_end,
+                       cancel_at_period_end, grace_period_ends_at, company_name, billing_country,
+                       vat_id, promo_code, discount_percent, updated_at
+                FROM organization_subscriptions
+                WHERE status = 'PAST_DUE' AND grace_period_ends_at IS NOT NULL AND grace_period_ends_at <= ?
+                """;
+        List<dev.flowtrace.domain.Subscription> list = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setTimestamp(1, Timestamp.from(cutoff));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapSubscription(rs));
+                }
+            }
+            return list;
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to query expired past-due subscriptions", e);
+        }
+    }
+
+    @Override
+    public List<dev.flowtrace.domain.BillingInvoice> listInvoices(UUID organizationId) {
+        String sql = """
+                SELECT id, organization_id, provider_invoice_id, plan_tier, billing_interval,
+                       amount_cents, currency, status, invoice_pdf_url, created_at
+                FROM billing_invoices
+                WHERE organization_id = ?
+                ORDER BY created_at DESC
+                """;
+        List<dev.flowtrace.domain.BillingInvoice> list = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setObject(1, organizationId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapInvoice(rs));
+                }
+            }
+            return list;
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to list invoices for organization " + organizationId, e);
+        }
+    }
+
+    @Override
+    public dev.flowtrace.domain.BillingInvoice createInvoice(dev.flowtrace.domain.BillingInvoice inv) {
+        String sql = """
+                INSERT INTO billing_invoices (
+                    id, organization_id, provider_invoice_id, plan_tier, billing_interval,
+                    amount_cents, currency, status, invoice_pdf_url, created_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """;
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setObject(1, inv.id());
+            ps.setObject(2, inv.organizationId());
+            ps.setString(3, inv.providerInvoiceId());
+            ps.setString(4, inv.planTier().name());
+            ps.setString(5, inv.billingInterval().name());
+            ps.setInt(6, inv.amountCents());
+            ps.setString(7, inv.currency());
+            ps.setString(8, inv.status());
+            ps.setString(9, inv.invoicePdfUrl());
+            ps.setTimestamp(10, Timestamp.from(inv.createdAt()));
+            ps.executeUpdate();
+            return inv;
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to create billing invoice for organization " + inv.organizationId(), e);
+        }
+    }
+
+    @Override
+    public synchronized boolean tryRecordWebhookEvent(String eventId, UUID organizationId, String eventType, Instant processedAt) {
+        String checkSql = "SELECT event_id FROM billing_webhook_events WHERE event_id = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement checkPs = conn.prepareStatement(checkSql)) {
+            checkPs.setString(1, eventId);
+            try (ResultSet rs = checkPs.executeQuery()) {
+                if (rs.next()) {
+                    return false;
+                }
+            }
+            String insertSql = "INSERT INTO billing_webhook_events (event_id, organization_id, event_type, processed_at) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement insertPs = conn.prepareStatement(insertSql)) {
+                insertPs.setString(1, eventId);
+                insertPs.setObject(2, organizationId);
+                insertPs.setString(3, eventType);
+                insertPs.setTimestamp(4, Timestamp.from(processedAt != null ? processedAt : Instant.now()));
+                insertPs.executeUpdate();
+                return true;
+            }
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    private dev.flowtrace.domain.Subscription mapSubscription(ResultSet rs) throws SQLException {
+        Timestamp graceTs = rs.getTimestamp("grace_period_ends_at");
+        return new dev.flowtrace.domain.Subscription(
+                UUID.fromString(rs.getString("organization_id")),
+                rs.getString("provider"),
+                rs.getString("provider_customer_id"),
+                rs.getString("provider_subscription_id"),
+                PlanTier.fromString(rs.getString("plan_tier")),
+                dev.flowtrace.domain.BillingInterval.fromString(rs.getString("billing_interval")),
+                dev.flowtrace.domain.SubscriptionStatus.fromString(rs.getString("status")),
+                rs.getTimestamp("current_period_start").toInstant(),
+                rs.getTimestamp("current_period_end").toInstant(),
+                rs.getBoolean("cancel_at_period_end"),
+                graceTs != null ? graceTs.toInstant() : null,
+                rs.getString("company_name"),
+                rs.getString("billing_country"),
+                rs.getString("vat_id"),
+                rs.getString("promo_code"),
+                rs.getInt("discount_percent"),
+                rs.getTimestamp("updated_at").toInstant()
+        );
+    }
+
+    private dev.flowtrace.domain.BillingInvoice mapInvoice(ResultSet rs) throws SQLException {
+        return new dev.flowtrace.domain.BillingInvoice(
+                UUID.fromString(rs.getString("id")),
+                UUID.fromString(rs.getString("organization_id")),
+                rs.getString("provider_invoice_id"),
+                PlanTier.fromString(rs.getString("plan_tier")),
+                dev.flowtrace.domain.BillingInterval.fromString(rs.getString("billing_interval")),
+                rs.getInt("amount_cents"),
+                rs.getString("currency"),
+                rs.getString("status"),
+                rs.getString("invoice_pdf_url"),
+                rs.getTimestamp("created_at").toInstant()
+        );
+    }
+
     private Organization mapOrganization(ResultSet rs) throws SQLException {
         Timestamp deletedTs = rs.getTimestamp("deleted_at");
         return new Organization(

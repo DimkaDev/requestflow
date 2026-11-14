@@ -60,6 +60,12 @@ class FlowTraceIntegrationTest {
     OrganizationService organizationService;
 
     @Inject
+    dev.flowtrace.application.BillingService billingService;
+
+    @Inject
+    dev.flowtrace.application.port.out.BillingProviderPort billingProviderPort;
+
+    @Inject
     dev.flowtrace.application.port.out.ProjectRepository projectRepository;
 
     @TestHTTPResource("/")
@@ -653,6 +659,136 @@ class FlowTraceIntegrationTest {
                 .when().delete("/api/v1/projects/" + projectId + "/custom-blocks/" + customBlockId)
                 .then()
                 .statusCode(204);
+    }
+
+    @Test
+    void commercialBillingCheckoutWebhookIdempotencyDunningGracePeriodAndVatProfileWorkEndToEnd() {
+        // 1. Verify unified 4-tier catalog endpoint
+        RestAssured.given()
+                .when().get("/api/v1/billing/plans")
+                .then()
+                .statusCode(200)
+                .body("size()", equalTo(4))
+                .body("find { it.tier == 'PRO' }.monthlyPriceUsd", equalTo(29))
+                .body("find { it.tier == 'PRO' }.annualMonthlyPriceUsd", equalTo(23))
+                .body("find { it.tier == 'PRO' }.effectiveHardStopQuota", equalTo(6000000));
+
+        // 2. Create a fresh organization on FREE plan
+        String orgId = RestAssured.given()
+                .header("X-Debug-User-Id", "billing-owner")
+                .contentType(ContentType.JSON)
+                .body(Map.of(
+                        "name", "Brussels FinTech SRL",
+                        "slug", "brussels-fintech-" + System.currentTimeMillis(),
+                        "billingEmail", "finance@brussels-fintech.eu"
+                ))
+                .when().post("/api/v1/organizations")
+                .then()
+                .statusCode(201)
+                .extract().path("organization.id");
+
+        // 3. Upgrade to PRO Annual with promo code LAUNCH20 (-20%) via Checkout
+        RestAssured.given()
+                .header("X-Debug-User-Id", "billing-owner")
+                .contentType(ContentType.JSON)
+                .body(Map.of(
+                        "planTier", "PRO",
+                        "billingInterval", "ANNUAL",
+                        "promoCode", "LAUNCH20",
+                        "returnUrl", "http://localhost:4200/billing"
+                ))
+                .when().post("/api/v1/organizations/" + orgId + "/billing/checkout")
+                .then()
+                .statusCode(200)
+                .body("checkout.discountPercent", equalTo(20))
+                .body("checkout.amountCents", equalTo(22080))
+                .body("overview.organization.planTier", equalTo("PRO"))
+                .body("overview.subscription.planTier", equalTo("PRO"))
+                .body("overview.subscription.billingInterval", equalTo("ANNUAL"))
+                .body("overview.subscription.status", equalTo("ACTIVE"))
+                .body("overview.invoices.size()", greaterThanOrEqualTo(1));
+
+        // 4. Validate EU B2B VAT ID format and save valid Belgian VAT ID
+        RestAssured.given()
+                .header("X-Debug-User-Id", "billing-owner")
+                .contentType(ContentType.JSON)
+                .body(Map.of(
+                        "companyName", "Brussels FinTech SRL",
+                        "billingCountry", "BE",
+                        "vatId", "INVALID_VAT"
+                ))
+                .when().put("/api/v1/organizations/" + orgId + "/billing/profile")
+                .then()
+                .statusCode(400);
+
+        RestAssured.given()
+                .header("X-Debug-User-Id", "billing-owner")
+                .contentType(ContentType.JSON)
+                .body(Map.of(
+                        "companyName", "Brussels FinTech SRL",
+                        "billingEmail", "ap@brussels-fintech.eu",
+                        "billingCountry", "BE",
+                        "vatId", "be 0123.456.789"
+                ))
+                .when().put("/api/v1/organizations/" + orgId + "/billing/profile")
+                .then()
+                .statusCode(200)
+                .body("subscription.vatId", equalTo("BE0123456789"))
+                .body("subscription.billingCountry", equalTo("BE"))
+                .body("organization.billingEmail", equalTo("ap@brussels-fintech.eu"));
+
+        // 5. Verify webhook signature enforcement & idempotency on /api/v1/webhooks/billing
+        String rawWebhook = String.format(
+                "{\"id\":\"evt_idempotent_001\",\"type\":\"invoice.payment_failed\",\"organizationId\":\"%s\",\"planTier\":\"PRO\",\"billingInterval\":\"ANNUAL\"}",
+                orgId
+        );
+        RestAssured.given()
+                .header("Stripe-Signature", "t=123,v1=invalid_signature")
+                .contentType(ContentType.JSON)
+                .body(rawWebhook)
+                .when().post("/api/v1/webhooks/billing")
+                .then()
+                .statusCode(401);
+
+        String validSig = billingProviderPort.computeWebhookSignature(rawWebhook, Instant.now().getEpochSecond());
+        RestAssured.given()
+                .header("Stripe-Signature", validSig)
+                .contentType(ContentType.JSON)
+                .body(rawWebhook)
+                .when().post("/api/v1/webhooks/billing")
+                .then()
+                .statusCode(200)
+                .body("processed", equalTo(true))
+                .body("duplicate", equalTo(false))
+                .body("status", equalTo("PAST_DUE"))
+                .body("planTier", equalTo("PRO"));
+
+        // Duplicate delivery of the same eventId must be a no-op (duplicate=true)
+        RestAssured.given()
+                .header("Stripe-Signature", validSig)
+                .contentType(ContentType.JSON)
+                .body(rawWebhook)
+                .when().post("/api/v1/webhooks/billing")
+                .then()
+                .statusCode(200)
+                .body("processed", equalTo(false))
+                .body("duplicate", equalTo(true));
+
+        // 6. Verify 7-day dunning grace period expiry downgrades organization to FREE without deleting data
+        int downgradedBefore7Days = billingService.expirePastDueSubscriptions(Instant.now().plusSeconds(3 * 86400));
+        assertEquals(0, downgradedBefore7Days);
+
+        int downgradedAfter8Days = billingService.expirePastDueSubscriptions(Instant.now().plusSeconds(8 * 86400));
+        assertTrue(downgradedAfter8Days >= 1);
+
+        RestAssured.given()
+                .header("X-Debug-User-Id", "billing-owner")
+                .when().get("/api/v1/organizations/" + orgId + "/billing")
+                .then()
+                .statusCode(200)
+                .body("organization.planTier", equalTo("FREE"))
+                .body("subscription.planTier", equalTo("FREE"))
+                .body("subscription.status", equalTo("CANCELED"));
     }
 
     private JsonNode pollType(BlockingQueue<JsonNode> queue, String expectedType, int timeoutSeconds) throws InterruptedException {

@@ -81,15 +81,23 @@ public class UsageMeterServiceTest {
         meterService.clearMemoryCache();
         assertFalse(meterService.isIngestAllowed(orgId, PlanTier.FREE));
 
-        // 2. PRO tier has soft quota (5,000,000 limit) -> allowed even when over quota
-        mockRepository.monthlyCount.set(6_000_000L);
+        // 2. PRO tier has 120% soft-cap buffer (5M quota -> allowed up to 5,999,999, hard-stopped at 6,000,000)
+        mockRepository.monthlyCount.set(5_500_000L);
         meterService.clearMemoryCache();
         assertTrue(meterService.isIngestAllowed(orgId, PlanTier.PRO));
 
-        // 3. BUSINESS tier has soft quota (25,000,000 limit) -> allowed even when over quota
-        mockRepository.monthlyCount.set(30_000_000L);
+        mockRepository.monthlyCount.set(6_000_000L);
+        meterService.clearMemoryCache();
+        assertFalse(meterService.isIngestAllowed(orgId, PlanTier.PRO));
+
+        // 3. BUSINESS tier has 120% soft-cap buffer (25M quota -> allowed up to 29,999,999, hard-stopped at 30,000,000)
+        mockRepository.monthlyCount.set(28_000_000L);
         meterService.clearMemoryCache();
         assertTrue(meterService.isIngestAllowed(orgId, PlanTier.BUSINESS));
+
+        mockRepository.monthlyCount.set(30_000_000L);
+        meterService.clearMemoryCache();
+        assertFalse(meterService.isIngestAllowed(orgId, PlanTier.BUSINESS));
     }
 
     private static class InMemoryUsageRepository implements UsageRepository {
