@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { FlowSessionStore } from '../../../core/flow-session.store';
 
 @Component({
   selector: 'app-live-toolbar',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   template: `
     <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 pointer-events-auto">
       <div
@@ -121,6 +122,16 @@ import { FlowSessionStore } from '../../../core/flow-session.store';
           <span class="material-symbols-outlined text-[15px] text-node-queue">style</span>
           <span>Template</span>
         </button>
+
+        <!-- Open Diagram Editor -->
+        <a
+          [routerLink]="['/projects', store.selectedProjectId() || 'default', 'editor']"
+          class="px-3 py-1 rounded-lg bg-bg-3 border border-border-structural hover:border-node-queue/50 text-text-1 font-label-md text-label-md flex items-center gap-1 transition-all"
+          title="Open Advanced Diagram Editor"
+        >
+          <span class="material-symbols-outlined text-[15px] text-node-queue">draw</span>
+          <span>Edit Diagram</span>
+        </a>
       </div>
     </div>
   `,

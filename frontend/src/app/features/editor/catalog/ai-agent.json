@@ -1,0 +1,86 @@
+{
+  "pack": "ai-agent",
+  "version": 1,
+  "title": "AI Agent",
+  "license": {
+    "source": "own",
+    "notes": "First-party FlowTrace AI Agent block pack"
+  },
+  "blocks": [
+    {
+      "id": "ai.agent",
+      "name": "Agent Orchestrator",
+      "category": "Reasoning",
+      "nodeType": "service",
+      "icon": "lib:smart_toy",
+      "tint": "#8B5CF6",
+      "defaultLabel": "Agent",
+      "keyPattern": "agent-orchestrator",
+      "ports": { "in": "many", "out": "many" },
+      "role": "normal",
+      "defaultProps": { "shape": "card", "size": "M", "holdTimeMs": 120 },
+      "tags": ["ai", "agent", "orchestrator", "reasoning"],
+      "snippetHint": "Emit a checkpoint at the start of each agent reasoning loop."
+    },
+    {
+      "id": "ai.llm-call",
+      "name": "LLM Call",
+      "category": "Reasoning",
+      "nodeType": "external",
+      "icon": "lib:psychology",
+      "tint": "#0EA5E9",
+      "defaultLabel": "LLM Call",
+      "keyPattern": "llm-call",
+      "ports": { "in": "many", "out": "many" },
+      "role": "normal",
+      "defaultProps": { "shape": "card", "size": "M", "holdTimeMs": 280 },
+      "tags": ["ai", "llm", "model", "prompt", "inference"],
+      "snippetHint": "Emit a checkpoint when sending a prompt and receiving completions."
+    },
+    {
+      "id": "ai.tool-call",
+      "name": "Tool Call",
+      "category": "Actions",
+      "nodeType": "worker",
+      "icon": "lib:build",
+      "tint": "#F59E0B",
+      "defaultLabel": "Tool Call",
+      "keyPattern": "tool-call",
+      "ports": { "in": "many", "out": "many" },
+      "role": "normal",
+      "defaultProps": { "shape": "card", "size": "M", "holdTimeMs": 150 },
+      "tags": ["ai", "tool", "function", "action", "mcp"],
+      "snippetHint": "Emit a checkpoint when the agent invokes an external tool or function."
+    },
+    {
+      "id": "ai.memory",
+      "name": "Memory / Vector DB",
+      "category": "Memory",
+      "nodeType": "db",
+      "icon": "lib:memory",
+      "tint": "#14B8A6",
+      "defaultLabel": "Vector Memory",
+      "keyPattern": "vector-memory",
+      "ports": { "in": "many", "out": "many" },
+      "role": "normal",
+      "defaultProps": { "shape": "card", "size": "M" },
+      "tags": ["ai", "memory", "vector", "rag", "embeddings"],
+      "snippetHint": "Emit a checkpoint when querying or storing embeddings in vector memory."
+    },
+    {
+      "id": "ai.human-approval",
+      "name": "Human Approval",
+      "category": "Governance",
+      "nodeType": "decision",
+      "icon": "lib:verified_user",
+      "tint": "#EC4899",
+      "defaultLabel": "Human Approval",
+      "keyPattern": "human-approval",
+      "ports": { "in": "many", "out": "many" },
+      "role": "decision",
+      "defaultProps": { "shape": "diamond", "size": "M", "idleAbandonMinutes": 60 },
+      "tags": ["ai", "human", "approval", "hitl", "decision"],
+      "snippetHint": "Pause trace until a human operator approves or rejects the action."
+    }
+  ]
+}

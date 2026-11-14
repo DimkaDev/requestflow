@@ -316,6 +316,14 @@ type ProjectSort = 'recent' | 'name' | 'retention';
                       </button>
 
                       <div class="flex items-center gap-1">
+                        <a
+                          [routerLink]="['/projects', project.id, 'editor']"
+                          class="w-7 h-7 flex items-center justify-center rounded-lg text-[#64748B] hover:text-cyan-400 hover:bg-white/[0.05] transition-colors"
+                          title="Open Diagram Editor"
+                          aria-label="Open Diagram Editor"
+                        >
+                          <span class="material-symbols-outlined text-[16px]">draw</span>
+                        </a>
                         <button
                           type="button"
                           (click)="openProjectOnboarding(project)"

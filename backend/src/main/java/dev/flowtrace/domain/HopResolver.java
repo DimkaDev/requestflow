@@ -116,21 +116,25 @@ public class HopResolver {
         }
 
         DiagramGraph workingDiagram = currentDiagram != null ? currentDiagram : DiagramGraph.defaultSampleDiagram();
+        String targetNode = workingDiagram.resolveCanonicalNodeKey(event.node());
+        if (fromNode != null) {
+            fromNode = workingDiagram.resolveCanonicalNodeKey(fromNode);
+        }
         boolean diagramModified = false;
         List<UiEvent.PatchOp> patchOps = new ArrayList<>();
         List<UiEvent> emitted = new ArrayList<>();
 
         // In-place carry update at existing node without movement
-        if (fromNode != null && fromNode.equals(event.node()) && event.type() == EventType.enter && event.carry() != null) {
+        if (fromNode != null && fromNode.equals(targetNode) && event.type() == EventType.enter && event.carry() != null) {
             emitted.add(new UiEvent.CarryEvent(
                     event.traceId(),
                     event.branch(),
-                    event.node(),
+                    targetNode,
                     event.carry().op(),
                     carrySummary,
                     now
             ));
-            traceStates.put(stateKey, new TraceStateEntry(event.node(), now, currentEntity, updatedItems));
+            traceStates.put(stateKey, new TraceStateEntry(targetNode, now, currentEntity, updatedItems));
             return new ResolutionResult(false, fromNode, List.copyOf(emitted), null);
         }
 
@@ -142,8 +146,8 @@ public class HopResolver {
             diagramModified = true;
         }
 
-        if (workingDiagram.findNode(event.node()).isEmpty() && autoDiscover) {
-            DiagramGraph.DiagramNode discoveredTarget = createAutoLayoutNode(workingDiagram, event.node());
+        if (workingDiagram.findNode(targetNode).isEmpty() && autoDiscover) {
+            DiagramGraph.DiagramNode discoveredTarget = createAutoLayoutNode(workingDiagram, targetNode);
             workingDiagram = workingDiagram.withAddedNode(discoveredTarget);
             patchOps.add(UiEvent.PatchOp.addNode(discoveredTarget));
             diagramModified = true;
@@ -156,7 +160,7 @@ public class HopResolver {
             emitted.add(new UiEvent.SpawnEvent(
                     event.traceId(),
                     event.branch(),
-                    event.node(),
+                    targetNode,
                     status,
                     event.label(),
                     event.attrs(),
@@ -166,18 +170,18 @@ public class HopResolver {
             ));
         } else {
             // Rule 5: Check if edge `from -> node` exists
-            Optional<DiagramGraph.DiagramEdge> existingEdge = workingDiagram.findEdge(fromNode, event.node());
+            Optional<DiagramGraph.DiagramEdge> existingEdge = workingDiagram.findEdge(fromNode, targetNode);
             String edgeId = null;
             boolean unmapped = false;
 
             if (existingEdge.isPresent()) {
                 edgeId = existingEdge.get().id();
             } else if (autoDiscover) {
-                edgeId = "e_disc_" + autoEdgeCounter.incrementAndGet() + "_" + fromNode + "_" + event.node();
+                edgeId = "e_disc_" + autoEdgeCounter.incrementAndGet() + "_" + fromNode + "_" + targetNode;
                 DiagramGraph.DiagramEdge newEdge = new DiagramGraph.DiagramEdge(
                         edgeId,
                         fromNode,
-                        event.node(),
+                        targetNode,
                         event.label(),
                         true
                 );
@@ -197,7 +201,7 @@ public class HopResolver {
                     event.traceId(),
                     event.branch(),
                     fromNode,
-                    event.node(),
+                    targetNode,
                     edgeId,
                     unmapped,
                     status,
@@ -217,18 +221,18 @@ public class HopResolver {
         // Rule 4, 8 & v1.1 Terminal events: Update TraceState or emit terminal outcome
         if (event.type() == EventType.end) {
             traceStates.remove(stateKey);
-            emitted.add(new UiEvent.EndEvent(event.traceId(), event.branch(), event.node(), now, "end"));
+            emitted.add(new UiEvent.EndEvent(event.traceId(), event.branch(), targetNode, now, "end"));
         } else if (event.type() == EventType.complete) {
             traceStates.remove(stateKey);
-            emitted.add(new UiEvent.CompleteEvent(event.traceId(), event.branch(), event.node(), currentEntity, carrySummary, now));
+            emitted.add(new UiEvent.CompleteEvent(event.traceId(), event.branch(), targetNode, currentEntity, carrySummary, now));
         } else if (event.type() == EventType.fail) {
             traceStates.remove(stateKey);
-            emitted.add(new UiEvent.FailEvent(event.traceId(), event.branch(), event.node(), currentEntity, event.label() != null ? event.label() : "error", now));
+            emitted.add(new UiEvent.FailEvent(event.traceId(), event.branch(), targetNode, currentEntity, event.label() != null ? event.label() : "error", now));
         } else if (event.type() == EventType.abandon) {
             traceStates.remove(stateKey);
-            emitted.add(new UiEvent.AbandonEvent(event.traceId(), event.branch(), event.node(), currentEntity, carrySummary, now));
+            emitted.add(new UiEvent.AbandonEvent(event.traceId(), event.branch(), targetNode, currentEntity, carrySummary, now));
         } else {
-            traceStates.put(stateKey, new TraceStateEntry(event.node(), now, currentEntity, updatedItems));
+            traceStates.put(stateKey, new TraceStateEntry(targetNode, now, currentEntity, updatedItems));
         }
 
         return new ResolutionResult(

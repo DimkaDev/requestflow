@@ -5,7 +5,18 @@ export type NodeType =
   | 'datastore'
   | 'queue'
   | 'external'
-  | 'end';
+  | 'end'
+  | 'gateway'
+  | 'db'
+  | 'cache'
+  | 'worker'
+  | 'client'
+  | 'parallel'
+  | 'join'
+  | 'note'
+  | 'group';
+
+export type EditorNodeType = NodeType;
 
 export type HopVisualStyle =
   | 'comet'
@@ -80,29 +91,138 @@ export interface AuditLogEntry {
   createdAt: string;
 }
 
+export type NodeRole =
+  | 'normal'
+  | 'start'
+  | 'end'
+  | 'decision'
+  | 'success'
+  | 'failure'
+  | 'abandon';
+
+export interface NodeProps {
+  role?: NodeRole | string | null;
+  description?: string | null;
+  tint?: string | null;
+  size?: 'S' | 'M' | 'L' | string | null;
+  shape?: 'card' | 'pill' | 'diamond' | string | null;
+  labelPosition?: 'inside' | 'bottom' | 'below' | string | null;
+  showCounter?: boolean | null;
+  idleAbandonMinutes?: number | null;
+  maxIn?: number | null;
+  maxOut?: number | null;
+  maxInPorts?: number | 'many' | null;
+  maxOutPorts?: number | 'many' | null;
+  holdTimeMs?: number | null;
+  groupId?: string | null;
+  locked?: boolean | null;
+  zIndex?: number | null;
+  aliases?: string[] | null;
+  packId?: string | null;
+  blockDefId?: string | null;
+  vendorLabel?: string | null;
+  customIconUrl?: string | null;
+}
+
+export interface EdgeStyle {
+  type?: 'curved' | 'straight' | 'step' | string | null;
+  lineType?: 'curved' | 'straight' | 'step' | string | null;
+  color?: string | null;
+  thickness?: 'thin' | 'normal' | 'thick' | 'volume' | string | null;
+  dashed?: boolean | null;
+  arrowhead?: boolean | 'arrow' | 'none' | string | null;
+  direction?: 'one-way' | 'bidirectional' | string | null;
+}
+
+export interface EdgeFlow {
+  weight?: number | null;
+  condition?: string | null;
+  expectedLatencyMs?: number | null;
+  speedMultiplier?: number | null;
+  tokenStyle?: 'auto' | 'dot' | 'entity' | 'inherit' | string | null;
+  terminalPath?: boolean | null;
+  terminal?: boolean | null;
+}
+
+export interface DiagramGroup {
+  id: string;
+  name: string;
+  color: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  collapsed?: boolean | null;
+  locked?: boolean | null;
+}
+
 export interface DiagramNode {
   key: string;
   label: string;
-  type: NodeType;
+  type: EditorNodeType;
   x: number;
   y: number;
   icon?: string | null;
   discovered?: boolean | null;
+  props?: NodeProps | null;
 }
 
 export interface DiagramEdge {
   id: string;
   from: string;
   to: string;
+  source?: string;
+  target?: string;
+  status?: 'defined' | 'discovered' | string;
   label?: string | null;
   discovered?: boolean | null;
+  style?: EdgeStyle | null;
+  flow?: EdgeFlow | null;
 }
 
 export interface DiagramGraph {
   schema: number;
   direction: string;
+  gridSnap?: boolean | null;
+  themePreview?: 'dark' | 'light' | string | null;
+  autoDiscovery?: boolean | null;
   nodes: DiagramNode[];
   edges: DiagramEdge[];
+  groups?: DiagramGroup[] | null;
+}
+
+export interface DiagramDraft {
+  projectId: string;
+  draftVersion: number;
+  basedOnVersion: number;
+  baseVersion?: number;
+  graph: DiagramGraph;
+  diagram?: DiagramGraph;
+  updatedBy: string;
+  updatedAt: string;
+}
+
+export interface EditorEntitlements {
+  planTier: PlanTier;
+  maxBlocksPerProject: number;
+  maxBlocksPerDiagram?: number;
+  maxEdgesPerProject: number;
+  allowedPacks: string[];
+  canEdit: boolean;
+}
+
+export interface CustomBlockDefinition {
+  id: string;
+  organizationId: string;
+  name: string;
+  category: string;
+  nodeType: EditorNodeType;
+  role: string;
+  icon: string;
+  tint: string;
+  keyPattern: string;
+  defaultProps?: Record<string, unknown> | null;
+  createdAt: string;
 }
 
 export interface TemplateDefinition {
@@ -132,7 +252,10 @@ export interface DiagramVersion {
   projectId: string;
   version: number;
   graph: DiagramGraph;
+  diagram?: DiagramGraph;
   createdAt: string;
+  authorEmail?: string | null;
+  changeSummary?: string | null;
 }
 
 export interface ApiKey {

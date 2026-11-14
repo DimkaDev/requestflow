@@ -9,8 +9,77 @@ public record DiagramGraph(
         int schema,
         String direction,
         List<DiagramNode> nodes,
-        List<DiagramEdge> edges
+        List<DiagramEdge> edges,
+        List<DiagramGroup> groups
 ) {
+    public DiagramGraph(int schema, String direction, List<DiagramNode> nodes, List<DiagramEdge> edges) {
+        this(schema, direction, nodes, edges, null);
+    }
+
+    public record NodeProps(
+            String role,
+            String description,
+            String tint,
+            String size,
+            String shape,
+            String labelPosition,
+            Boolean showCounter,
+            Integer idleAbandonMinutes,
+            Integer maxIn,
+            Integer maxOut,
+            Integer holdTimeMs,
+            String groupId,
+            Boolean locked,
+            Integer zIndex,
+            List<String> aliases,
+            String packId,
+            String blockDefId,
+            String vendorLabel
+    ) {
+        public static NodeProps empty() {
+            return new NodeProps("normal", null, null, "M", "card", "inside", true, null, null, null, 400, null, false, 1, List.of(), null, null, null);
+        }
+    }
+
+    public record EdgeStyle(
+            String lineType,
+            String color,
+            String thickness,
+            Boolean dashed,
+            Boolean arrowhead,
+            String direction
+    ) {
+        public static EdgeStyle defaults() {
+            return new EdgeStyle("curved", "auto", "normal", false, true, "one-way");
+        }
+    }
+
+    public record EdgeFlow(
+            Double weight,
+            String condition,
+            Integer expectedLatencyMs,
+            Double speedMultiplier,
+            String tokenStyle,
+            Boolean terminalPath
+    ) {
+        public static EdgeFlow defaults() {
+            return new EdgeFlow(null, null, 400, 1.0, "auto", false);
+        }
+    }
+
+    public record DiagramGroup(
+            String id,
+            String name,
+            String color,
+            double x,
+            double y,
+            double width,
+            double height,
+            Boolean collapsed,
+            Boolean locked
+    ) {
+    }
+
     public record DiagramNode(
             String key,
             String label,
@@ -18,10 +87,15 @@ public record DiagramGraph(
             double x,
             double y,
             String icon,
-            Boolean discovered
+            Boolean discovered,
+            NodeProps props
     ) {
+        public DiagramNode(String key, String label, NodeType type, double x, double y, String icon, Boolean discovered) {
+            this(key, label, type, x, y, icon, discovered, null);
+        }
+
         public DiagramNode(String key, String label, NodeType type, double x, double y, String icon) {
-            this(key, label, type, x, y, icon, null);
+            this(key, label, type, x, y, icon, null, null);
         }
     }
 
@@ -30,21 +104,42 @@ public record DiagramGraph(
             String from,
             String to,
             String label,
-            Boolean discovered
+            Boolean discovered,
+            EdgeStyle style,
+            EdgeFlow flow
     ) {
+        public DiagramEdge(String id, String from, String to, String label, Boolean discovered) {
+            this(id, from, to, label, discovered, null, null);
+        }
+
         public DiagramEdge(String id, String from, String to, String label) {
-            this(id, from, to, label, null);
+            this(id, from, to, label, null, null, null);
         }
     }
 
     public Optional<DiagramNode> findNode(String key) {
-        if (nodes == null) return Optional.empty();
-        return nodes.stream().filter(n -> n.key().equals(key)).findFirst();
+        if (nodes == null || key == null) return Optional.empty();
+        Optional<DiagramNode> direct = nodes.stream().filter(n -> key.equals(n.key())).findFirst();
+        if (direct.isPresent()) {
+            return direct;
+        }
+        return nodes.stream()
+                .filter(n -> n.props() != null && n.props().aliases() != null && n.props().aliases().contains(key))
+                .findFirst();
+    }
+
+    public String resolveCanonicalNodeKey(String key) {
+        if (key == null) return null;
+        return findNode(key).map(DiagramNode::key).orElse(key);
     }
 
     public Optional<DiagramEdge> findEdge(String from, String to) {
-        if (edges == null) return Optional.empty();
-        return edges.stream().filter(e -> e.from().equals(from) && e.to().equals(to)).findFirst();
+        if (edges == null || from == null || to == null) return Optional.empty();
+        String canonicalFrom = resolveCanonicalNodeKey(from);
+        String canonicalTo = resolveCanonicalNodeKey(to);
+        return edges.stream()
+                .filter(e -> e.from().equals(canonicalFrom) && e.to().equals(canonicalTo))
+                .findFirst();
     }
 
     public DiagramGraph withAddedNode(DiagramNode newNode) {
@@ -52,7 +147,7 @@ public record DiagramGraph(
         if (updated.stream().noneMatch(n -> n.key().equals(newNode.key()))) {
             updated.add(newNode);
         }
-        return new DiagramGraph(schema, direction, Collections.unmodifiableList(updated), edges);
+        return new DiagramGraph(schema, direction, Collections.unmodifiableList(updated), edges, groups);
     }
 
     public DiagramGraph withAddedEdge(DiagramEdge newEdge) {
@@ -60,7 +155,11 @@ public record DiagramGraph(
         if (updated.stream().noneMatch(e -> e.from().equals(newEdge.from()) && e.to().equals(newEdge.to()))) {
             updated.add(newEdge);
         }
-        return new DiagramGraph(schema, direction, nodes, Collections.unmodifiableList(updated));
+        return new DiagramGraph(schema, direction, nodes, Collections.unmodifiableList(updated), groups);
+    }
+
+    public static DiagramGraph blankDiagram() {
+        return new DiagramGraph(2, "LR", List.of(), List.of(), List.of());
     }
 
     public static DiagramGraph defaultSampleDiagram() {
@@ -80,7 +179,7 @@ public record DiagramGraph(
                 new DiagramEdge("e5", "service-a", "db", null, false),
                 new DiagramEdge("e6", "service-b", "db", null, false)
         );
-        return new DiagramGraph(1, "TB", nodes, edges);
+        return new DiagramGraph(1, "TB", nodes, edges, List.of());
     }
 
     public static DiagramGraph onlineShopDiagram() {
@@ -108,7 +207,7 @@ public record DiagramGraph(
                 new DiagramEdge("e_shop_10", "payment", "paid", "success", false),
                 new DiagramEdge("e_shop_11", "payment", "payment-failed", "declined", false)
         );
-        return new DiagramGraph(1, "LR", nodes, edges);
+        return new DiagramGraph(1, "LR", nodes, edges, List.of());
     }
 
     public static DiagramGraph queueWorkerDiagram() {
@@ -127,7 +226,7 @@ public record DiagramGraph(
                 new DiagramEdge("e_qw_4", "worker", "db", "commit", false),
                 new DiagramEdge("e_qw_5", "worker", "dlq", "exhausted", false)
         );
-        return new DiagramGraph(1, "LR", nodes, edges);
+        return new DiagramGraph(1, "LR", nodes, edges, List.of());
     }
 
     public static DiagramGraph aiRagDiagram() {
@@ -147,6 +246,6 @@ public record DiagramGraph(
                 new DiagramEdge("e_ai_5", "tool-exec", "llm-agent", "tool_result", false),
                 new DiagramEdge("e_ai_6", "llm-agent", "response", "stream", false)
         );
-        return new DiagramGraph(1, "LR", nodes, edges);
+        return new DiagramGraph(1, "LR", nodes, edges, List.of());
     }
 }

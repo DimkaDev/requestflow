@@ -245,7 +245,7 @@ public class JdbcProjectRepository implements ProjectRepository {
 
     @Override
     public Optional<DiagramVersion> getLatestDiagram(UUID projectId) {
-        String sql = "SELECT id, project_id, version, graph, created_at FROM diagrams WHERE project_id = ? ORDER BY version DESC LIMIT 1";
+        String sql = "SELECT id, project_id, version, graph, created_at, author_email, change_summary FROM diagrams WHERE project_id = ? ORDER BY version DESC LIMIT 1";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setObject(1, projectId);
@@ -262,6 +262,11 @@ public class JdbcProjectRepository implements ProjectRepository {
 
     @Override
     public synchronized DiagramVersion saveDiagramVersion(UUID projectId, DiagramGraph graph) {
+        return saveDiagramVersion(projectId, graph, "dev@flowtrace.local", "Published diagram");
+    }
+
+    @Override
+    public synchronized DiagramVersion saveDiagramVersion(UUID projectId, DiagramGraph graph, String authorEmail, String changeSummary) {
         try (Connection conn = dataSource.getConnection()) {
             int nextVersion = 1;
             try (PreparedStatement maxPs = conn.prepareStatement("SELECT COALESCE(MAX(version), 0) FROM diagrams WHERE project_id = ?")) {
@@ -276,13 +281,18 @@ public class JdbcProjectRepository implements ProjectRepository {
             UUID diagId = UuidV7.generate();
             Instant now = Instant.now();
             String json = objectMapper.writeValueAsString(graph);
+            String effectiveAuthor = (authorEmail != null && !authorEmail.isBlank()) ? authorEmail.trim() : "dev@flowtrace.local";
+            String effectiveSummary = (changeSummary != null && !changeSummary.isBlank()) ? changeSummary.trim() : "Published version v" + nextVersion;
+
             try (PreparedStatement ins = conn.prepareStatement(
-                    "INSERT INTO diagrams (id, project_id, version, graph, created_at) VALUES (?, ?, ?, ?, ?)")) {
+                    "INSERT INTO diagrams (id, project_id, version, graph, created_at, author_email, change_summary) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
                 ins.setObject(1, diagId);
                 ins.setObject(2, projectId);
                 ins.setInt(3, nextVersion);
                 ins.setString(4, json);
                 ins.setTimestamp(5, Timestamp.from(now));
+                ins.setString(6, effectiveAuthor);
+                ins.setString(7, effectiveSummary);
                 ins.executeUpdate();
             }
 
@@ -297,7 +307,7 @@ public class JdbcProjectRepository implements ProjectRepository {
                 }
             }
 
-            return new DiagramVersion(diagId, projectId, nextVersion, graph, now);
+            return new DiagramVersion(diagId, projectId, nextVersion, graph, now, effectiveAuthor, effectiveSummary);
         } catch (SQLException | JsonProcessingException e) {
             throw new IllegalStateException("Failed to save diagram version", e);
         }
@@ -305,7 +315,7 @@ public class JdbcProjectRepository implements ProjectRepository {
 
     @Override
     public List<DiagramVersion> listDiagramVersions(UUID projectId) {
-        String sql = "SELECT id, project_id, version, graph, created_at FROM diagrams WHERE project_id = ? ORDER BY version DESC LIMIT 20";
+        String sql = "SELECT id, project_id, version, graph, created_at, author_email, change_summary FROM diagrams WHERE project_id = ? ORDER BY version DESC LIMIT 20";
         List<DiagramVersion> list = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -318,6 +328,154 @@ public class JdbcProjectRepository implements ProjectRepository {
             return list;
         } catch (SQLException e) {
             throw new IllegalStateException("Failed to list diagram versions", e);
+        }
+    }
+
+    @Override
+    public Optional<DiagramVersion> findDiagramVersion(UUID projectId, int version) {
+        String sql = "SELECT id, project_id, version, graph, created_at, author_email, change_summary FROM diagrams WHERE project_id = ? AND version = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setObject(1, projectId);
+            ps.setInt(2, version);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(mapDiagram(rs));
+                }
+            }
+            return Optional.empty();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to find diagram version " + version, e);
+        }
+    }
+
+    @Override
+    public Optional<dev.flowtrace.domain.DiagramDraft> getDiagramDraft(UUID projectId) {
+        String sql = "SELECT project_id, draft_version, based_on_version, graph, updated_by, updated_at FROM project_diagram_drafts WHERE project_id = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setObject(1, projectId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    DiagramGraph graph = objectMapper.readValue(rs.getString("graph"), DiagramGraph.class);
+                    return Optional.of(new dev.flowtrace.domain.DiagramDraft(
+                            UUID.fromString(rs.getString("project_id")),
+                            rs.getInt("draft_version"),
+                            rs.getInt("based_on_version"),
+                            graph,
+                            rs.getString("updated_by"),
+                            rs.getTimestamp("updated_at").toInstant()
+                    ));
+                }
+            }
+            return Optional.empty();
+        } catch (SQLException | JsonProcessingException e) {
+            throw new IllegalStateException("Failed to load diagram draft", e);
+        }
+    }
+
+    @Override
+    public synchronized dev.flowtrace.domain.DiagramDraft saveDiagramDraft(
+            UUID projectId,
+            DiagramGraph graph,
+            int basedOnVersion,
+            String updatedBy
+    ) {
+        Instant now = Instant.now();
+        String effectiveUser = (updatedBy != null && !updatedBy.isBlank()) ? updatedBy.trim() : "dev@flowtrace.local";
+        try (Connection conn = dataSource.getConnection()) {
+            String json = objectMapper.writeValueAsString(graph);
+            int currentDraftVer = 0;
+            try (PreparedStatement sel = conn.prepareStatement("SELECT draft_version FROM project_diagram_drafts WHERE project_id = ?")) {
+                sel.setObject(1, projectId);
+                try (ResultSet rs = sel.executeQuery()) {
+                    if (rs.next()) {
+                        currentDraftVer = rs.getInt(1);
+                    }
+                }
+            }
+            int nextDraftVer = currentDraftVer + 1;
+            if (currentDraftVer == 0) {
+                try (PreparedStatement ins = conn.prepareStatement(
+                        "INSERT INTO project_diagram_drafts (project_id, draft_version, based_on_version, graph, updated_by, updated_at) VALUES (?, ?, ?, ?, ?, ?)")) {
+                    ins.setObject(1, projectId);
+                    ins.setInt(2, nextDraftVer);
+                    ins.setInt(3, basedOnVersion);
+                    ins.setString(4, json);
+                    ins.setString(5, effectiveUser);
+                    ins.setTimestamp(6, Timestamp.from(now));
+                    ins.executeUpdate();
+                }
+            } else {
+                try (PreparedStatement upd = conn.prepareStatement(
+                        "UPDATE project_diagram_drafts SET draft_version = ?, based_on_version = ?, graph = ?, updated_by = ?, updated_at = ? WHERE project_id = ?")) {
+                    upd.setInt(1, nextDraftVer);
+                    upd.setInt(2, basedOnVersion);
+                    upd.setString(3, json);
+                    upd.setString(4, effectiveUser);
+                    upd.setTimestamp(5, Timestamp.from(now));
+                    upd.setObject(6, projectId);
+                    upd.executeUpdate();
+                }
+            }
+            return new dev.flowtrace.domain.DiagramDraft(projectId, nextDraftVer, basedOnVersion, graph, effectiveUser, now);
+        } catch (SQLException | JsonProcessingException e) {
+            throw new IllegalStateException("Failed to save diagram draft", e);
+        }
+    }
+
+    @Override
+    public List<dev.flowtrace.domain.CustomBlockDefinition> listCustomBlocks(UUID organizationId) {
+        String sql = "SELECT id, organization_id, name, category, node_type, role, icon, tint, key_pattern, default_props, created_at FROM org_custom_blocks WHERE organization_id = ? ORDER BY created_at DESC";
+        List<dev.flowtrace.domain.CustomBlockDefinition> list = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setObject(1, organizationId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapCustomBlock(rs));
+                }
+            }
+            return list;
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to list custom blocks", e);
+        }
+    }
+
+    @Override
+    public dev.flowtrace.domain.CustomBlockDefinition createCustomBlock(dev.flowtrace.domain.CustomBlockDefinition block) {
+        String sql = "INSERT INTO org_custom_blocks (id, organization_id, name, category, node_type, role, icon, tint, key_pattern, default_props, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            String propsJson = block.defaultProps() != null ? objectMapper.writeValueAsString(block.defaultProps()) : "{}";
+            ps.setObject(1, block.id());
+            ps.setObject(2, block.organizationId());
+            ps.setString(3, block.name());
+            ps.setString(4, block.category());
+            ps.setString(5, block.nodeType().name());
+            ps.setString(6, block.role());
+            ps.setString(7, block.icon());
+            ps.setString(8, block.tint());
+            ps.setString(9, block.keyPattern());
+            ps.setString(10, propsJson);
+            ps.setTimestamp(11, Timestamp.from(block.createdAt()));
+            ps.executeUpdate();
+            return block;
+        } catch (SQLException | JsonProcessingException e) {
+            throw new IllegalStateException("Failed to create custom block", e);
+        }
+    }
+
+    @Override
+    public boolean deleteCustomBlock(UUID organizationId, UUID blockId) {
+        String sql = "DELETE FROM org_custom_blocks WHERE id = ? AND organization_id = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setObject(1, blockId);
+            ps.setObject(2, organizationId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to delete custom block", e);
         }
     }
 
@@ -470,16 +628,60 @@ public class JdbcProjectRepository implements ProjectRepository {
     private DiagramVersion mapDiagram(ResultSet rs) throws SQLException {
         try {
             DiagramGraph graph = objectMapper.readValue(rs.getString("graph"), DiagramGraph.class);
+            String authorEmail = "dev@flowtrace.local";
+            String changeSummary = "Published diagram";
+            try {
+                String ae = rs.getString("author_email");
+                if (ae != null && !ae.isBlank()) authorEmail = ae;
+            } catch (SQLException ignored) {
+            }
+            try {
+                String cs = rs.getString("change_summary");
+                if (cs != null && !cs.isBlank()) changeSummary = cs;
+            } catch (SQLException ignored) {
+            }
             return new DiagramVersion(
                     UUID.fromString(rs.getString("id")),
                     UUID.fromString(rs.getString("project_id")),
                     rs.getInt("version"),
                     graph,
-                    rs.getTimestamp("created_at").toInstant()
+                    rs.getTimestamp("created_at").toInstant(),
+                    authorEmail,
+                    changeSummary
             );
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Failed to parse diagram JSON", e);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private dev.flowtrace.domain.CustomBlockDefinition mapCustomBlock(ResultSet rs) throws SQLException {
+        java.util.Map<String, Object> defaultProps = java.util.Collections.emptyMap();
+        String propsJson = rs.getString("default_props");
+        if (propsJson != null && !propsJson.isBlank()) {
+            try {
+                defaultProps = objectMapper.readValue(propsJson, java.util.Map.class);
+            } catch (Exception ignored) {
+            }
+        }
+        dev.flowtrace.domain.NodeType nodeType = dev.flowtrace.domain.NodeType.service;
+        try {
+            nodeType = dev.flowtrace.domain.NodeType.valueOf(rs.getString("node_type"));
+        } catch (Exception ignored) {
+        }
+        return new dev.flowtrace.domain.CustomBlockDefinition(
+                UUID.fromString(rs.getString("id")),
+                UUID.fromString(rs.getString("organization_id")),
+                rs.getString("name"),
+                rs.getString("category"),
+                nodeType,
+                rs.getString("role"),
+                rs.getString("icon"),
+                rs.getString("tint"),
+                rs.getString("key_pattern"),
+                defaultProps,
+                rs.getTimestamp("created_at").toInstant()
+        );
     }
 
     private ApiKey mapApiKey(ResultSet rs) throws SQLException {

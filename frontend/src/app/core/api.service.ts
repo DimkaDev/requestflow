@@ -316,6 +316,145 @@ export class FlowTraceApiService {
     return res.json();
   }
 
+  public async getDiagramDraft(
+    projectId: string
+  ): Promise<{ draft: import('./models').DiagramDraft; entitlements: import('./models').EditorEntitlements }> {
+    const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/diagram/draft`, {
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to load diagram draft: ${res.status}`);
+    return res.json();
+  }
+
+  public async saveDiagramDraft(
+    projectId: string,
+    graph: DiagramGraph,
+    expectedDraftVersion?: number,
+    forceOverwrite = false
+  ): Promise<{
+    conflict: boolean;
+    draft?: import('./models').DiagramDraft;
+    serverDraft?: import('./models').DiagramDraft;
+  }> {
+    const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/diagram/draft`, {
+      method: 'PUT',
+      headers: this.headers(),
+      body: JSON.stringify({ graph, expectedDraftVersion, forceOverwrite }),
+    });
+    if (res.status === 409) {
+      return res.json();
+    }
+    if (!res.ok) throw new Error(`Failed to save diagram draft: ${res.status}`);
+    return res.json();
+  }
+
+  public async publishDiagram(
+    projectId: string,
+    graph?: DiagramGraph,
+    changeSummary?: string
+  ): Promise<{
+    published: DiagramVersion;
+    syncedDraft: import('./models').DiagramDraft;
+    affectedEventsLast24h: number;
+    removedKeys: string[];
+  }> {
+    const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/diagram/publish`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify({ graph, changeSummary }),
+    });
+    if (!res.ok) {
+      let msg = `Failed to publish diagram: ${res.status}`;
+      try {
+        const err = await res.json();
+        if (err?.error) msg = err.error;
+      } catch {
+        // ignore parse error
+      }
+      throw new Error(msg);
+    }
+    return res.json();
+  }
+
+  public async restoreDiagramVersion(projectId: string, version: number): Promise<DiagramVersion> {
+    const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/diagram/versions/${version}/restore`, {
+      method: 'POST',
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to restore diagram version: ${res.status}`);
+    return res.json();
+  }
+
+  public async getKeyUsage(
+    projectId: string,
+    nodeKey: string
+  ): Promise<{
+    key: string;
+    eventsLast24h: number;
+    recentEvents: import('./models').TraceEventRecord[];
+  }> {
+    const res = await fetch(
+      `${this.apiBaseUrl}/projects/${projectId}/diagram/key-usage?key=${encodeURIComponent(nodeKey)}`,
+      { headers: this.headers() }
+    );
+    if (!res.ok) throw new Error(`Failed to fetch key usage: ${res.status}`);
+    return res.json();
+  }
+
+  public async listCustomBlocks(projectId: string): Promise<import('./models').CustomBlockDefinition[]> {
+    const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/custom-blocks`, {
+      headers: this.headers(),
+    });
+    if (!res.ok) return [];
+    return res.json();
+  }
+
+  public async createCustomBlock(
+    projectId: string,
+    payload: {
+      name: string;
+      category?: string;
+      nodeType: import('./models').NodeType;
+      role?: string;
+      icon: string;
+      tint: string;
+      keyPattern?: string;
+      defaultProps?: Record<string, unknown>;
+    }
+  ): Promise<import('./models').CustomBlockDefinition> {
+    const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/custom-blocks`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error(`Failed to create custom block: ${res.status}`);
+    return res.json();
+  }
+
+  public async deleteCustomBlock(projectId: string, blockId: string): Promise<void> {
+    const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/custom-blocks/${blockId}`, {
+      method: 'DELETE',
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Failed to delete custom block: ${res.status}`);
+  }
+
+  public async saveCustomTemplate(payload: {
+    name: string;
+    category?: string;
+    description?: string;
+    theme?: string;
+    diagram: DiagramGraph;
+  }): Promise<TemplateDefinition> {
+    const res = await fetch(`${this.apiBaseUrl}/templates`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error(`Failed to save template: ${res.status}`);
+    return res.json();
+  }
+
   public async listDiagramVersions(projectId: string): Promise<DiagramVersion[]> {
     const res = await fetch(`${this.apiBaseUrl}/projects/${projectId}/diagram/versions`, {
       headers: this.headers(),

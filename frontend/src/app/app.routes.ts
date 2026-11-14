@@ -14,9 +14,12 @@ import { TeamPageComponent } from './features/team/team.page';
 import { TemplateGalleryPageComponent } from './features/templates/template-gallery.page';
 import { TracesReplayPageComponent } from './features/traces/traces-replay.page';
 import { WallboardPageComponent } from './features/wallboard/wallboard.page';
+import { DiagramEditorPageComponent } from './features/editor/diagram-editor.page';
 
 export const routes: Routes = [
   { path: '', component: LiveViewPageComponent },
+  { path: 'projects/:projectId/editor', component: DiagramEditorPageComponent },
+  { path: 'editor', component: DiagramEditorPageComponent },
   { path: 'traces', component: TracesReplayPageComponent },
   { path: 'projects', component: ProjectsHomePageComponent },
   { path: 'templates', component: TemplateGalleryPageComponent },

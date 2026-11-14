@@ -57,17 +57,26 @@ export interface FlowTemplateVisualProfile {
   recommendedTheme: 'dark' | 'light' | 'cozy-light';
   cardWidth: number;
   cardHeight: number;
-  nodeTypeVisuals: Record<NodeType, TemplateBlockVisual>;
+  nodeTypeVisuals: Record<string, TemplateBlockVisual>;
 }
 
-const DEFAULT_TYPE_ICONS: Record<NodeType, string> = {
+const DEFAULT_TYPE_ICONS: Record<string, string> = {
   source: 'language',
+  client: 'language',
+  gateway: 'router',
   service: 'memory',
+  worker: 'engineering',
   decision: 'alt_route',
+  parallel: 'call_split',
+  join: 'call_merge',
   datastore: 'database',
+  db: 'database',
+  cache: 'bolt',
   queue: 'hub',
   external: 'cloud',
   end: 'flag',
+  note: 'sticky_note_2',
+  group: 'dashboard_customize',
 };
 
 const MATERIAL_ICON_MAP: Record<string, string> = {

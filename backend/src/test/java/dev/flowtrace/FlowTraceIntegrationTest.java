@@ -27,6 +27,7 @@ import java.net.Socket;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -472,6 +473,186 @@ class FlowTraceIntegrationTest {
                 .when().get("/api/v1/organizations/" + orgId)
                 .then()
                 .statusCode(404);
+    }
+
+    @Test
+    void advancedDiagramEditorDraftConflictPublishCustomBlocksAndAliasResolutionWorkEndToEnd() {
+        // 1. Create a blank-canvas project
+        String projectId = RestAssured.given()
+                .header("X-Debug-User-Id", "editor-author")
+                .contentType(ContentType.JSON)
+                .body(Map.of("name", "E26 Blank Canvas Project", "autoDiscover", false))
+                .when().post("/api/v1/projects")
+                .then()
+                .statusCode(201)
+                .extract().path("id");
+
+        // 2. Fetch initial draft and entitlements
+        int initialDraftVer = RestAssured.given()
+                .header("X-Debug-User-Id", "editor-author")
+                .when().get("/api/v1/projects/" + projectId + "/diagram/draft")
+                .then()
+                .statusCode(200)
+                .body("draft.projectId", equalTo(projectId))
+                .body("entitlements.canEdit", equalTo(true))
+                .extract().path("draft.draftVersion");
+
+        // 3. Save a Schema v2 draft with a renamed node ("checkout-v2") that keeps old key "legacy-cart" as a 7-day alias
+        Map<String, Object> v2Diagram = Map.of(
+                "schema", 2,
+                "direction", "LR",
+                "gridSnap", true,
+                "nodes", List.of(
+                        Map.of(
+                                "key", "storefront",
+                                "label", "Storefront",
+                                "type", "client",
+                                "x", 120,
+                                "y", 200,
+                                "icon", "lib:storefront",
+                                "props", Map.of("role", "start", "tint", "#0EA5E9")
+                        ),
+                        Map.of(
+                                "key", "checkout-v2",
+                                "label", "Checkout V2",
+                                "type", "service",
+                                "x", 380,
+                                "y", 200,
+                                "icon", "lib:shopping_cart_checkout",
+                                "props", Map.of(
+                                        "role", "normal",
+                                        "tint", "#8B5CF6",
+                                        "aliases", List.of("legacy-cart")
+                                )
+                        ),
+                        Map.of(
+                                "key", "order-paid",
+                                "label", "Order Paid",
+                                "type", "end",
+                                "x", 640,
+                                "y", 200,
+                                "icon", "lib:check_circle",
+                                "props", Map.of("role", "success", "tint", "#10B981")
+                        )
+                ),
+                "edges", List.of(
+                        Map.of(
+                                "id", "e-storefront-checkout",
+                                "from", "storefront",
+                                "to", "checkout-v2",
+                                "source", "storefront",
+                                "target", "checkout-v2",
+                                "status", "defined",
+                                "flow", Map.of("expectedLatencyMs", 250, "weight", 100)
+                        ),
+                        Map.of(
+                                "id", "e-checkout-paid",
+                                "from", "checkout-v2",
+                                "to", "order-paid",
+                                "source", "checkout-v2",
+                                "target", "order-paid",
+                                "status", "defined",
+                                "flow", Map.of("expectedLatencyMs", 300, "terminal", true)
+                        )
+                )
+        );
+
+        int updatedDraftVer = RestAssured.given()
+                .header("X-Debug-User-Id", "editor-author")
+                .contentType(ContentType.JSON)
+                .body(Map.of(
+                        "expectedDraftVersion", initialDraftVer,
+                        "diagram", v2Diagram
+                ))
+                .when().put("/api/v1/projects/" + projectId + "/diagram/draft")
+                .then()
+                .statusCode(200)
+                .body("draft.draftVersion", equalTo(initialDraftVer + 1))
+                .extract().path("draft.draftVersion");
+
+        // 4. Stale expectedDraftVersion from another tab returns 409 Conflict with serverDraft
+        RestAssured.given()
+                .header("X-Debug-User-Id", "editor-author")
+                .contentType(ContentType.JSON)
+                .body(Map.of(
+                        "expectedDraftVersion", initialDraftVer,
+                        "diagram", v2Diagram
+                ))
+                .when().put("/api/v1/projects/" + projectId + "/diagram/draft")
+                .then()
+                .statusCode(409)
+                .body("conflict", equalTo(true))
+                .body("serverDraft.draftVersion", equalTo(updatedDraftVer));
+
+        // 5. Publish the draft to create an immutable version and activate live alias resolution
+        RestAssured.given()
+                .header("X-Debug-User-Id", "editor-author")
+                .contentType(ContentType.JSON)
+                .body(Map.of(
+                        "diagram", v2Diagram,
+                        "changeSummary", "Initial E26 blank-canvas publish with alias"
+                ))
+                .when().post("/api/v1/projects/" + projectId + "/diagram/publish")
+                .then()
+                .statusCode(200)
+                .body("published.version", greaterThanOrEqualTo(2))
+                .body("published.changeSummary", equalTo("Initial E26 blank-canvas publish with alias"));
+
+        // 6. Send live events using the old alias key ("legacy-cart") and verify HopResolver maps it to "checkout-v2"
+        String apiKey = RestAssured.given()
+                .header("X-Debug-User-Id", "editor-author")
+                .contentType(ContentType.JSON)
+                .body(Map.of("name", "Editor Test Key", "rateLimitPerS", 500))
+                .when().post("/api/v1/projects/" + projectId + "/keys")
+                .then()
+                .statusCode(201)
+                .extract().path("fullKey");
+
+        String traceId = UuidV7.generateString();
+        RestAssured.given()
+                .header("X-API-Key", apiKey)
+                .contentType(ContentType.JSON)
+                .body(List.of(
+                        Map.of("traceId", traceId, "node", "storefront", "type", "enter", "seq", 1),
+                        Map.of("traceId", traceId, "fromNode", "storefront", "node", "legacy-cart", "type", "enter", "seq", 2),
+                        Map.of("traceId", traceId, "fromNode", "legacy-cart", "node", "order-paid", "type", "end", "seq", 3)
+                ))
+                .when().post("/api/v1/events")
+                .then()
+                .statusCode(202)
+                .body("accepted", equalTo(3));
+
+        // 7. Create, list, and delete an org-level Custom Block ("My blocks")
+        String customBlockId = RestAssured.given()
+                .header("X-Debug-User-Id", "editor-author")
+                .contentType(ContentType.JSON)
+                .body(Map.of(
+                        "name", "Fraud Scorer",
+                        "category", "Security",
+                        "nodeType", "decision",
+                        "role", "decision",
+                        "icon", "lib:shield",
+                        "tint", "#F59E0B",
+                        "keyPattern", "fraud-scorer"
+                ))
+                .when().post("/api/v1/projects/" + projectId + "/custom-blocks")
+                .then()
+                .statusCode(201)
+                .body("name", equalTo("Fraud Scorer"))
+                .extract().path("id");
+
+        RestAssured.given()
+                .header("X-Debug-User-Id", "editor-author")
+                .when().get("/api/v1/projects/" + projectId + "/custom-blocks")
+                .then()
+                .statusCode(200)
+                .body("size()", greaterThanOrEqualTo(1));
+
+        RestAssured.given()
+                .header("X-Debug-User-Id", "editor-author")
+                .when().delete("/api/v1/projects/" + projectId + "/custom-blocks/" + customBlockId)
+                .then()
+                .statusCode(204);
     }
 
     private JsonNode pollType(BlockingQueue<JsonNode> queue, String expectedType, int timeoutSeconds) throws InterruptedException {

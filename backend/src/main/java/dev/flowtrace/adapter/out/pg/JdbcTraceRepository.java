@@ -322,6 +322,77 @@ public class JdbcTraceRepository implements TraceRepository {
         }
     }
 
+    @Override
+    public long countNodeEventsSince(UUID projectId, String nodeKey, Instant since) {
+        if (nodeKey == null || nodeKey.isBlank()) return 0L;
+        flushNow();
+        String sql = "SELECT COUNT(*) FROM trace_events WHERE project_id = ? AND (node = ? OR from_node = ?) AND server_ts >= ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setObject(1, projectId);
+            ps.setString(2, nodeKey.trim());
+            ps.setString(3, nodeKey.trim());
+            ps.setTimestamp(4, Timestamp.from(since != null ? since : Instant.now().minus(24, ChronoUnit.HOURS)));
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+            }
+            return 0L;
+        } catch (SQLException e) {
+            return 0L;
+        }
+    }
+
+    @Override
+    public List<TraceSummary.TraceEventRecord> findRecentNodeEvents(UUID projectId, String nodeKey, int limit) {
+        if (nodeKey == null || nodeKey.isBlank()) return List.of();
+        flushNow();
+        int safeLimit = Math.clamp(limit <= 0 ? 5 : limit, 1, 20);
+        String sql = "SELECT id, project_id, trace_id, branch, from_node, node, type, label, attrs, client_ts, server_ts, seq FROM trace_events WHERE project_id = ? AND (node = ? OR from_node = ?) ORDER BY server_ts DESC, id DESC LIMIT " + safeLimit;
+        List<TraceSummary.TraceEventRecord> events = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setObject(1, projectId);
+            ps.setString(2, nodeKey.trim());
+            ps.setString(3, nodeKey.trim());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String attrsJson = rs.getString("attrs");
+                    Map<String, Object> attrs = Collections.emptyMap();
+                    if (attrsJson != null && !attrsJson.isBlank()) {
+                        try {
+                            attrs = objectMapper.readValue(attrsJson, new TypeReference<>() {
+                            });
+                        } catch (Exception ignored) {
+                        }
+                    }
+                    long clientTsVal = rs.getLong("client_ts");
+                    Long clientTs = rs.wasNull() ? null : clientTsVal;
+                    long seqVal = rs.getLong("seq");
+                    Long seq = rs.wasNull() ? null : seqVal;
+                    events.add(new TraceSummary.TraceEventRecord(
+                            rs.getLong("id"),
+                            UUID.fromString(rs.getString("project_id")),
+                            rs.getString("trace_id"),
+                            rs.getString("branch"),
+                            rs.getString("from_node"),
+                            rs.getString("node"),
+                            EventType.fromString(rs.getString("type")),
+                            rs.getString("label"),
+                            attrs,
+                            clientTs,
+                            rs.getTimestamp("server_ts").toInstant(),
+                            seq
+                    ));
+                }
+            }
+            return events;
+        } catch (SQLException e) {
+            return List.of();
+        }
+    }
+
     @Scheduled(every = "6h", concurrentExecution = Scheduled.ConcurrentExecution.SKIP)
     void scheduledPurgeExpiredTraces() {
         purgeExpiredTraces();

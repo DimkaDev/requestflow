@@ -7,7 +7,16 @@ public enum NodeType {
     datastore,
     queue,
     external,
-    end;
+    end,
+    gateway,
+    db,
+    cache,
+    worker,
+    client,
+    parallel,
+    join,
+    note,
+    group;
 
     public static NodeType fromString(String value) {
         if (value == null || value.isBlank()) {

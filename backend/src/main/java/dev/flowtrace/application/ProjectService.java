@@ -207,15 +207,286 @@ public class ProjectService {
         );
     }
 
+    public record DraftSaveOutcome(
+            boolean conflict,
+            dev.flowtrace.domain.DiagramDraft draft,
+            dev.flowtrace.domain.DiagramDraft serverDraft
+    ) {
+    }
+
+    public record PublishDiagramResult(
+            DiagramVersion published,
+            dev.flowtrace.domain.DiagramDraft syncedDraft,
+            long affectedEventsLast24h,
+            List<String> removedKeys
+    ) {
+    }
+
+    public record EditorEntitlementsView(
+            dev.flowtrace.domain.PlanTier planTier,
+            int maxBlocksPerProject,
+            int maxEdgesPerProject,
+            List<String> allowedPacks,
+            boolean canEdit
+    ) {
+    }
+
+    public EditorEntitlementsView getEditorEntitlements(UUID userId, UUID projectId) {
+        Project project = requireProjectPermission(userId, projectId, OrgPermission.PROJECT_VIEW);
+        dev.flowtrace.domain.PlanTier tier = dev.flowtrace.domain.PlanTier.FREE;
+        boolean canEdit = true;
+        if (project.organizationId() != null) {
+            Organization org = organizationRepository.findById(project.organizationId()).orElse(null);
+            if (org != null && org.planTier() != null) {
+                tier = org.planTier();
+            }
+            OrgRole role = organizationRepository.findMemberRole(project.organizationId(), userId).orElse(OrgRole.VIEWER);
+            canEdit = role.hasPermission(OrgPermission.DIAGRAM_EDIT);
+        }
+        return new EditorEntitlementsView(
+                tier,
+                tier.maxBlocksPerProject(),
+                tier.maxEdgesPerProject(),
+                tier.allowedPacks(),
+                canEdit
+        );
+    }
+
     public DiagramVersion getLatestDiagram(UUID userId, UUID projectId) {
         requireProjectPermission(userId, projectId, OrgPermission.PROJECT_VIEW);
         return projectRepository.getLatestDiagram(projectId)
                 .orElseThrow(() -> new NotFoundException("Diagram not found for project " + projectId));
     }
 
+    public dev.flowtrace.domain.DiagramDraft getOrInitDiagramDraft(UUID userId, UUID projectId) {
+        requireProjectPermission(userId, projectId, OrgPermission.PROJECT_VIEW);
+        return projectRepository.getDiagramDraft(projectId).orElseGet(() -> {
+            DiagramVersion latest = projectRepository.getLatestDiagram(projectId)
+                    .orElseThrow(() -> new NotFoundException("Diagram not found for project " + projectId));
+            return projectRepository.saveDiagramDraft(
+                    projectId,
+                    latest.graph(),
+                    latest.version(),
+                    latest.authorEmail() != null ? latest.authorEmail() : "dev@flowtrace.local"
+            );
+        });
+    }
+
+    public DraftSaveOutcome saveDiagramDraft(
+            UUID userId,
+            String userEmail,
+            UUID projectId,
+            DiagramGraph graph,
+            Integer expectedDraftVersion,
+            Boolean forceOverwrite
+    ) {
+        requireProjectPermission(userId, projectId, OrgPermission.DIAGRAM_EDIT);
+        var existingOpt = projectRepository.getDiagramDraft(projectId);
+        if (existingOpt.isPresent() && !Boolean.TRUE.equals(forceOverwrite)) {
+            var existing = existingOpt.get();
+            if (expectedDraftVersion != null && expectedDraftVersion > 0 && existing.draftVersion() != expectedDraftVersion) {
+                return new DraftSaveOutcome(true, null, existing);
+            }
+        }
+        int basedOnVersion = existingOpt.map(dev.flowtrace.domain.DiagramDraft::basedOnVersion)
+                .orElseGet(() -> projectRepository.getLatestDiagram(projectId).map(DiagramVersion::version).orElse(1));
+        dev.flowtrace.domain.DiagramDraft saved = projectRepository.saveDiagramDraft(
+                projectId,
+                graph,
+                basedOnVersion,
+                userEmail != null ? userEmail : "dev@flowtrace.local"
+        );
+        return new DraftSaveOutcome(false, saved, null);
+    }
+
+    public PublishDiagramResult publishDiagram(
+            UUID userId,
+            String userEmail,
+            UUID projectId,
+            DiagramGraph graphOverride,
+            String changeSummary,
+            dev.flowtrace.application.port.out.TraceRepository traceRepository
+    ) {
+        Project project = requireProjectPermission(userId, projectId, OrgPermission.DIAGRAM_EDIT);
+        EditorEntitlementsView entitlements = getEditorEntitlements(userId, projectId);
+
+        DiagramGraph graphToPublish = graphOverride != null
+                ? graphOverride
+                : getOrInitDiagramDraft(userId, projectId).graph();
+
+        int nodeCount = graphToPublish.nodes() != null ? graphToPublish.nodes().size() : 0;
+        int edgeCount = graphToPublish.edges() != null ? graphToPublish.edges().size() : 0;
+        if (nodeCount > entitlements.maxBlocksPerProject()) {
+            throw new dev.flowtrace.domain.ValidationException(
+                    "Plan limit exceeded: " + nodeCount + " blocks exceeds max " + entitlements.maxBlocksPerProject() + " for " + entitlements.planTier() + " plan"
+            );
+        }
+        if (edgeCount > entitlements.maxEdgesPerProject()) {
+            throw new dev.flowtrace.domain.ValidationException(
+                    "Plan limit exceeded: " + edgeCount + " connections exceeds max " + entitlements.maxEdgesPerProject() + " for " + entitlements.planTier() + " plan"
+            );
+        }
+
+        // Validate unique and valid keys
+        if (graphToPublish.nodes() != null) {
+            java.util.Set<String> seenKeys = new java.util.HashSet<>();
+            for (DiagramGraph.DiagramNode n : graphToPublish.nodes()) {
+                if (n.key() == null || !n.key().matches("^[a-z0-9-_.]{1,64}$")) {
+                    throw new dev.flowtrace.domain.ValidationException("Invalid block key: " + n.key());
+                }
+                if (!seenKeys.add(n.key())) {
+                    throw new dev.flowtrace.domain.ValidationException("Duplicate block key: " + n.key());
+                }
+            }
+            if (graphToPublish.edges() != null) {
+                for (DiagramGraph.DiagramEdge e : graphToPublish.edges()) {
+                    if (!seenKeys.contains(e.from()) || !seenKeys.contains(e.to())) {
+                        throw new dev.flowtrace.domain.ValidationException("Edge " + e.id() + " references missing block");
+                    }
+                }
+            }
+        }
+
+        // Calculate removed keys & affected events in last 24h
+        List<String> removedKeys = new java.util.ArrayList<>();
+        long affectedEvents = 0L;
+        var prevVersionOpt = projectRepository.getLatestDiagram(projectId);
+        if (prevVersionOpt.isPresent() && prevVersionOpt.get().graph().nodes() != null) {
+            java.time.Instant since24h = java.time.Instant.now().minus(java.time.Duration.ofHours(24));
+            for (DiagramGraph.DiagramNode oldNode : prevVersionOpt.get().graph().nodes()) {
+                if (graphToPublish.findNode(oldNode.key()).isEmpty()) {
+                    removedKeys.add(oldNode.key());
+                    if (traceRepository != null) {
+                        affectedEvents += traceRepository.countNodeEventsSince(projectId, oldNode.key(), since24h);
+                    }
+                }
+            }
+        }
+
+        DiagramVersion saved = projectRepository.saveDiagramVersion(
+                projectId,
+                graphToPublish,
+                userEmail != null ? userEmail : "dev@flowtrace.local",
+                changeSummary != null && !changeSummary.isBlank()
+                        ? changeSummary
+                        : ("Published " + nodeCount + " blocks, " + edgeCount + " connections")
+        );
+        dev.flowtrace.domain.DiagramDraft syncedDraft = projectRepository.saveDiagramDraft(
+                projectId,
+                graphToPublish,
+                saved.version(),
+                userEmail != null ? userEmail : "dev@flowtrace.local"
+        );
+        ingestEventUseCase.invalidateDiagramCache(projectId, graphToPublish);
+        recordAudit(
+                project.organizationId(),
+                userId,
+                "diagram.published",
+                "diagram",
+                saved.id().toString(),
+                Map.of(
+                        "projectId", projectId.toString(),
+                        "version", saved.version(),
+                        "nodes", nodeCount,
+                        "edges", edgeCount,
+                        "affectedEventsLast24h", affectedEvents
+                )
+        );
+        return new PublishDiagramResult(saved, syncedDraft, affectedEvents, removedKeys);
+    }
+
+    public DiagramVersion restoreDiagramVersion(
+            UUID userId,
+            String userEmail,
+            UUID projectId,
+            int targetVersion
+    ) {
+        Project project = requireProjectPermission(userId, projectId, OrgPermission.DIAGRAM_EDIT);
+        DiagramVersion oldVer = projectRepository.findDiagramVersion(projectId, targetVersion)
+                .orElseThrow(() -> new NotFoundException("Diagram version " + targetVersion + " not found"));
+        DiagramVersion restored = projectRepository.saveDiagramVersion(
+                projectId,
+                oldVer.graph(),
+                userEmail != null ? userEmail : "dev@flowtrace.local",
+                "Restored from version v" + targetVersion
+        );
+        projectRepository.saveDiagramDraft(
+                projectId,
+                oldVer.graph(),
+                restored.version(),
+                userEmail != null ? userEmail : "dev@flowtrace.local"
+        );
+        ingestEventUseCase.invalidateDiagramCache(projectId, oldVer.graph());
+        recordAudit(
+                project.organizationId(),
+                userId,
+                "diagram.restored",
+                "diagram",
+                restored.id().toString(),
+                Map.of("projectId", projectId.toString(), "restoredFrom", targetVersion, "newVersion", restored.version())
+        );
+        return restored;
+    }
+
+    public List<dev.flowtrace.domain.CustomBlockDefinition> listCustomBlocks(UUID userId, UUID organizationId) {
+        OrgRole role = organizationRepository.findMemberRole(organizationId, userId)
+                .orElseThrow(() -> new ForbiddenException("Access denied to organization " + organizationId));
+        if (!role.hasPermission(OrgPermission.PROJECT_VIEW)) {
+            throw new ForbiddenException("Role lacks permission to view custom blocks");
+        }
+        return projectRepository.listCustomBlocks(organizationId);
+    }
+
+    public dev.flowtrace.domain.CustomBlockDefinition createCustomBlock(
+            UUID userId,
+            UUID organizationId,
+            String name,
+            String category,
+            dev.flowtrace.domain.NodeType nodeType,
+            String roleName,
+            String icon,
+            String tint,
+            String keyPattern,
+            Map<String, Object> defaultProps
+    ) {
+        OrgRole memberRole = organizationRepository.findMemberRole(organizationId, userId)
+                .orElseThrow(() -> new ForbiddenException("Access denied to organization " + organizationId));
+        if (!memberRole.hasPermission(OrgPermission.DIAGRAM_EDIT)) {
+            throw new ForbiddenException("Role lacks permission to create custom blocks");
+        }
+        String cleanName = (name == null || name.isBlank()) ? "Custom Block" : name.trim();
+        String cleanSlug = (keyPattern == null || keyPattern.isBlank())
+                ? cleanName.toLowerCase(java.util.Locale.ROOT).replaceAll("[^a-z0-9-_.]", "-").replaceAll("-+", "-")
+                : keyPattern.trim();
+        dev.flowtrace.domain.CustomBlockDefinition block = new dev.flowtrace.domain.CustomBlockDefinition(
+                UuidV7.generate(),
+                organizationId,
+                cleanName,
+                (category == null || category.isBlank()) ? "My Blocks" : category.trim(),
+                nodeType != null ? nodeType : dev.flowtrace.domain.NodeType.service,
+                (roleName == null || roleName.isBlank()) ? "normal" : roleName.trim(),
+                (icon == null || icon.isBlank()) ? "lib:cpu" : icon.trim(),
+                (tint == null || tint.isBlank()) ? "#8B5CF6" : tint.trim(),
+                cleanSlug,
+                defaultProps != null ? defaultProps : Map.of(),
+                java.time.Instant.now()
+        );
+        return projectRepository.createCustomBlock(block);
+    }
+
+    public void deleteCustomBlock(UUID userId, UUID organizationId, UUID blockId) {
+        OrgRole memberRole = organizationRepository.findMemberRole(organizationId, userId)
+                .orElseThrow(() -> new ForbiddenException("Access denied to organization " + organizationId));
+        if (!memberRole.hasPermission(OrgPermission.DIAGRAM_EDIT)) {
+            throw new ForbiddenException("Role lacks permission to delete custom blocks");
+        }
+        projectRepository.deleteCustomBlock(organizationId, blockId);
+    }
+
     public DiagramVersion saveDiagram(UUID userId, UUID projectId, DiagramGraph graph) {
         Project project = requireProjectPermission(userId, projectId, OrgPermission.DIAGRAM_EDIT);
         DiagramVersion saved = projectRepository.saveDiagramVersion(projectId, graph);
+        projectRepository.saveDiagramDraft(projectId, graph, saved.version(), "dev@flowtrace.local");
         ingestEventUseCase.invalidateDiagramCache(projectId, graph);
         recordAudit(
                 project.organizationId(),
@@ -245,6 +516,7 @@ public class ProjectService {
             }
         }
         DiagramVersion saved = projectRepository.saveDiagramVersion(projectId, graph);
+        projectRepository.saveDiagramDraft(projectId, graph, saved.version(), userEmailHeader != null ? userEmailHeader : "dev@flowtrace.local");
         ingestEventUseCase.invalidateDiagramCache(projectId, graph);
         return saved;
     }

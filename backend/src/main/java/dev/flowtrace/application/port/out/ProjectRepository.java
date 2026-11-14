@@ -1,6 +1,8 @@
 package dev.flowtrace.application.port.out;
 
 import dev.flowtrace.domain.ApiKey;
+import dev.flowtrace.domain.CustomBlockDefinition;
+import dev.flowtrace.domain.DiagramDraft;
 import dev.flowtrace.domain.DiagramGraph;
 import dev.flowtrace.domain.DiagramVersion;
 import dev.flowtrace.domain.Project;
@@ -38,7 +40,21 @@ public interface ProjectRepository {
 
     DiagramVersion saveDiagramVersion(UUID projectId, DiagramGraph graph);
 
+    DiagramVersion saveDiagramVersion(UUID projectId, DiagramGraph graph, String authorEmail, String changeSummary);
+
     List<DiagramVersion> listDiagramVersions(UUID projectId);
+
+    Optional<DiagramVersion> findDiagramVersion(UUID projectId, int version);
+
+    Optional<DiagramDraft> getDiagramDraft(UUID projectId);
+
+    DiagramDraft saveDiagramDraft(UUID projectId, DiagramGraph graph, int basedOnVersion, String updatedBy);
+
+    List<CustomBlockDefinition> listCustomBlocks(UUID organizationId);
+
+    CustomBlockDefinition createCustomBlock(CustomBlockDefinition block);
+
+    boolean deleteCustomBlock(UUID organizationId, UUID blockId);
 
     List<ApiKey> listApiKeys(UUID projectId);
 

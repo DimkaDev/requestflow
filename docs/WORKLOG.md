@@ -30,30 +30,64 @@ git push origin main
 
 ## Текущее состояние проекта (Snapshot)
 
-- **Активная ветка:** `main`
-- **Последний завершённый этап:** `M0` – `M8` (Базовая реализация MVP по `spec.md` завершена, покрыта тестами).
+- **Активная ветка:** `feat/stitch-design`
+- **Последний завершённый этап:** `M0` – `M8` + `G1-UI / Stitch` + **E26 Advanced Diagram Editor (Phases P1–P5)**.
 - **Статус сборки и тестов:**
-  - `mvn test` (`parent`, `client-java`, `simulator`, `backend`, `infra`): **BUILD SUCCESS (100% PASS)** — все юнит и интеграционные тесты (FlowTraceIntegrationTest, DemoSimulatorCommerceTest, TenantIsolationGuardTest, WebhookPayloadParserTest, ApiKeyTest, CarryStateTest, OrgRoleTest, UsageMeterServiceTest, FlowTraceCdkTest) зеленые.
-  - `cd frontend && npm test && npm run build`: **PASS** (все тесты зеленые, production bundle собирается без единой ошибки за 4.2с).
+  - `mvn test` (`parent`, `client-java`, `simulator`, `backend`, `infra`): **BUILD SUCCESS (100% PASS)** (включая E26 end-to-end интеграционный тест черновиков, 409 конфликтов, публикации Schema v2, 7-дневных алиасов ключей и кастомных блоков организации).
+  - `cd frontend && npm test && npm run build`: **PASS** (14/14 юнит-тестов в `animation-engine.spec.ts` и `editor-engine.spec.ts`, production bundle собирается без ошибок).
 - **Сидированные данные по умолчанию (при старте бэкенда):**
   - Проект: `E-Commerce Checkout Flow` (`0194f1c0-0000-7000-8000-000000000001`)
   - Инжест API-ключ: `ft_live_demo0000000000000000000000000000`
   - Авто-запуск `DemoSimulator`: включён (`flowtrace.demo.auto-start=true`).
-- **Готовность к передаче в Cloud VM:**
-  - Все миграции Flyway (V1..V5) проверены и совместимы как с PostgreSQL 16, так и с in-memory H2.
+- **Готовность к передаче в Cloud VM / Local:**
+  - Все миграции Flyway (`V1..V7`) проверены и совместимы как с PostgreSQL 16, так и с in-memory H2.
   - Добавлено свойство `quarkus.flyway.repair-at-start=true` для автоматического устранения расхождений контрольных сумм при переносе между окружениями.
 
 ---
 
 ## Открытые задачи / Бэклог для следующих сессий (Next Up)
 
-- [ ] **Cloud Agent:** Запустить `docker compose up --build` в облачной VM для верификации работы всех сервисов.
-- [ ] **Cloud Agent (Gate G1):** Реализация Stripe Billing & Subscriptions (Эпик E2-Step-1..E2-Step-4) — сессии оформления заказа, Customer Portal и вебхуки изменения подписки.
-- [ ] Добавить E2E-тесты Playwright поверх контейнеризованного окружения.
+- [ ] **Gate G1:** Реализация Stripe Billing & Subscriptions (Эпик E2-Step-1..E2-Step-4): сессии оформления заказа, Customer Portal и вебхуки изменения подписки.
+- [ ] Добавить E2E-тесты Playwright поверх контейнеризованного окружения (включая сценарий Blank Canvas -> Publish в `/projects/:projectId/editor`).
 
 ---
 
 ## История сессий (Trace Log)
+
+### Сессия #017 — 2026-11-14 (Environment: `cloud-vm`, Branch: `feat/stitch-design`)
+- **Автор / Агент:** Antigravity (Cloud VM)
+- **Цель:** Полная реализация **E26 - Advanced Diagram Editor (blank-canvas projects)** по фазам P1–P5.
+- **Что сделано:**
+  - **ADR и Документация (`docs/adr/0010-advanced-diagram-editor.md`, `docs/PROTOCOL.md`, `docs/editor.md`, `ATTRIBUTIONS.md`):**
+    - Зафиксированы архитектурные решения `DEC-16` (движок авто-лейаута), `DEC-17` (хранение черновиков в `project_diagram_drafts`), `DEC-18` (JSON-каталог паков и API кастомных блоков организации) и `DEC-19` (7-дневные алиасы переименованных ключей в `node.props.aliases`).
+    - Документирована схема диаграмм `Schema v2` с автоматической миграцией `Schema v1 -> v2`, руководство по редактору и атрибуция нейтральных иконок.
+  - **Backend (Flyway V7, Domain, Application, Ports & REST API):**
+    - Миграция `V7__diagram_drafts_and_custom_blocks.sql` (`project_diagram_drafts`, `org_custom_blocks`, колонки `author_email` и `change_summary` в `diagram_versions`).
+    - Расширены доменные модели `DiagramGraph` (Schema v2: `props`, `style`, `flow`, `groups`, `resolveAliasMap()`), `DiagramDraft`, `CustomBlockDefinition`, `DiagramVersion`, `PlanTier` (лимиты блоков и паков по тарифу).
+    - В `HopResolver` добавлено разрешение алиасов (`resolveNodeKey`) с фоллбэком на авто-дискавери.
+    - В `ProjectManagementResource` и `TemplateResource` добавлены эндпоинты `GET/PUT /api/v1/projects/{id}/diagram/draft` (с проверкой `expectedDraftVersion` и ответом `409 Conflict`), `POST /api/v1/projects/{id}/diagram/publish`, `GET /api/v1/projects/{id}/diagram/versions`, `POST /api/v1/projects/{id}/diagram/versions/{ver}/restore`, `GET /api/v1/projects/{id}/key-usage/{nodeKey}`, `GET/POST/DELETE /api/v1/projects/{id}/custom-blocks` и `POST /api/v1/templates/custom`.
+  - **Frontend (`/projects/:projectId/editor`, Block Library, Engine, Inspector, Preview Flow):**
+    - Создан JSON-каталог из 7 паков (`standard`, `shop`, `aws`, `gcp`, `tech`, `ai-agent`, `business`) со строгой валидацией `catalog.schema.json` и `validateCatalogPack()`.
+    - Реализован `editor-engine.ts`: генерация и валидация ключей (`slugifyKey`, `ensureUniqueKey`), миграция `v1 -> v2`, Command-pattern `EditorCommandHistory` (120 шагов Undo/Redo с сохранением в `sessionStorage`), иерархический авто-лейаут (`LR` / `TB` / `Tidy`), правила валидации (Error / Warning / Plan Limit), симулятор `generatePreviewRun` с весами ветвлений и Shop-корзиной, поиск пути между двумя блоками (`findPathsBetweenNodes`) и виртуализация viewport для графов 300+ узлов (`< 16ms`).
+    - Создан полноэкранный компонент `DiagramEditorPageComponent` (`/projects/:projectId/editor`) и подключены точки входа из `OnboardingWizardPageComponent` (`Blank canvas`), `ProjectsHomePageComponent` и `LiveToolbarComponent` (`Edit diagram`).
+- **Изменённые и созданные файлы:**
+  - `docs/adr/0010-advanced-diagram-editor.md`, `ATTRIBUTIONS.md`, `docs/editor.md`, `docs/PROTOCOL.md`
+  - `backend/src/main/resources/db/migration/V7__diagram_drafts_and_custom_blocks.sql`
+  - `backend/src/main/java/dev/flowtrace/domain/{DiagramGraph,DiagramVersion,DiagramDraft,CustomBlockDefinition,PlanTier,HopResolver}.java`
+  - `backend/src/main/java/dev/flowtrace/application/{ProjectRepository,TraceRepository,ProjectService}.java`
+  - `backend/src/main/java/dev/flowtrace/adapter/out/pg/{JdbcProjectRepository,JdbcTraceRepository}.java`
+  - `backend/src/main/java/dev/flowtrace/adapter/in/http/{ProjectManagementResource,TemplateResource}.java`
+  - `backend/src/test/java/dev/flowtrace/FlowTraceIntegrationTest.java`
+  - `frontend/src/app/features/editor/catalog/{catalog.schema.json,catalog-registry.ts,standard.json,shop.json,aws.json,gcp.json,tech.json,ai-agent.json,business.json}`
+  - `frontend/src/app/features/editor/engine/{editor-engine.ts,editor-engine.spec.ts}`
+  - `frontend/src/app/features/editor/{diagram-editor.page.ts,diagram-editor.template.ts}`
+  - `frontend/src/app/{app.routes.ts,core/models.ts,core/api.service.ts,core/template-visuals.ts}`
+  - `frontend/src/app/features/{onboarding/onboarding-wizard.page.ts,projects/projects-home.page.ts,live-view/components/live-toolbar.component.ts}`
+- **Запущенные тесты:**
+  - `cd frontend && npm test && npm run build` -> 14/14 unit tests PASS, `ng build` PASS.
+  - `cd backend && mvn -B test` -> 39/39 unit & integration tests PASS.
+- **Следующие шаги:**
+  - Перейти к реализации Эпика 2 (Stripe Billing & Subscriptions) либо E2E-тестам Playwright.
 
 ### Сессия #016 — 2026-11-14 (Environment: `local`, Branch: `feat/stitch-design`)
 - **Автор / Агент:** Antigravity (Local)

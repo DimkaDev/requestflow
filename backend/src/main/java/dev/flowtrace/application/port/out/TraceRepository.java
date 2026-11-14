@@ -32,5 +32,9 @@ public interface TraceRepository {
 
     Optional<TraceSummary.TraceDetail> findTraceDetail(UUID projectId, String traceId);
 
+    long countNodeEventsSince(UUID projectId, String nodeKey, Instant since);
+
+    List<TraceSummary.TraceEventRecord> findRecentNodeEvents(UUID projectId, String nodeKey, int limit);
+
     int purgeExpiredTraces();
 }

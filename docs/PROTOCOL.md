@@ -105,3 +105,83 @@ JSON schema file: [`docs/event.schema.json`](./event.schema.json)
    - Else: emit hop with `edgeId: null, unmapped: true`.
 8. `type == "error"` → hop status is `"error"`.
 9. `type == "end"` → emit `end` event at `node`.
+
+## 4. Diagram JSON Schema v2 (`DEC-18`)
+
+Published diagrams (`diagram_versions.diagram_json`) and editable drafts (`diagram_drafts.diagram_json`) use Schema v2 while remaining backward-compatible with v1 diagrams (`migrateDiagramToV2` upgrades v1 payloads automatically).
+
+```json
+{
+  "schema": 2,
+  "direction": "LR",
+  "gridSnap": true,
+  "nodes": [
+    {
+      "key": "cart",
+      "label": "Shopping Cart",
+      "type": "service",
+      "x": 360,
+      "y": 240,
+      "icon": "lib:shopping_cart",
+      "props": {
+        "tint": "#F97316",
+        "shape": "card",
+        "size": "M",
+        "labelPosition": "inside",
+        "role": "normal",
+        "description": "Fired when the customer adds or updates cart items.",
+        "idleAbandonMinutes": 30,
+        "expectedDwellMs": 1200,
+        "carryAction": "add",
+        "aliases": ["legacy_cart_v1"],
+        "groupId": "zone-checkout",
+        "locked": false
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-cart-checkout",
+      "from": "cart",
+      "to": "checkout",
+      "source": "cart",
+      "target": "checkout",
+      "label": "proceed",
+      "discovered": false,
+      "status": "defined",
+      "style": {
+        "type": "curved",
+        "color": "default",
+        "thickness": "normal",
+        "dashed": false,
+        "arrowhead": "arrow",
+        "direction": "one-way"
+      },
+      "flow": {
+        "condition": "proceed",
+        "weight": 85,
+        "expectedLatencyMs": 350,
+        "speedMultiplier": 1.0,
+        "tokenStyle": "inherit",
+        "terminal": false
+      }
+    }
+  ],
+  "groups": [
+    {
+      "id": "zone-checkout",
+      "name": "Checkout Funnel",
+      "color": "#6366F1",
+      "x": 280,
+      "y": 140,
+      "width": 520,
+      "height": 240,
+      "collapsed": false,
+      "locked": false
+    }
+  ]
+}
+```
+
+### Alias Resolution (`props.aliases`)
+When a block's `key` is renamed in the Advanced Diagram Editor with **Keep old key as alias for 7 days** enabled, the previous key is stored in `node.props.aliases`. During `ResolveHop`, `HopResolver.resolveCanonicalKey(key)` maps any incoming `node` or `from` key matching an alias to the block's current canonical `key`.

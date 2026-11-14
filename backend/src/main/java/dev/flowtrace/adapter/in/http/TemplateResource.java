@@ -37,10 +37,46 @@ public class TemplateResource {
         this.ingestEventUseCase = ingestEventUseCase;
     }
 
+    private final java.util.List<TemplateDefinition> customTemplates = new java.util.concurrent.CopyOnWriteArrayList<>();
+
+    public record SaveCustomTemplateRequest(
+            String name,
+            String category,
+            String description,
+            String theme,
+            DiagramGraph diagram
+    ) {
+    }
+
     @GET
     @Path("/templates")
     public List<TemplateDefinition> listTemplates() {
-        return TemplateDefinition.builtInTemplates();
+        java.util.List<TemplateDefinition> all = new java.util.ArrayList<>(TemplateDefinition.builtInTemplates());
+        all.addAll(customTemplates);
+        return all;
+    }
+
+    @POST
+    @Path("/templates")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response saveCustomTemplate(SaveCustomTemplateRequest req) {
+        if (req == null || req.diagram() == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(Map.of("error", "diagram is required")).build();
+        }
+        String cleanName = (req.name() == null || req.name().isBlank()) ? "Custom Architecture Template" : req.name().trim();
+        String slug = "custom-" + cleanName.toLowerCase(java.util.Locale.ROOT).replaceAll("[^a-z0-9]+", "-").replaceAll("(^-|-$)", "") + "-" + (customTemplates.size() + 1);
+        TemplateDefinition created = new TemplateDefinition(
+                slug,
+                cleanName,
+                (req.category() == null || req.category().isBlank()) ? "custom" : req.category().trim(),
+                (req.description() == null || req.description().isBlank()) ? "Custom diagram saved from Advanced Editor." : req.description().trim(),
+                (req.theme() == null || req.theme().isBlank()) ? "dark-neon" : req.theme().trim(),
+                req.diagram(),
+                List.of("default"),
+                List.of()
+        );
+        customTemplates.add(created);
+        return Response.status(Response.Status.CREATED).entity(created).build();
     }
 
     @POST
@@ -59,7 +95,19 @@ public class TemplateResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(Map.of("error", "Invalid project UUID")).build();
         }
 
-        TemplateDefinition template = TemplateDefinition.builtInTemplates().stream()
+        if ("blank".equalsIgnoreCase(templateId) || "blank-canvas".equalsIgnoreCase(templateId)) {
+            DiagramGraph blankGraph = DiagramGraph.blankDiagram();
+            projectService.saveDiagramVersion(projectId, blankGraph, userIdHeader, userEmailHeader);
+            demoSimulator.stopDemo(projectId);
+            ingestEventUseCase.invalidateDiagramCache(projectId, blankGraph);
+            return Response.ok(Map.of(
+                    "projectId", projectId.toString(),
+                    "appliedTemplate", "blank",
+                    "diagram", blankGraph
+            )).build();
+        }
+
+        TemplateDefinition template = listTemplates().stream()
                 .filter(t -> t.id().equalsIgnoreCase(templateId))
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("Template not found: " + templateId));

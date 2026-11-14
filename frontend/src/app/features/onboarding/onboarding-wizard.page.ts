@@ -898,17 +898,30 @@ export class OnboardingWizardPageComponent implements OnInit {
 
   public async skipToBlank(): Promise<void> {
     this.selectedTemplate.set('blank');
-    await this.ensureApiKey();
-    this.step.set(2);
+    const pid = this.store.selectedProjectId() || 'default';
+    try {
+      await this.api.applyTemplate(pid, 'blank');
+    } catch {
+      // Proceed even if backend is offline
+    }
+    await this.router.navigate(['/projects', pid, 'editor']);
   }
 
   public async applyAndContinue(): Promise<void> {
     this.busy.set(true);
     try {
       const chosen = this.selectedTemplate();
-      if (chosen !== 'blank') {
-        await this.store.applyTemplate(chosen);
+      const pid = this.store.selectedProjectId() || 'default';
+      if (chosen === 'blank') {
+        try {
+          await this.api.applyTemplate(pid, 'blank');
+        } catch {
+          // Proceed even if backend is offline
+        }
+        await this.router.navigate(['/projects', pid, 'editor']);
+        return;
       }
+      await this.store.applyTemplate(chosen);
       await this.ensureApiKey();
       this.step.set(2);
     } finally {

@@ -129,7 +129,16 @@
     - [x] Framework-free domain `AlertRule` (Java 21 record).
     - [x] Outbound port `AlertRuleRepository` & PostgreSQL adapter `JdbcAlertRuleRepository` with tenant isolation.
     - [x] REST controller `AlertResource` (`/api/v1/projects/{projectId}/alerts`).
-    - [x] All unit & integration tests passing (`BUILD SUCCESS` 38/38 backend tests, 7/7 frontend tests, `ng build` 0 errors).
+    - [x] All unit & integration tests passing (`BUILD SUCCESS` 39/39 backend tests, 14/14 frontend tests, `ng build` 0 errors).
+- [x] **E26 - Advanced Diagram Editor (Blank-Canvas Projects, Phases P1 - P5)**
+  - [x] ADR-0010 (`docs/adr/0010-advanced-diagram-editor.md` covering `DEC-16`, `DEC-17`, `DEC-18`, `DEC-19`)
+  - [x] Dedicated `/projects/:projectId/editor` page with 3-pane layout (`280px` Block Library | SVG Canvas | `360px` Context-Sensitive Inspector) and mobile view-only banner
+  - [x] Data-driven Block Library (`catalog/<pack>.json` + `catalog.schema.json`) across 7 built-in packs (`standard`, `shop`, `aws`, `gcp`, `tech`, `ai-agent`, `business`), org-level **My blocks**, and `ATTRIBUTIONS.md`
+  - [x] Canvas engine (`editor-engine.ts`): pan/zoom (`25% - 200%`), fit (`0`/`F`), `8px` grid snap, alignment guides, marquee & multi-select, collapsible zones/groups (`Ctrl+G`), port-to-empty quick-add menu, self-loops, deterministic hierarchical auto-layout (`LR` / `TB` / `Tidy`), and 120-step Command-pattern Undo/Redo (`EditorCommandHistory`)
+  - [x] Context-Sensitive Inspector: Block (5 tabs: General, Appearance, Behaviour, Integration with 5-language snippets + Send Test Event + 7-day key rename alias), Connection (General, Style, Flow rules), Zone/Group, Multi-select, and Diagram Settings + Validation drawer
+  - [x] Client-side Request Flow Preview (`Ctrl+Enter`) with seeded weighted decision routing, Shop entity/carry avatars, path highlighting between two selected blocks, and Run Summary bar
+  - [x] Draft vs Published persistence: Flyway `V7__diagram_drafts_and_custom_blocks.sql`, `PUT /api/v1/projects/{id}/diagram/draft` (1.5s debounced autosave + `409 Conflict` banner), `POST /api/v1/projects/{id}/diagram/publish`, version history restore, Save as Template, and Import/Export JSON
+  - [x] Documentation (`docs/PROTOCOL.md` Section 4 Schema v2, `docs/editor.md`, `ATTRIBUTIONS.md`) and automated unit/integration tests (`editor-engine.spec.ts` 7/7, `FlowTraceIntegrationTest` E26 end-to-end test)
 - [ ] **S2 — Scale & Ecosystem (OpenTelemetry, Multi-SDK, Partitioning)**
 - [ ] **S3 — Enterprise Ready (SAML SSO, SCIM, PII Masking, Audit Logs, Trace Diff)**
 
